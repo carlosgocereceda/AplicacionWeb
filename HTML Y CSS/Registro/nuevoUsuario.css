@@ -1,0 +1,96 @@
+*{
+	padding: 0;
+	margin: 0;
+/*	border-style: solid;
+	border-color: orange;*/
+}
+.header{
+	width: 100%;
+	height: 60px;
+	background-color: #262a35;
+	display: flex;
+	justify-content: space-around;
+	border-bottom-style: solid;
+	border-color: #4c545c;
+}
+.titulo{
+	font-size:40px;
+	color:#e8e9ef;
+	padding: 10px;
+}
+a{
+	text-decoration-line: unset;
+	color:#a9acac;
+}
+.botones{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+}
+.Registrar{
+	margin-left: 15px;
+}
+body{
+	background-color: #fcf9fa;
+}
+.formulario{
+	background-color: #04ab74;
+	border: 1px solid #CCC;
+    border-radius: 1em;
+    width: 500px;
+    margin:auto;
+	margin-top: 30px;
+	font-size: 30px;
+
+}
+.sexo{
+	display: flex;
+	flex-direction: row;
+}
+/*A partir de aquí revisar*/
+form {
+    padding: 1em;
+    margin: auto;
+    align-content: center;
+}
+form div + div {
+    margin-top: 1em;
+}
+form div{
+	display: flex;
+	flex-direction: column;
+}
+label {
+    /* Para asegurarse que todos los labels tienen el mismo tamaño y están alineados correctamente */
+    display: inline-block;
+    width: 300px;
+    text-align: left;
+}
+input{
+	color: #ebebf3;
+	background:transparent;
+	border:none;
+	border-bottom-style: solid;
+	border-color: #ebebf3;
+	font-size: 30px;
+}
+label{
+	color: #ebebf3;
+}
+input:focus{
+	border-color: #3c3c4b;
+}
+
+button{
+	background-color: #3c3c4b;
+    color:#ebebf3;
+    border:none;
+    padding:10px;
+    width: 100%;
+    margin:auto;
+}
+a:hover{
+	color:#04ab74;
+}
