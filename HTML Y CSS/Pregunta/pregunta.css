@@ -1,0 +1,121 @@
+*{
+	padding: 0;
+	margin: 0;
+/*	border-style: solid;
+	border-color: orange;*/
+}
+/*--------BARRA INICIAL--------*/
+.header{
+	width: 100%;
+	height: 60px;
+	max-height: auto;
+	background-color: #262a35;
+	display: flex;
+	justify-content: space-around;
+	border-bottom-style: solid;
+	border-color: #4c545c;
+}
+.titulo{
+	font-size:40px;
+	color:#e8e9ef;
+	padding: 10px;
+}
+a{
+	text-decoration-line: unset;
+	color:#a9acac;
+}
+.botones{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+}
+a:hover{
+	color:#04ab74;
+	border-bottom: solid;
+	border-color:#04ab74;
+}
+.Desconectar a:hover{
+	color:#f43d3d;
+	border-bottom: solid;
+	border-color: #f43d3d;
+}
+.Preguntas a{
+	color:#04ab74;
+	border-bottom: solid;
+	border-color: #04ab74;
+}
+.botones div{
+	margin-right: 15px;
+	margin-right: 15px;
+}
+/*----------Barra de estado---------*/
+.Actual{
+	align-self: center;
+	width:100%;
+	background-color:#04ab74;
+	padding:20px;
+	font-size: 30px;
+	color:#4c545c;
+}
+/*----------Contenido---------------*/
+body{ 
+	font-family: 'Niramit', sans-serif;
+}
+.contenido{
+    margin: auto;
+    margin-top:1%;
+    width:40%;
+}
+h1{
+    color:#262a35;
+    text-align: center;
+}
+.pregunta_contestada{
+    display: flex;
+    flex-direction: column;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    
+}
+.pregunta_contestada a{
+    width: 25%;
+    padding: 2%;
+    text-align: center;
+    background-color: #04ab74;
+    color: white;
+}
+.pregunta_contestada a:hover{
+    color: #262a35;
+}
+h3{
+    margin-bottom: 2%;
+}
+.amigos_contestaron{
+    display: flex;
+    flex-direction: column;
+}
+.amigo{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 1%;
+}
+.fotoAmigo{
+	background-image:url("gato.jpg");
+	background-size:100%;
+	width:35px;
+	height:35px;
+}
+.info_amigo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.NombreAmigo{
+    width: 500px;
+    padding-left: 20px;
+}
