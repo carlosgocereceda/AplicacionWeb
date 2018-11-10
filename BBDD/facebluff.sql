@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-11-2018 a las 10:29:40
+-- Tiempo de generación: 10-11-2018 a las 15:06:22
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -74,6 +74,13 @@ CREATE TABLE `usuario` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`, `Imagen_perfil`, `id`) VALUES
+('usuario@ucm.es', '1234', 'usuario1', 0, '2018-11-10', NULL, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -112,7 +119,8 @@ ALTER TABLE `pregunta`
 ALTER TABLE `solicitudesamistad`
   ADD PRIMARY KEY (`id`),
   ADD KEY `usuario_envia` (`usuario_envia`),
-  ADD KEY `usuario_recibe` (`usuario_recibe`);
+  ADD KEY `usuario_recibe` (`usuario_recibe`),
+  ADD KEY `usuario_envia_2` (`usuario_envia`);
 
 --
 -- Indices de la tabla `usuario`
@@ -150,12 +158,42 @@ ALTER TABLE `solicitudesamistad`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `usuarioresponde`
 --
 ALTER TABLE `usuarioresponde`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `amigos`
+--
+ALTER TABLE `amigos`
+  ADD CONSTRAINT `amigos_ibfk_1` FOREIGN KEY (`idAmigo1`) REFERENCES `usuario` (`id`),
+  ADD CONSTRAINT `amigos_ibfk_2` FOREIGN KEY (`idAmigo2`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `pregunta`
+--
+ALTER TABLE `pregunta`
+  ADD CONSTRAINT `pregunta_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `solicitudesamistad`
+--
+ALTER TABLE `solicitudesamistad`
+  ADD CONSTRAINT `solicitudesamistad_ibfk_1` FOREIGN KEY (`usuario_envia`) REFERENCES `usuario` (`id`),
+  ADD CONSTRAINT `solicitudesamistad_ibfk_2` FOREIGN KEY (`usuario_recibe`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `usuarioresponde`
+--
+ALTER TABLE `usuarioresponde`
+  ADD CONSTRAINT `usuarioresponde_ibfk_1` FOREIGN KEY (`idPregunta`) REFERENCES `pregunta` (`id`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
