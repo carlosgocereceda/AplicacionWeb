@@ -1,8 +1,8 @@
 *{
 	padding: 0;
 	margin: 0;
-	border-style: solid;
-	border-color: orange;
+/*	border-style: solid;
+	border-color: orange;*/
 }
 /*--------BARRA INICIAL--------*/
 .header{
@@ -70,4 +70,30 @@ body{
 }
 h1{
     color:#262a35;
+    text-align: center;
+}
+.bloque_preguntas{
+    margin-top: 2%;
+}
+.pregunta{
+    margin-bottom: 2%;
+    padding:1%;
+    border-style: solid;
+    border-color: #04ab74;
+    background-color: #e8e9ef;
+    text-align: center;
+}
+.crear_pregunta{
+    width: 220px;
+    margin: auto;
+    background-color: #04ab74;
+    padding:1%;
+    margin-top: 1%;
+    
+}
+.crear_pregunta a{
+    color: white;
+}
+.crear_pregunta a:hover{
+    color: #4c545c;
 }
