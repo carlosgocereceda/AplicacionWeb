@@ -5,6 +5,7 @@ Funcionalidades de DAOUsuarios
     Constructor
     insertaUsuario
     isUserCorrect
+    deleteUsuario
 */
 
 class DAOUsuarios{
@@ -68,6 +69,25 @@ class DAOUsuarios{
                         }
                     }
                 )
+            }
+        })
+    }
+    deleteUsuario(email,callback){
+        this.pool.getConnection(function(err,connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(`DELETE FROM USUARIO WHERE EMAIL = ?`,
+                [email],
+                function(err, result){
+                    if(err){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else{
+                        callback(null,result);
+                    }
+                })
             }
         })
     }
