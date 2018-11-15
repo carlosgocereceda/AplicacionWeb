@@ -91,5 +91,36 @@ class DAOUsuarios{
             }
         })
     }
+    insertTask(email, task, callback){
+        this.pool.getConnection(function(err,connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(`INSERT INTO TASK(USER, TEXT, DONE) VALUES (?,?,?)`,
+                [email, task.text, task.done],
+                function(err,result){
+                    if(err){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else{
+                        for(let i = 0; i < task.tags.lenght; i++){
+                            connection.query(`INSERT INTO TAG(taskId, tag) VALUES (?,?)`,
+                            [result.insertId, task.tags[i]],
+                            function(error,res){
+                                if(error){
+                                    callback(new Error("Error de acceso a la base de datos"));
+                                }
+                                else{
+                                    callback(null,res);
+                                }
+                            }
+                            )
+                        }
+                    }
+                })
+            }
+        })
+    }
 }
 module.exports = DAOUsuarios;
