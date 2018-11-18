@@ -31,7 +31,7 @@ app.use(express.static(ficherosEstaticos));
 
 // Crear un pool de conexiones a la base de datos de MySQL
 const pool = mysql.createPool(config.mysqlConfig);
-// Creamos las instancias de los daos
+//Creamos los daos
 const daoUsuarios = new DAOUsuarios(pool);
 
 //-----------------LOCALIZACIÓN DE LAS PLANTILLAS-----------------------------
@@ -49,9 +49,28 @@ app.listen(config.port, function (err) {
     }
 });
 
-//daoUsuarios.insertaUsuario("cargom11@ucm.es", 1234, "carlos", 0, null, null, cb_insertaUsuario);
+//daoUsuarios.insertaUsuario("pepe", 1234, "carlos", 0, null, null, cb_insertaUsuario);
 //daoUsuarios.isUserCorrect("cargom11@ucm.es", 1234, cb_isUserCorrect);
 //daoUsuarios.deleteUsuario("cargom11@ucm.es", cb_deleteUsuario);
+
+//---------------------------------POST PARA EL LOGIN-----------------------------
+app.post("/LoginUser", function (request, response) {
+    console.log(request.body);
+    daoUsuarios.isUserCorrect(request.body.email, request.body.password, function(err,solution){
+        if(!err && solution){
+            response.redirect("/profile");
+        }
+        else{
+            //FALTA EL MENSAJE DE ERROR
+            console.log("usuario incorrecto");
+        }
+    })
+});
+//-------------------------------FIN DEL POST PARA EL LOGIN----------------------
+//--------------------------------------PROFILE----------------------------------
+app.get("/profile",function(request,response){
+    //Creo que hacen falta coockies para esto
+})
 
 function cb_insertaUsuario(err,result){
     if(err){

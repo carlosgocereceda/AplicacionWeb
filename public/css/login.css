@@ -72,13 +72,9 @@ a{
 	color:#04ac74;;
 }
 /*Para los formularios*/
-form {
-    padding: 1em;
-    margin: auto;
-    align-content: center;
-}
-form div + div {
-    margin-top: 1em;
+form{
+	display: flex;
+	flex-direction: column;
 }
 label {
     /* Para asegurarse que todos los labels tienen el mismo tamaño y están alineados correctamente */
@@ -88,26 +84,27 @@ label {
 }
 input{
 	color: #ebebf3;
+	width: 400px;
 	background:transparent;
 	border:none;
+	font-size: 20px;
 	border-bottom-style: solid;
 	border-color: #ebebf3;
 }
 label{
+	margin-bottom: 12px;
+	margin-top: 12px;
 	color: #ebebf3;
 }
 input:focus{
 	border-color: #3c3c4b;
 }
-.button {
-    /* Para posicionar los botones a la misma posición que los campos de texto */
-    padding-left: 90px; /* mismo tamaño a todos los elementos label */
-}
-button{
-	background-color: #3c3c4b;
-    color:#ebebf3;
-    border:none;
-    padding:12px;
+#formLogin{
+	border-style: solid;
+	border-color: #ebebf3;
+	margin-top: 20px;
+	font-size: 25px;
+	width: 90px;
 }
 /*
 .izquierda{
