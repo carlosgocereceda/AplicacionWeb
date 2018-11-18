@@ -1,3 +1,11 @@
+/*
+    npm init
+    npm install express --save
+    npm install ejs --save
+    npm install body-parser --save
+*/
+
+
 const DAOUsuarios = require("./DAOUsuarios");
 
 const daoUsuarios = new DAOUsuarios("localhost", "root", "", "facebluff");

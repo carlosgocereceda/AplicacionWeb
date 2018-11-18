@@ -1,0 +1,176 @@
+*{
+	padding:0;
+	margin:0;
+	
+}
+body{
+	background-image: url("../img/fondoGrande2.png");
+	background-size: cover;
+	background-repeat: round;
+}
+.izquierda{
+	position: absolute;
+	left:0;
+	top:0;
+	min-height: 1000px;
+	height:100%;
+	width:60%;
+	background-color:white;
+}
+.derecha{
+	background-color:#04ac74;
+	width:40%;
+	position: absolute;
+	left:60%;
+	top:0;
+	min-height: 1000px;
+	height: 100%;
+
+}	
+h1{
+	color:#e8e9ef;
+	padding-top: 350px; 
+	
+	color:#56595e;
+
+}
+.Bienvenida{
+	padding-left: 60px;
+}
+p{
+	padding-top: 50px;
+	color:#56595e;
+	font-size:30px;
+}
+.RegistroBtn{
+	font-size:20px;
+	margin-left: 60px;
+	margin-top: 20px;
+	padding:15px;
+	width:130px;
+	background-color:#04ac74;
+}
+.RegistroBtn a{
+	color:#e8e9ef;
+
+}
+
+a{
+	text-decoration-line: unset;
+}
+.Entrar{
+	padding-top: 400px;
+	font-size:30px;
+	color:#e8e9ef;
+	padding-left: 15%;
+}
+.Entrarbtn{
+	background-color: #e8e9ef;
+	width: 100px;
+}
+.Entrarbtn a{
+	color:#04ac74;;
+}
+/*Para los formularios*/
+form {
+    padding: 1em;
+    margin: auto;
+    align-content: center;
+}
+form div + div {
+    margin-top: 1em;
+}
+label {
+    /* Para asegurarse que todos los labels tienen el mismo tamaño y están alineados correctamente */
+    display: inline-block;
+    width: 90px;
+    text-align: right;
+}
+input{
+	color: #ebebf3;
+	background:transparent;
+	border:none;
+	border-bottom-style: solid;
+	border-color: #ebebf3;
+}
+label{
+	color: #ebebf3;
+}
+input:focus{
+	border-color: #3c3c4b;
+}
+.button {
+    /* Para posicionar los botones a la misma posición que los campos de texto */
+    padding-left: 90px; /* mismo tamaño a todos los elementos label */
+}
+button{
+	background-color: #3c3c4b;
+    color:#ebebf3;
+    border:none;
+    padding:12px;
+}
+/*
+.izquierda{
+	position: absolute;
+	left:0;
+	top:0;
+	height:100%;
+	width:60%;
+	background-color:#141c24;
+	color:white;
+}
+.derecha{
+	background-color:#04ac74;
+	width:40%;
+	position: absolute;
+	left:60%;
+	top:0;
+	height: 100%;
+
+}	
+
+h1{
+	color:#e8e9ef;
+	padding-top: 350px; 
+
+}
+.Bienvenida{
+	padding-left: 60px;
+}
+p{
+	padding-top: 50px;
+	color:#56595e;
+	font-size:30px;
+}
+.RegistroBtn{
+	font-size:20px;
+	margin-left: 60px;
+	margin-top: 20px;
+	padding:15px;
+	width:130px;
+	background-color:#04ac74;
+}
+.RegistroBtn a{
+	color:#e8e9ef;
+
+}
+
+a{
+	text-decoration-line: unset;
+}
+.Entrar{
+	padding-top: 350px;
+	font-size:30px;
+	color:#e8e9ef;
+
+
+
+}
+.Entrarbtn{
+	background-color: #e8e9ef;
+	width: 100px;
+}
+.Entrarbtn a{
+	color:#04ac74;;
+}
+*/
