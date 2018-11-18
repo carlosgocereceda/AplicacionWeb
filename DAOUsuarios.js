@@ -10,14 +10,9 @@ Funcionalidades de DAOUsuarios
 
 class DAOUsuarios{
 
-    constructor(host, user, password, database) {
+    constructor(pool) {
 
-        this.pool = mysql.createPool({
-            host: host,
-            user: user,
-            password: password,
-            database: database
-        });
+        this.pool = pool;
 
     }
 
