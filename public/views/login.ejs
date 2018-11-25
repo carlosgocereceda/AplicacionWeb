@@ -33,7 +33,7 @@
 
 		<div class="derecha">
 			<div class="Entrar"> Login to your account
-				<form method="POST" action="/LoginUser">
+				<form method="POST" action="/loginUser">
 					<label for="mail">E-mail:</label>
 					<input type="text" name="email" id="mail">
 
@@ -41,6 +41,10 @@
 					<input type="password" name="password">
 
 					<input type="submit" value="login" id="formLogin">
+
+					<% if( errorMsg != null){ %>
+						<p class="mensajeError">MENSAJE DE ERROR</p>
+					<% } %>
 				</form>
 			</div>
 		</div>

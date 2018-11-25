@@ -16,8 +16,28 @@ class DAOUsuarios{
 
     }
 
+    getUsuario(email,callback){
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(`SELECT * FROM USUARIO WHERE email = ?`,[email], 
+                function(err,filas){
+                    console.log(email);
+                    if(err){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else{
+                        callback(null,filas);
+                    }
+                })
+            }
+        })
+    }
+
     insertaUsuario(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, callback){
-        console.log("estoy aqui");
+        //console.log("estoy aqui");
         this.pool.getConnection(function(err,connection){
             if(err){
                 callback(new Error("Error de conexión a la base de datos"));

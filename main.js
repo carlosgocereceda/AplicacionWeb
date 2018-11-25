@@ -14,10 +14,31 @@ const mysql = require("mysql");
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
+
+const session = require("express-session");
+const mysqlSession = require("express-mysql-session");
+
+const MySQLStore = mysqlSession(session);
+
+const sessionStore = new MySQLStore({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "facebluff"
+});
+
+const middlewareSession = session({
+    saveUninitialized: false,
+    secret: "foobar34",
+    resave: false,
+    store: sessionStore
+});
+
 //------------------FIN DE IMPORTACIONES------------------------------------
 
 //Creacion del servidor
 const app = express();
+app.use(middlewareSession);
 //Midleware de body parser
 app.use(bodyParser.urlencoded({ extended: true })); //Preguntar a Marina donde hay que colocar esto
 
@@ -53,24 +74,71 @@ app.listen(config.port, function (err) {
 //daoUsuarios.isUserCorrect("cargom11@ucm.es", 1234, cb_isUserCorrect);
 //daoUsuarios.deleteUsuario("cargom11@ucm.es", cb_deleteUsuario);
 
+//---------------------------------GET PARA EL LOGIN------------------------------
+app.get("/login", function(request, response){
+    response.render("login",{errorMsg: null} );
+})
+
 //---------------------------------POST PARA EL LOGIN-----------------------------
-app.post("/LoginUser", function (request, response) {
+app.post("/loginUser", function (request, response) {
     console.log(request.body);
     daoUsuarios.isUserCorrect(request.body.email, request.body.password, function(err,solution){
-        if(!err && solution){
+
+         
+        if(err){
+            console.log("Error inesperado");
+        }
+        else if(solution){
+            request.session.currentUser = request.body.email;
             response.redirect("/profile");
         }
         else{
-            //FALTA EL MENSAJE DE ERROR
-            console.log("usuario incorrecto");
+            response.render("login",{errorMsg: true} );
         }
+
     })
 });
 //-------------------------------FIN DEL POST PARA EL LOGIN----------------------
+
+//-------------------------------MID PARA SI NO ESTÁ IDENTIFICADO----------------
+/*app.use(function(request, response, next){
+    if(request.session.currentUser){
+        response.locals = request.session.currentUser;
+    }
+    else{
+        response.redirect("/login");
+    }
+    next();
+})*/
+//-------------------------------------------------------------------------------
+
 //--------------------------------------PROFILE----------------------------------
 app.get("/profile",function(request,response){
+    daoUsuarios.getUsuario(request.session.currentUser, function(err,res){
+        if(err=== null){
+            let nombre = res[0].nombre;
+            let edad = res[0].fecha_nacimiento;
+            let sexo = "";
+            if(res[0].sexo == 0){
+                sexo = "Hombre";
+            }
+            else{
+                sexo = "Mujer";
+            }
+            let puntos = "0 puntos";
+
+            response.render("perfil",{nombre:nombre, edad:edad, sexo: sexo, puntos: puntos});
+        }
+    })
     //Creo que hacen falta coockies para esto
 })
+
+//------------------------LOGOUT--------------------------------
+app.get("/logout", function(request, response){
+    request.session.destroy();
+    response.redirect("/login");
+})
+//--------------------------------------------------------------
 
 function cb_insertaUsuario(err,result){
     if(err){
