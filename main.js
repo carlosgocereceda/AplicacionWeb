@@ -81,7 +81,7 @@ app.get("/login", function(request, response){
 
 //---------------------------------POST PARA EL LOGIN-----------------------------
 app.post("/loginUser", function (request, response) {
-    console.log(request.body);
+    //console.log(request.body);
     daoUsuarios.isUserCorrect(request.body.email, request.body.password, function(err,solution){
 
          
@@ -118,8 +118,13 @@ app.post("/register", function(request, response){
             else{
                 sexo = 1;
             }
+            console.log("imagen|" +  request.body.Imagen_perfil + "|");
+            if(request.body.Imagen_perfil = ""){
+                console.log("pues si");
+            }
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
-                request.body.nombre, sexo, request.body.fecha_nacimiento, request.body.fecha_nacimiento,
+                request.body.nombre, sexo, request.body.fecha_nacimiento,
+                null,
                 function(err){
                     if(!err){
                         request.session.currentUser = request.body.email;
@@ -134,7 +139,7 @@ app.post("/register", function(request, response){
 })
 
 //-------------------------------MID PARA SI NO ESTÁ IDENTIFICADO----------------
-/*app.use(function(request, response, next){
+app.use(function(request, response, next){
     if(request.session.currentUser){
         response.locals = request.session.currentUser;
     }
@@ -142,14 +147,14 @@ app.post("/register", function(request, response){
         response.redirect("/login");
     }
     next();
-})*/
+})
 //-------------------------------------------------------------------------------
 
 //--------------------------------------PROFILE----------------------------------
 app.get("/profile",function(request,response){
-    console.log("sdf fsdf fasdf");
+    //console.log("sdf fsdf fasdf");
     daoUsuarios.getUsuario(request.session.currentUser, function(err,res){
-        console.log(res);
+        //console.log(res);
         if(res != null){
             
             let nombre = res[0].nombre;
@@ -169,6 +174,29 @@ app.get("/profile",function(request,response){
     //Creo que hacen falta coockies para esto
 })
 
+
+//------------------------IMAGEN DE USUARIO---------------------
+
+app.get("/imagenUsuario", function(request, response){
+    
+    daoUsuarios.getUserImageName(request.session.currentUser, function(err, res){
+        console.log(res);
+        
+        if(res === null){
+            //console.log("aqui");
+            let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
+            response.sendFile(pathImg)
+           // response.sendFile("C:\Users\carlo\Desktop\4\AW\Practicas\PRACTICAS OBLIGATORIAS\P5\public\img\NoPerfil.jpg");
+        }
+        else{
+            //console.log("holi");
+            let pathImg = path.join(__dirname, "profile_imgs", res);
+            console.log(pathImg);
+            response.sendFile(pathImg)
+        }
+    })
+})
+//--------------------------------------------------------------
 //------------------------LOGOUT--------------------------------
 app.get("/logout", function(request, response){
     request.session.destroy();

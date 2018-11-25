@@ -42,6 +42,29 @@ class DAOUsuarios{
         })
     }
 
+    getUserImageName(email, callback){
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query(
+                    "SELECT Imagen_perfil FROM USUARIO WHERE EMAIL = ?",[email],
+                    function (err, resultado) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null, resultado[0].Imagen_perfil);
+                           
+                        };
+                    }
+                    
+                )
+            }
+        })
+    }
     insertaUsuario(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, callback){
         //console.log("estoy aqui");
         this.pool.getConnection(function(err,connection){
