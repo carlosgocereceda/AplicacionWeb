@@ -29,7 +29,13 @@ class DAOUsuarios{
                         callback(new Error("Error de acceso a la base de datos"));
                     }
                     else{
-                        callback(null,filas);
+                        if(filas.length > 0){
+                            callback(null,filas);
+                        }
+                        else{
+                            callback(null,null);
+                        }
+                        
                     }
                 })
             }

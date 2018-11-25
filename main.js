@@ -100,6 +100,39 @@ app.post("/loginUser", function (request, response) {
 });
 //-------------------------------FIN DEL POST PARA EL LOGIN----------------------
 
+//-------------------------------REGISTRAR USUARIO-------------------------------
+
+app.get("/register", function(request, response){
+    response.redirect("/nuevoUsuario.html")
+})
+
+app.post("/register", function(request, response){
+    //console.log(request.body);
+    daoUsuarios.getUsuario(request.body.email, function(err, res){
+        
+        if(res == null){
+            let sexo;
+            if(request.body.sexo == "hombre"){
+                sexo = 0;
+            }
+            else{
+                sexo = 1;
+            }
+            daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
+                request.body.nombre, sexo, request.body.fecha_nacimiento, request.body.fecha_nacimiento,
+                function(err){
+                    if(!err){
+                        request.session.currentUser = request.body.email;
+                        response.redirect("/profile");
+                    }
+                    else{
+                        console.log(err);
+                    }
+                })
+        }
+    })
+})
+
 //-------------------------------MID PARA SI NO ESTÁ IDENTIFICADO----------------
 /*app.use(function(request, response, next){
     if(request.session.currentUser){
@@ -114,8 +147,11 @@ app.post("/loginUser", function (request, response) {
 
 //--------------------------------------PROFILE----------------------------------
 app.get("/profile",function(request,response){
+    console.log("sdf fsdf fasdf");
     daoUsuarios.getUsuario(request.session.currentUser, function(err,res){
-        if(err=== null){
+        console.log(res);
+        if(res != null){
+            
             let nombre = res[0].nombre;
             let edad = res[0].fecha_nacimiento;
             let sexo = "";
