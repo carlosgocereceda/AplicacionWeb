@@ -4,7 +4,7 @@
 	
 }
 body{
-	background-image: url("../img/fondoGrande2.png");
+	
 	background-size: cover;
 	background-repeat: round;
 }
@@ -12,9 +12,10 @@ body{
 	position: absolute;
 	left:0;
 	top:0;
-	min-height: 1000px;
+	margin-right : 30px;
+	min-height: 500px;
 	height:100%;
-	width:60%;
+	width:55%;
 	background-color:white;
 }
 .derecha{
@@ -23,13 +24,13 @@ body{
 	position: absolute;
 	left:60%;
 	top:0;
-	min-height: 1000px;
+	min-height: 500px;
 	height: 100%;
 
 }	
 h1{
 	color:#e8e9ef;
-	padding-top: 350px; 
+	padding-top: 100px; 
 	
 	color:#56595e;
 
@@ -59,7 +60,7 @@ a{
 	text-decoration-line: unset;
 }
 .Entrar{
-	padding-top: 400px;
+	padding-top: 100px;
 	font-size:30px;
 	color:#e8e9ef;
 	padding-left: 15%;
