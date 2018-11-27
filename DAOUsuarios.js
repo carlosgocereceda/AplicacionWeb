@@ -135,36 +135,26 @@ class DAOUsuarios{
             }
         })
     }
-    insertTask(email, task, callback){
+    modifyUser(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, callback){
+       
         this.pool.getConnection(function(err,connection){
             if(err){
-                callback(new Error("Error de conexión a la base de datos"));
+                callback(new Error("Error de conexión a la base de datos1"));
             }
             else{
-                connection.query(`INSERT INTO TASK(USER, TEXT, DONE) VALUES (?,?,?)`,
-                [email, task.text, task.done],
-                function(err,result){
+                connection.query(`UPDATE usuario SET password = ?, nombre= ? , sexo= ? , fecha_nacimiento =? , Imagen_perfil = ? WHERE email = ?`, [password, nombre, sexo, fecha_nacimiento, imagen_perfil, email],
+                 //ESta mal la consulta 
+                function(err,filas){
                     if(err){
                         callback(new Error("Error de acceso a la base de datos"));
                     }
                     else{
-                        for(let i = 0; i < task.tags.lenght; i++){
-                            connection.query(`INSERT INTO TAG(taskId, tag) VALUES (?,?)`,
-                            [result.insertId, task.tags[i]],
-                            function(error,res){
-                                if(error){
-                                    callback(new Error("Error de acceso a la base de datos"));
-                                }
-                                else{
-                                    callback(null,res);
-                                }
-                            }
-                            )
-                        }
+                        callback(null);
                     }
                 })
             }
         })
-    }
+    }   
+
 }
 module.exports = DAOUsuarios;

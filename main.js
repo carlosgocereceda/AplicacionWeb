@@ -204,6 +204,40 @@ app.get("/logout", function(request, response){
 })
 //--------------------------------------------------------------
 
+app.get("/modify",function(request, response){
+    response.redirect("/modificar.html");
+})
+
+app.post("/modify",function(request, response){
+    //console.log(request.body);
+            let sexo;
+            if(request.body.sexo == "hombre"){
+                sexo = 0;
+            }
+            else{
+                sexo = 1;
+            }
+           
+            if(request.body.Imagen_perfil = ""){
+                console.log("pues si");
+            }
+            console.log(request.session.currentUser);
+            daoUsuarios.modifyUser(request.session.currentUser, request.body.contrasenya,
+                request.body.nombre, sexo, request.body.fecha_nacimiento,
+                null,
+                function(err){
+                    if(!err){
+                        response.redirect("/profile");
+                    }
+                    else{
+                        response.redirect("/register");
+                        console.log(err);
+                    }
+                })
+        
+    
+})
+
 function cb_insertaUsuario(err,result){
     if(err){
         console.log(err);
