@@ -208,6 +208,22 @@ app.get("/modify",function(request, response){
     response.redirect("/modificar.html");
 })
 
+app.get("/amigos", function(request,response){
+    response.render("amigos")
+})
+app.post("/buscarAmigo",function(request,response){
+    daoUsuarios.buscarUsuario(request.body.buscadorAmigo, function (err, result){
+        if(err){
+            response.redirect("/profile");
+        }
+        else{
+            response.render("/nuevosAmigos", {listaNombre: result});
+        }
+
+    })
+})
+
+
 app.post("/modify",function(request, response){
     //console.log(request.body);
             let sexo;

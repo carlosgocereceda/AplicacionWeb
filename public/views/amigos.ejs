@@ -4,7 +4,7 @@
 	<title></title>
 	<meta charset="utf-8">
 	<link rel ="icon" href= "">
-	<title>Let´s Talk!</title>
+	<title>Let´s Answer!</title>
 	<link rel="stylesheet" type ="text/css" href="css/amigos.css" media="screen"/>
 </head>
 <body>
@@ -48,6 +48,8 @@
                     Solicitudes de amigo
                 </div>
                 <div class="peticiones">
+
+                    <!--Aqui va un for con las peticiones restantes respecto el ID-->
                     <div class="peticion">
                             <div class="fotos">
                              </div>
@@ -74,7 +76,10 @@
                         Buscar por nombre
                     </div>
                     <div class="barrabusqueda">
-                        
+                        <form method = "POST" action= "/buscarAmigo">
+                            <input type="text" name="buscador">
+                            <input type="submit" name ="Buscar">
+                        </form>
                     </div>
                     <div class="btnBuscar">
 

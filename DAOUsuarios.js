@@ -104,7 +104,7 @@ class DAOUsuarios{
                         else{
                          //   console.log(filas[0].PASSWORD); PREGUNTAR POR QUE console.log(filas[0].password);
                          //   saca undefined
-                         if(filas[0].PASSWORD == password){
+                         if(filas[0] == password){
                             callback(null,true);
                          }
                          else{
@@ -155,6 +155,26 @@ class DAOUsuarios{
             }
         })
     }   
+
+    buscarUsuario(nombre, callback){
+        this.pool.getConnection(function(err,connection){
+            if(err){
+                callback(new Error("Error de acceso a la base de datos1"));
+            }
+            else{
+                connection.query(`SELECT nombre from usuario WHERE nombre LIKE %`[nombre]`%`),
+                function(err,filas){
+                    if(err){
+                        callback(new Error("Error al realizar la consulta"));
+                    }
+                    else{
+                        callback(null);
+                    }
+                }
+            }
+        })
+
+    }
 
 }
 module.exports = DAOUsuarios;
