@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="icon" href="">
+    <title>Let´s Answer!</title>
+    <link rel="stylesheet" type="text/css" href="css/amigos.css" media="screen" />
+</head>
+
+<body>
+    <div class="contenedor">
+        <div class="header">
+            <div class="titulo">Let´s Answer!</div>
+            <div class="botones">
+                <div class="Perfil">
+                    <a href="\profile">
+                        PERFIL
+                    </a>
+                </div>
+                <div class="Amigos">
+                    <a href="/amigos">
+                        AMIGOS
+                    </a>
+                </div>
+                <div class="Preguntas">
+                    <a href="preguntasAleatorias.html">
+                        PREGUNTAS
+                    </a>
+                </div>
+                <div class="Desconectar">
+                    <a href="/logout">
+                        DESCONECTAR
+                    </a>
+                </div>
+                <div class="Puntos">
+                    <a href="#">
+                        a
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="Actual">
+            <!--Esto es para darle al usuario un feedback de en que parte de la pagina esta.-->
+            Actualmente estas en: Agregar nuevos amigos
+        </div>
+        <div class="Info_amigos">
+
+            <div class="peticiones">
+                <ul>
+                    <% listaNombre.forEach(function(usuario) { %>
+                    <li>
+                        <div class="peticion">
+                            <div class="fotos">
+                                <%= usuario.Imagen_perfil %>
+                            </div>
+                            <div class="Nombre">
+                                <%= usuario.nombre %>
+                            </div>
+
+                            <div class="botones">
+                                <div class="btn"> <a href="/añadirAmigo/<%= usuario.id %>" class="btn">Añadir Amigo</a></div>
+                            </div>
+
+                    </li>
+                    <% }); %>
+                </ul>
+                <!--Aqui va un for con las peticiones restantes respecto el ID-->
+                <div class="peticion">
+                    <div class="fotos">
+                    </div>
+                    <div class="Nombre">
+                        Adrian Dorta
+                    </div>
+                    <div class="botones">
+                        <div class="btn">
+                            <a href="/añadirAmigo">Añadir amigo</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    </div>
+</body>
+
+</html>

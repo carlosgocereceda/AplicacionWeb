@@ -104,12 +104,17 @@ class DAOUsuarios{
                         else{
                          //   console.log(filas[0].PASSWORD); PREGUNTAR POR QUE console.log(filas[0].password);
                          //   saca undefined
-                         if(filas[0] == password){
+                         if(filas.length >= 0){
+                         if(filas[0].PASSWORD == password){
                             callback(null,true);
                          }
                          else{
                             callback(null,false);
                          }
+                        }
+                        else{
+                            callback(null,false);   
+                        }
                         }
                     }
                 )
@@ -145,6 +150,7 @@ class DAOUsuarios{
                 connection.query(`UPDATE usuario SET password = ?, nombre= ? , sexo= ? , fecha_nacimiento =? , Imagen_perfil = ? WHERE email = ?`, [password, nombre, sexo, fecha_nacimiento, imagen_perfil, email],
                  //ESta mal la consulta 
                 function(err,filas){
+                    connection.release();
                     if(err){
                         callback(new Error("Error de acceso a la base de datos"));
                     }
@@ -156,25 +162,37 @@ class DAOUsuarios{
         })
     }   
 
-    buscarUsuario(nombre, callback){
+    buscarUsuario2(nombre, callback){
+      
+       
         this.pool.getConnection(function(err,connection){
             if(err){
                 callback(new Error("Error de acceso a la base de datos1"));
             }
             else{
-                connection.query(`SELECT nombre from usuario WHERE nombre LIKE %`[nombre]`%`),
+                
+                connection.query(`SELECT * FROM USUARIO`),
                 function(err,filas){
+                    console.log("release");
+                    connection.release();
+                    
                     if(err){
                         callback(new Error("Error al realizar la consulta"));
                     }
                     else{
-                        callback(null);
+                        console.log(filas);
+                        if(filas.length == 0){
+                            callback(null, null);
+                        }
+                        else{
+                        callback(null,filas);
+                        }
                     }
                 }
             }
-        })
+      })
 
-    }
-
+    //}
+        }
 }
 module.exports = DAOUsuarios;

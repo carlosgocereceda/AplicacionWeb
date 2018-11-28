@@ -212,12 +212,13 @@ app.get("/amigos", function(request,response){
     response.render("amigos")
 })
 app.post("/buscarAmigo",function(request,response){
+    console.log(request.body.buscadorAmigo);
     daoUsuarios.buscarUsuario(request.body.buscadorAmigo, function (err, result){
         if(err){
             response.redirect("/profile");
         }
         else{
-            response.render("/nuevosAmigos", {listaNombre: result});
+            response.render("nuevosAmigos", {listaNombre: result});
         }
 
     })
