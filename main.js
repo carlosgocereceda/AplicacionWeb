@@ -186,6 +186,19 @@ app.get("/profile", function (request, response) {
     //Creo que hacen falta coockies para esto
 })
 
+app.get("/preguntasAleatorias/:id", function(request, response){
+    daoPreguntas.getPreguntabyId(request.params.id, function(err,res){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log(res);
+            response.render("pregunta",{enunciado: res[0].pregunta});
+        }
+    })
+    
+})
+
 app.get("/preguntasAleatorias", function(request, response){
     daoPreguntas.getPreguntaAleatoria(5, function(err,res){
         if(err){
@@ -193,7 +206,6 @@ app.get("/preguntasAleatorias", function(request, response){
         }
         else{
             if(res != null){
-                console.log(res);
                 response.render("preguntasAleatorias", {preguntas : res});
             }
         }
