@@ -10,7 +10,7 @@ class DAOPreguntas {
 
     }
 
-    insertarPregunta(email, enunciado, respuesta_correcta, respuesta2, respuesta3, respuesta4, callback){
+    insertarPregunta(id, enunciado, respuesta_correcta, respuesta2, respuesta3, respuesta4, callback){
         //console.log("estoy aqui");
         this.pool.getConnection(function(err,connection){
             if(err){
@@ -20,9 +20,8 @@ class DAOPreguntas {
                 connection.query(`INSERT INTO 
                 PREGUNTA(idUsuarioCrea, pregunta, respuesta_correcta, respuesta2, respuesta3, respuesta4) 
                 VALUES (?,?,?,?,?,?)`,
-                [email, enunciado, respuesta_correcta, respuesta2, respuesta3, respuesta4],
+                [id, enunciado, respuesta_correcta, respuesta2, respuesta3, respuesta4],
                 function(err, filas){
-                    console.log(email, enunciado, respuesta_correcta, respuesta2, respuesta3, respuesta4);
                     if(err){
                         callback(new Error("Error de acceso a la base de datos"));
                     }
@@ -58,6 +57,8 @@ class DAOPreguntas {
                         console.log("numero de preguntas" + preguntas);
                         while(mySet.size < preguntas){
                             let num = Math.floor((Math.random() * filas.length) + 0);
+                            console.log("el numero ha sido " + num
+                            +" la pregunta " + filas[num].pregunta + " hay " + mySet.size);
                             mySet.add(filas[num].pregunta);
                         }
                         let sol = Array.from(mySet);

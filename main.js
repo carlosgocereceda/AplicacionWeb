@@ -96,9 +96,10 @@ app.post("/loginUser", function (request, response) {
                 console.log("id " + filas[0].id);
                 request.session.currentId = filas[0].id;
                 console.log("id guardado " + request.session.currentId);
+                response.redirect("/profile");
                 
             })
-            response.redirect("/profile");
+            
         }
         else {
             response.render("login", { errorMsg: true });
@@ -204,16 +205,15 @@ app.get("/crearPregunta", function(request, response){
 })
 
 app.post("/crearPregunta", function(request, response){
-    console.log("estoy en crear pregunta y el current id es " + request.session.currentId);
-    daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado, request.body.p1, 
-        request.body.p2, request.body.p3, request.body.pCorrecta, function(err){
+    daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado,request.body.pCorrecta, request.body.p1, 
+        request.body.p2, request.body.p3,  function(err){
             if(err){
                 console.log(err);
             }
+            else{
+                response.redirect("/preguntasAleatorias");
+            }
         });
-    
-   console.log(request.session.currentUser, request.body.enunciado, request.body.p1, 
-    request.body.p2, request.body.p3, request.body.pCorrecta)
 })
 //------------------------IMAGEN DE USUARIO---------------------
 

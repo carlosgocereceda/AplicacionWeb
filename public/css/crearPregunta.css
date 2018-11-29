@@ -77,6 +77,16 @@ h1{
 	flex-direction: column;
 }
 .preguntaIncorrecta{
+	margin-top: 8px;
+}
+label{
+	height: 2px;
+}
+input{
+	margin-top: 8px;
+	width: 100%;
+}
+.preguntaIncorrecta{
     background-color: #f43d3d
 }
 .preguntaCorrecta{
