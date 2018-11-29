@@ -72,28 +72,17 @@ h1{
     color:#262a35;
     text-align: center;
 }
-.bloque_preguntas{
-    margin-top: 2%;
+.contenido{
+	display: flex;
+	flex-direction: column;
 }
-.pregunta{
-    margin-bottom: 2%;
-    padding:1%;
-    border-style: solid;
-    border-color: #04ab74;
-    background-color: #e8e9ef;
-    text-align: center;
+.preguntaIncorrecta{
+    background-color: #f43d3d
 }
-.crear_pregunta{
-    width: 220px;
-    margin: auto;
+.preguntaCorrecta{
     background-color: #04ab74;
-    padding:1%;
-    margin-top: 1%;
-    
 }
-.crear_pregunta a{
-    color: white;
-}
-.crear_pregunta a:hover{
-    color: #4c545c;
+.preguntaIncorrect{
+	display: flex;
+	flex-direction: column;
 }

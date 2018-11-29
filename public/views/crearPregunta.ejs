@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <link rel="icon" href="">
     <title>Let´s Talk!</title>
-    <link rel="stylesheet" type="text/css" href="css/preguntasAleatorias.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="css/crearPregunta.css" media="screen" />
 </head>
 
 <body>
@@ -46,34 +46,35 @@
             Actualmente estas en: Preguntas
         </div>
         <div class="contenido">
-            <h1>Preguntas seleccionadas anteriormente</h1>
-            <div class="bloque_preguntas">
-                <div class="pregunta">
-                    ¿Cuál es la peor prelícula de la historia?
-                </div>
-                <div class="pregunta">
-                    ¿En qué escuela primaria estudiaste?
-                </div>
-                <div class="pregunta">
-                    ¿Nintendo Switch, PS4 o Xbox One?
-                </div>
-                <div class="pregunta">
-                    ¿Cuál es tu plato favorito?
-                </div>
-                <div class="pregunta">
-                    ¿Cuál es el personaje más irritante de juego de tronos?
-                </div>
-            </div>
-        </div>
-        <h1>¡Añade tus preguntas!</h1>
-        <div class="crear_pregunta">
-            <a href="#">
-                 CREAR NUEVA PREGUNTA
-            </a>
-        </div>
-        
 
-    </div>
+            <form method="POST" action="/crearPregunta" class="formulario">
+                <div class="enunciado">
+                    <label for="enunciado">Enunciado</label>
+                    <input type="text" name="enunciado" id="mail">
+                </div>
+                <div class="preguntaIncorrecta">
+                    <label for="respuesta_incorrecta">Respuesta Incorrecta</label>
+                    <input type="text" name="p1" id="mail">
+                </div>
+                <div class="preguntaIncorrecta">
+                    <label for="respuesta_incorrecta">Respuesta Incorrecta</label>
+                    <input type="text" name="p2" id="mail">
+                </div>
+                <div class="preguntaIncorrecta">
+                    <label for="respuesta_incorrecta">Respuesta Incorrecta</label>
+                    <input type="text" name="p3" id="mail">
+                </div>
+                <div class="preguntaCorrecta">
+                    <label for="respuesta_correcta">Respuesta Correcta</label>
+                    <input type="text" name="pCorrecta" id="mail">
+                </div>
+                <input type="submit" value="crear" id="crear">
+            </form>
+
+
+
+
+        </div>
 </body>
 
 </html>

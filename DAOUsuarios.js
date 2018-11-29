@@ -104,12 +104,18 @@ class DAOUsuarios{
                         else{
                          //   console.log(filas[0].PASSWORD); PREGUNTAR POR QUE console.log(filas[0].password);
                          //   saca undefined
-                         if(filas[0] == password){
-                            callback(null,true);
+                         if(filas.length > 0){
+                            if(filas[0].PASSWORD == password){
+                                callback(null,true);
+                             }
+                             else{
+                                callback(null,false);
+                             }
                          }
                          else{
-                            callback(null,false);
+                             callback(null,false);
                          }
+                         
                         }
                     }
                 )
