@@ -209,11 +209,35 @@ app.get("/modify",function(request, response){
 })
 
 app.get("/amigos", function(request,response){
-    response.render("amigos")
+    daoUsuarios.consultarSolicitudes(request.session.currentUser, function(err, result){
+        if (err){
+                console.log("ERROR")
+        }
+        else{
+            if(result){
+                console.log(result);
+                var posiblesamigos = [];
+                for(var j = 0; j < result.length; j++){
+                    daoUsuarios.getUsuarioid(result[j].usuario_envia, function(err, result2){
+                        if(err){
+                            console.log("ERROR");
+                        }
+                        else{
+                            
+                            posiblesamigos.push(result2);
+                        }
+                    })
+                }
+                console.log(posiblesamigos);
+                response.render("amigos", {posiblesamigos: posiblesamigos});
+            }
+        }
+    })
+    
 })
 app.post("/buscarAmigo",function(request,response){
-    console.log(request.body.buscadorAmigo);
-    daoUsuarios.buscarUsuario(request.body.buscadorAmigo, function (err, result){
+    
+    daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result){
         if(err){
             response.redirect("/profile");
         }
@@ -223,7 +247,17 @@ app.post("/buscarAmigo",function(request,response){
 
     })
 })
-
+app.get("/nuevoAmigo/:idAmigo", function(request,response){
+//Hay que comprobar que no hay ya amistad presente en estos dos ids.
+    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function(err){
+    if(err){
+        console.log("Error al enviar la peticion de amistad");
+    }
+    else{
+        response.redirect("/amigos");
+    }
+    })
+})
 
 app.post("/modify",function(request, response){
     //console.log(request.body);

@@ -48,23 +48,25 @@
                     Solicitudes de amigo
                 </div>
                 <div class="peticiones">
-
-                    <!--Aqui va un for con las peticiones restantes respecto el ID-->
-                    <div class="peticion">
-                            <div class="fotos">
-                             </div>
-                            <div class="Nombre">
-                        Adrian Dorta 
-                             </div>
-                            <div class="botones">
-                                 <div class="btn">
-                                    <a href="#">Aceptar</a>
-                                </div>
-                                 <div class="btn">
-                                    <a href="#">Rechazar</a>
-                                </div>
-                            </div>
-                    </div>
+						<ul>
+							<% posiblesamigos.forEach(function(usuario) { %>
+							<li>
+								<div class="peticion">
+									<div class="fotos">
+										<%= usuario.Imagen_perfil %>
+									</div>
+									<div class="Nombre">
+										<%= usuario.nombre %>
+									</div>
+		
+									<div class="botones">
+										<div class="btn"> <a href="YaseVera %>" class="btn">Aceptar</a></div>
+										<div class="btn"> <a href="YaseVera %>" class="btn">Rechazar</a></div>
+									</div>
+		
+							</li>
+							<% }); %>
+						</ul>
                 </div>
 			</div>
 			<div class="buscador">
