@@ -213,7 +213,7 @@ class DAOUsuarios {
                                     if (err) {
                                         callback(new Error("Error al enviar la solicitud de amistad"));
                                     }
-                                    else{
+                                    else {
                                         callback(null);
                                     }
                                 }
@@ -237,7 +237,7 @@ class DAOUsuarios {
                             callback(new Error("Error al obtener el id del recibidor"));
                         } else {
                             var id = filas[0].id;
-                            
+
                             connection.query("SELECT usuario_envia FROM solicitudesamistad WHERE usuario_recibe = ?", [id],
                                 function (err, filas) {
                                     connection.release();
@@ -279,6 +279,47 @@ class DAOUsuarios {
 
                         }
                     })
+            }
+        })
+    }
+
+    aceptarAmistad(email, id, callback) {
+
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de acceso a la base de datos"));
+            }
+            else {
+                connection.query("SELECT id FROM USUARIO WHERE email = ?", [email],
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error al obtener el id del recibidor"));
+                        } else {
+                            var ida = filas[0].id;
+
+                            connection.query("DELETE solicitudesamistad WHERE usuario_recibe = ? AND usuario_envia = ?", [ida, id],
+                                function (err, filas) {
+                                    
+                                    if (err) {
+                                        callback(new Error("Error al obtener las solicitudes de amistad"));
+                                    } else {
+                                        connection.query("INSERT INTO AMIGO(idAmigo1, idAmigo2) VALUES (?,?)", [id, ida], 
+                                        
+                                        function(err){
+                                            if (err){
+                                                callback(new Error("Error al insertar la amistad"));
+                                            }
+                                            else{
+                                                callback(null);
+                                            }
+                                        }
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    }
+                )
             }
         })
     }
