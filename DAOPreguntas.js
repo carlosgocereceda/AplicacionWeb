@@ -101,5 +101,23 @@ class DAOPreguntas {
             }
         })
     }
+    getAllPreguntasRespondidasPorUsuario(id, callback){
+        this.pool.getConnection(function(err,connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query("SELECT * FROM USUARIORESPONDE WHERE idUsuario = ?",
+                [id], function(err,res){
+                    if(err){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else{
+                        callback(err,res);
+                    }
+                })
+            }
+        })
+    }
 }
 module.exports = DAOPreguntas;

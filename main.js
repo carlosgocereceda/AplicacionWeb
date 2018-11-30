@@ -193,7 +193,30 @@ app.get("/preguntasAleatorias/:id", function(request, response){
         }
         else{
             console.log(res);
-            response.render("pregunta",{enunciado: res[0].pregunta});
+            daoPreguntas.getAllPreguntasRespondidasPorUsuario(request.session.currentId,
+                function(err,filas){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        let existe = 0;
+                        //console.log("filas" + filas.length);
+                        for(let i = 0; i < filas.length; i++){
+                            //console.log("pepito " +filas[i]);
+                            if(filas[i].idPregunta == res[0].id){
+                                existe += 1;
+                            }
+                        }
+                        if(existe > 0){
+                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
+                        }
+                        else{
+                            console.log("estoy por aquí " + res[0].pregunta);
+                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
+                        }
+                    }
+                })
+            
         }
     })
     
@@ -217,15 +240,32 @@ app.get("/crearPregunta", function(request, response){
 })
 
 app.post("/crearPregunta", function(request, response){
+    console.log("carlos, he sacado esto ");
+    console.log(request.body);
+    let preguntas_split = request.body.comment.split("\r\\");
+    console.log(preguntas_split);
     daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado,request.body.pCorrecta, request.body.p1, 
         request.body.p2, request.body.p3,  function(err){
             if(err){
                 console.log(err);
             }
             else{
+                
                 response.redirect("/preguntasAleatorias");
             }
         });
+})
+
+app.get("/contestarPregunta/:id", function(request, response){
+    daoPreguntas.getPreguntabyId(request.params.id, function(err,res){
+        if(err){
+            console.log(err);
+        }
+        else{
+            let pregunta = res[0];
+            console.log(pregunta);
+        }
+    })
 })
 //------------------------IMAGEN DE USUARIO---------------------
 

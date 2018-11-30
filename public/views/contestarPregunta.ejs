@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <link rel="icon" href="">
+    <title>Let´s Talk!</title>
+    <link rel="stylesheet" type="text/css" href="css/contestarPregunta.css" media="screen" />
+</head>
+
+<body>
+    <div class="contenedor">
+        <div class="header">
+            <div class="titulo">Let´s Talk!</div>
+            <div class="botones">
+                <div class="Perfil">
+                    <a href="\perfil.html">
+                        PERFIL
+                    </a>
+                </div>
+                <div class="Amigos">
+                    <a href="\amigos">
+                        AMIGOS
+                    </a>
+                </div>
+                <div class="Preguntas">
+                    <a href="#">
+                        PREGUNTAS
+                    </a>
+                </div>
+                <div class="Desconectar">
+                    <a href="/logout">
+                        DESCONECTAR
+                    </a>
+                </div>
+                <div class="Puntos">
+                    <a href="#">
+                        a
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="Actual">
+            <!--Esto es para darle al usuario un feedback de en que parte de la pagina esta.-->
+            Actualmente estas en: Preguntas
+        </div>
+        <div class="contenido">
+            <form method="POST" action="/contestarPregunta">
+                <input type="radio" name="r1" value="R1" id="formR1">
+                <label for="formR1">Respuesta1</label>
+                <input type="submit" value="Enviar">
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
