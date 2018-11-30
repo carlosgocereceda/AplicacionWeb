@@ -295,6 +295,9 @@ app.post("/buscarAmigo",function(request,response){
         }
         else{
             response.render("nuevosAmigos", {listaNombre: result});
+        }
+    })
+})
 
 app.get("/nuevoAmigo/:idAmigo", function(request,response){
 //Hay que comprobar que no hay ya amistad presente en estos dos ids.
