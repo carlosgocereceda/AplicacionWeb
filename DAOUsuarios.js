@@ -105,6 +105,7 @@ class DAOUsuarios {
                             //   console.log(filas[0].PASSWORD); PREGUNTAR POR QUE console.log(filas[0].password);
                             //   saca undefined
                             if (filas.length >= 0) {
+
                                 if (filas[0].PASSWORD == password) {
                                     callback(null, true);
                                 }
@@ -206,7 +207,7 @@ class DAOUsuarios {
                             callback(new Error("Error al realizar la consulta"));
                         }
                         else {
-                            var idenvia = filas[0].ID;
+                            let idenvia = filas[0].ID;
                             connection.query("INSERT INTO solicitudesamistad (usuario_envia, usuario_recibe) VALUES (?,?)", [idenvia, idAmigo],
                                 function (err) {
                                     connection.release();
@@ -236,7 +237,7 @@ class DAOUsuarios {
                         if (err) {
                             callback(new Error("Error al obtener el id del recibidor"));
                         } else {
-                            var id = filas[0].id;
+                            let id = filas[0].id;
 
                             connection.query("SELECT usuario_envia FROM solicitudesamistad WHERE usuario_recibe = ?", [id],
                                 function (err, filas) {
@@ -264,13 +265,13 @@ class DAOUsuarios {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query(`SELECT * FROM USUARIO WHERE id = ?`, [id],
+                connection.query(`SELECT * FROM usuario WHERE id = ?`, [id],
                     function (err, filas) {
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
-                            if (filas.length > 0) {
+                            if (filas.length >= 0) {
                                 callback(null, filas);
                             }
                             else {
@@ -295,24 +296,24 @@ class DAOUsuarios {
                         if (err) {
                             callback(new Error("Error al obtener el id del recibidor"));
                         } else {
-                            var ida = filas[0].id;
+                            let ida = filas[0].id;
 
-                            connection.query("DELETE solicitudesamistad WHERE usuario_recibe = ? AND usuario_envia = ?", [ida, id],
+                            connection.query("DELETE FROM solicitudesamistad WHERE usuario_recibe = ? AND usuario_envia = ?", [ida, id],
                                 function (err, filas) {
-                                    
+
                                     if (err) {
                                         callback(new Error("Error al obtener las solicitudes de amistad"));
                                     } else {
-                                        connection.query("INSERT INTO AMIGO(idAmigo1, idAmigo2) VALUES (?,?)", [id, ida], 
-                                        
-                                        function(err){
-                                            if (err){
-                                                callback(new Error("Error al insertar la amistad"));
+                                        connection.query("INSERT INTO AMIGOS (idAmigo1, idAmigo2) VALUES (?,?)", [id, ida],
+
+                                            function (err) {
+                                                if (err) {
+                                                    callback(new Error("Error al insertar la amistad"));
+                                                }
+                                                else {
+                                                    callback(null);
+                                                }
                                             }
-                                            else{
-                                                callback(null);
-                                            }
-                                        }
                                         )
                                     }
                                 }
@@ -323,5 +324,77 @@ class DAOUsuarios {
             }
         })
     }
+    selectAllbyID(id, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                let consulta = "SELECT * FROM usuario WHERE id IN (";
+                for (let i = 0; i < id.length; i++) {
+                    if (i < id.length - 1) {
+                        consulta += "?,"
+                    }
+                    else {
+                        consulta += "?)";
+                    }
+                }
+                console.log(consulta);
+                connection.query(consulta, id,
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            if (filas.length >= 0) {
+                                callback(null, filas);
+                            }
+                            else {
+                                callback(null, null);
+                            }
+                        }
+                    })
+            }
+        })
+    }
+    getAmigos(email, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de acceso a la base de datos"));
+            }
+            else {
+                connection.query("SELECT id FROM USUARIO WHERE email = ?", [email],
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error al obtener el id del recibidor"));
+                        } else {
+                            let ida = filas[0].id;
+                            connection.query("SELECT * FROM AMIGOS WHERE idAmigo1 = ? OR idAmigo2 = ?", [ida,ida],
+                            function(err,result){
+                                if(err){
+                                    callback(new Error("Error al encontrar tus amigos"));
+                                }
+                                else{
+                                    let amigos=[];
+                                    if(result >=0){
+                                        for(let i = 0; i < result.length; i++){
+                                            if(result[i].idAmigo1 == ida){
+                                                amigos.push(result[i].idAmigo2);
+                                            }
+                                            else{
+                                                amigos.push(result[i].idAmigo1);
+                                            }
+                                        }
+                                        callback(null, amigos);
+                                    }
+                                }
+
+                            })
+                        }
+                    })
+            }
+        })
+    }
+
 }
 module.exports = DAOUsuarios;

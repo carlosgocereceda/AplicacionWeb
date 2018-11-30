@@ -215,21 +215,27 @@ app.get("/amigos", function(request,response){
         }
         else{
             if(result){
-                console.log(result);
-                var posiblesamigos = [];
-                for(var j = 0; j < result.length; j++){
-                    daoUsuarios.getUsuarioid(result[j].usuario_envia, function(err, result2){
-                        if(err){
-                            console.log("ERROR");
-                        }
-                        else{
-                            
-                            posiblesamigos.push(result2);
-                        }
-                    })
-                }
-                console.log(posiblesamigos);
-                response.render("amigos", {posiblesamigos: posiblesamigos});
+               
+                let arrayID = result.map(element=> element.usuario_envia);
+               
+                daoUsuarios.selectAllbyID(arrayID, function(err, result2){
+                    if(err){
+                        console.log("Error al buscar amigos");
+                    }
+                    else{
+                        daoUsuarios.getAmigos(request.session.currentUser,function(err, result3){
+                            if(err){
+                                console.log("Error al encontrar tus amigos");
+                            }
+                            else{
+                                response.render("amigos", {posiblesamigos: result2, amigosya : result3});
+                            }
+
+                        })
+                        
+                    }
+                })
+                
             }
         }
     })
@@ -287,6 +293,18 @@ app.post("/modify",function(request, response){
                 })
         
     
+})
+app.get("/aceptarAmistad/:idAmigo", function(request,response){
+    daoUsuarios.aceptarAmistad(request.session.currentUser, request.params.idAmigo, function(err){
+        if(err){
+            console.log(err.message);
+        }
+        else{
+            response.redirect("/amigos");
+        }
+    })
+
+
 })
 
 

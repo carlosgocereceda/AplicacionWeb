@@ -60,10 +60,10 @@
 									</div>
 		
 									<div class="botones">
-										<div class="btn"> <a href="/aceptarAmistad/<%usuario.id%>" class="btn">Aceptar</a></div>
-										<div class="btn"> <a href="/rechazarAmistad/<%usuario.id%>" class="btn">Rechazar</a></div>
+										<div class="btn"> <a href="/aceptarAmistad/<%=usuario.id%>" class="btn">Aceptar</a></div>
+										<div class="btn"> <a href="/rechazarAmistad/<%=usuario.id%>" class="btn">Rechazar</a></div>
 									</div>
-		
+								</div>
 							</li>
 							<% }); %>
 						</ul>
@@ -94,13 +94,20 @@
                     Mis amigos
                 </div>
                 <div class="Amigos">
+					<ul>
+						<% amigosya.forEach(function(usuario) { %>
+					<li>
                     <div class="amigo">
                         <div class="fotoAmigo">
+								<%= usuario.Imagen_perfil %>
                         </div>
                         <div class="NombreAmigo">
-                        Carlos Gomez
+								<%= usuario.nombre %>
                         </div>
-                    </div>
+					</div>
+					</li>
+					<% }); %>
+						</ul>
                      
                     
                 </div>

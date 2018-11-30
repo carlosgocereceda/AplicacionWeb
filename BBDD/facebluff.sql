@@ -41,8 +41,8 @@ CREATE TABLE `amigos` (
 CREATE TABLE `pregunta` (
   `id` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
-  `pregunta` varchar(1000) NOT NULL,
-  `respuesta_correcta` varchar(1000) NOT NULL
+  `pregunta` letchar(1000) NOT NULL,
+  `respuesta_correcta` letchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -55,7 +55,7 @@ CREATE TABLE `solicitudesamistad` (
   `id` int(11) NOT NULL,
   `usuario_envia` int(11) NOT NULL,
   `usuario_recibe` int(11) NOT NULL,
-  `texto` varchar(1000) DEFAULT NULL
+  `texto` letchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -65,9 +65,9 @@ CREATE TABLE `solicitudesamistad` (
 --
 
 CREATE TABLE `usuario` (
-  `email` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
+  `email` letchar(100) NOT NULL,
+  `password` letchar(100) NOT NULL,
+  `nombre` letchar(100) NOT NULL,
   `sexo` tinyint(1) NOT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
   `Imagen_perfil` blob,
@@ -90,7 +90,7 @@ INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`
 CREATE TABLE `usuarioresponde` (
   `id` int(11) NOT NULL,
   `idPregunta` int(11) NOT NULL,
-  `respuesta` varchar(1000) NOT NULL,
+  `respuesta` letchar(1000) NOT NULL,
   `correcta` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
