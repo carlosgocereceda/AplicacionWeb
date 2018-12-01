@@ -47,18 +47,20 @@
         </div>
         <div class="contenido">
             <form method="POST" action="/contestarPregunta">
+                <input type="hidden" name="id"value="<%= pregunta.id %>"> 
+                <input type="hidden" name="respuestas"value="<%= pregunta.respuestas %>">
                 <%= pregunta.pregunta %>
-                <div class="propio">
-                    <input type="radio" name="r>" value="Ri">
-                    <input type="text" name="texto" id="formTexto">
-                </div>
+                
                 <% for(let i = 0; i < pregunta.respuestas.length; i++){ %>
                 <div class="respuesta">
-                    <input type="radio" name="<%i%>" value="Ri" id="form<%i%>">
-                    <label for="form<%i%>"> <%= pregunta.respuestas[i].replace(",","") %></label>
+                    <input type="radio" name="radio" value="R<%=i%>" id="form<%=i%>">
+                    <label for="form<%=i%>"> <%= pregunta.respuestas[i].replace(",","") %></label>
                 </div>
                 <% }; %>
-                
+                <div class="propio">
+                    <input type="radio" name="propio" value="propio" >
+                    <input type="text" name="texto" id="formTexto">
+                </div>
                 <div class="enviar">
                     <input type="submit" value="Enviar">
                 </div>

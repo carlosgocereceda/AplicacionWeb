@@ -86,13 +86,8 @@ input{
 	margin-top: 8px;
 	width: 100%;
 }
-.preguntaIncorrecta{
-    background-color: #f43d3d
-}
-.preguntaCorrecta{
-    background-color: #04ab74;
-}
-.preguntaIncorrect{
-	display: flex;
-	flex-direction: column;
+#textAreaRespuestas{
+	margin-top: 7px;
+	width: 675px;
+	height: 150px;
 }

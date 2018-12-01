@@ -211,7 +211,7 @@ app.get("/preguntasAleatorias/:id", function(request, response){
                             response.render("pregunta",{contestado: existe, pregunta: res[0]});
                         }
                         else{
-                            console.log("estoy por aquí " + res[0].pregunta);
+                            //console.log("estoy por aquí " + res[0].pregunta);
                             response.render("pregunta",{contestado: existe, pregunta: res[0]});
                         }
                     }
@@ -245,7 +245,7 @@ app.post("/crearPregunta", function(request, response){
    // request.body.comment.replace("\r", "");
     //let preguntas_split = request.body.comment.split('\n');
     var respuestas = request.body.comment.replace(/\r\n/g,"\n").split("\n");
-    console.log(respuestas);
+    //console.log(respuestas);
     if(respuestas.length < 2){
         console.log("No se pueden crear preguntas con menos de dos respuestas");
     }
@@ -272,7 +272,7 @@ app.get("/contestarPregunta/:id", function(request, response){
             let pregunta = res[0];
             //console.log(pregunta);
             pregunta.respuestas = pregunta.respuestas.split(",");
-            console.log(pregunta);
+            //console.log(pregunta);
             response.render("contestarPregunta", {pregunta:pregunta});
             //console.log(pregunta);
         }
@@ -280,14 +280,35 @@ app.get("/contestarPregunta/:id", function(request, response){
 })
 
 app.post("/contestarPregunta", function(request, response){
-    console.log(request.body);
+    //console.log(request.body);
+    if(request.body.radio){
+
+        let arrayRespuestas = request.body.respuestas.split(",");
+        let respuesta = arrayRespuestas[request.body.radio.replace("R","")];
+        let idRespuesta =request.body.radio.replace("R","");
+        //console.log(respuesta);
+
+        daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId,request.body.id, respuesta, idRespuesta,
+            function(err,res){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    response.redirect("/preguntasAleatorias");
+                }
+            })
+        //console.log("ha costestado radio");
+    }
+    else if(request.body.propio){
+        //console.log("ha costestado propio");
+    }
 })
 //------------------------IMAGEN DE USUARIO---------------------
 
 app.get("/imagenUsuario", function (request, response) {
 
     daoUsuarios.getUserImageName(request.session.currentUser, function (err, res) {
-        console.log(res);
+        //console.log(res);
 
         if (res === null) {
             //console.log("aqui");
@@ -298,7 +319,7 @@ app.get("/imagenUsuario", function (request, response) {
         else {
             //console.log("holi");
             let pathImg = path.join(__dirname, "profile_imgs", res);
-            console.log(pathImg);
+            //console.log(pathImg);
             response.sendFile(pathImg)
         }
     })

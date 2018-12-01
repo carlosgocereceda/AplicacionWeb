@@ -107,13 +107,32 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else{
-                connection.query("SELECT * FROM USUARIORESPONDE WHERE idUsuario = ?",
+                connection.query("SELECT * FROM usuariorespondeparasimismo WHERE idUsuario = ?",
                 [id], function(err,res){
                     if(err){
                         callback(new Error("Error de acceso a la base de datos"));
                     }
                     else{
                         callback(err,res);
+                    }
+                })
+            }
+        })
+    }
+    insertaRespuestaUnoMismo(idUsuario, idPregunta, respuesta, idRespuesta, callback){
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query("INSERT INTO usuariorespondeparasimismo (idPregunta, idUsuario, respuesta, idRespuesta) VALUES (?,?,?,?)",
+                [idPregunta,idUsuario,respuesta,idRespuesta],
+                function(err,res){
+                    if(err){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else{
+                        callback(null, res);
                     }
                 })
             }
