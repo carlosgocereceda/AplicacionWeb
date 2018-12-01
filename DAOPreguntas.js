@@ -10,7 +10,7 @@ class DAOPreguntas {
 
     }
 
-    insertarPregunta(id, enunciado, respuesta_correcta, respuesta2, respuesta3, respuesta4, callback){
+    insertarPregunta(id, enunciado, respuestas, callback){
         //console.log("estoy aqui");
         this.pool.getConnection(function(err,connection){
             if(err){
@@ -18,9 +18,9 @@ class DAOPreguntas {
             }
             else{
                 connection.query(`INSERT INTO 
-                PREGUNTA(idUsuarioCrea, pregunta, respuesta_correcta, respuesta2, respuesta3, respuesta4) 
-                VALUES (?,?,?,?,?,?)`,
-                [id, enunciado, respuesta_correcta, respuesta2, respuesta3, respuesta4],
+                PREGUNTA(idUsuarioCrea, pregunta, respuestas) 
+                VALUES (?,?,?)`,
+                [id, enunciado, respuestas.join(",")],
                 function(err, filas){
                     if(err){
                         callback(new Error("Error de acceso a la base de datos"));

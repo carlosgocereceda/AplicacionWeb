@@ -240,12 +240,17 @@ app.get("/crearPregunta", function(request, response){
 })
 
 app.post("/crearPregunta", function(request, response){
-    console.log("carlos, he sacado esto ");
-    console.log(request.body);
-    let preguntas_split = request.body.comment.split("\r\\");
-    console.log(preguntas_split);
-    daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado,request.body.pCorrecta, request.body.p1, 
-        request.body.p2, request.body.p3,  function(err){
+    //console.log("carlos, he sacado esto ");
+    //console.log(request.body);
+   // request.body.comment.replace("\r", "");
+    //let preguntas_split = request.body.comment.split('\n');
+    var respuestas = request.body.comment.replace(/\r\n/g,"\n").split("\n");
+    console.log(respuestas);
+    if(respuestas.length < 2){
+        console.log("No se pueden crear preguntas con menos de dos respuestas");
+    }
+    else{
+        daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado,respuestas,  function(err){
             if(err){
                 console.log(err);
             }
@@ -254,6 +259,8 @@ app.post("/crearPregunta", function(request, response){
                 response.redirect("/preguntasAleatorias");
             }
         });
+    }
+  
 })
 
 app.get("/contestarPregunta/:id", function(request, response){
@@ -263,9 +270,17 @@ app.get("/contestarPregunta/:id", function(request, response){
         }
         else{
             let pregunta = res[0];
+            //console.log(pregunta);
+            pregunta.respuestas = pregunta.respuestas.split(",");
             console.log(pregunta);
+            response.render("contestarPregunta", {pregunta:pregunta});
+            //console.log(pregunta);
         }
     })
+})
+
+app.post("/contestarPregunta", function(request, response){
+    console.log(request.body);
 })
 //------------------------IMAGEN DE USUARIO---------------------
 

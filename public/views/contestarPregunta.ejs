@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <link rel="icon" href="">
     <title>Let´s Talk!</title>
-    <link rel="stylesheet" type="text/css" href="css/contestarPregunta.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/contestarPregunta.css" media="screen" />
 </head>
 
 <body>
@@ -47,9 +47,21 @@
         </div>
         <div class="contenido">
             <form method="POST" action="/contestarPregunta">
-                <input type="radio" name="r1" value="R1" id="formR1">
-                <label for="formR1">Respuesta1</label>
-                <input type="submit" value="Enviar">
+                <%= pregunta.pregunta %>
+                <div class="propio">
+                    <input type="radio" name="r>" value="Ri">
+                    <input type="text" name="texto" id="formTexto">
+                </div>
+                <% for(let i = 0; i < pregunta.respuestas.length; i++){ %>
+                <div class="respuesta">
+                    <input type="radio" name="<%i%>" value="Ri" id="form<%i%>">
+                    <label for="form<%i%>"> <%= pregunta.respuestas[i].replace(",","") %></label>
+                </div>
+                <% }; %>
+                
+                <div class="enviar">
+                    <input type="submit" value="Enviar">
+                </div>
             </form>
         </div>
     </div>
