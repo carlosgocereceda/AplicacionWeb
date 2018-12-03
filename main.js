@@ -75,25 +75,25 @@ app.listen(config.port, function (err) {
 //daoUsuarios.deleteUsuario("cargom11@ucm.es", cb_deleteUsuario);
 
 //---------------------------------GET PARA EL LOGIN------------------------------
-app.get("/login", function(request, response){
-    response.render("login",{errorMsg: null} );
+app.get("/login", function (request, response) {
+    response.render("login", { errorMsg: null });
 })
 
 //---------------------------------POST PARA EL LOGIN-----------------------------
 app.post("/loginUser", function (request, response) {
     //console.log(request.body);
-    daoUsuarios.isUserCorrect(request.body.email, request.body.password, function(err,solution){
+    daoUsuarios.isUserCorrect(request.body.email, request.body.password, function (err, solution) {
 
-         
-        if(err){
+
+        if (err) {
             console.log("Error inesperado");
         }
-        else if(solution){
+        else if (solution) {
             request.session.currentUser = request.body.email;
             response.redirect("/profile");
         }
-        else{
-            response.render("login",{errorMsg: true} );
+        else {
+            response.render("login", { errorMsg: true });
         }
 
     })
@@ -102,35 +102,35 @@ app.post("/loginUser", function (request, response) {
 
 //-------------------------------REGISTRAR USUARIO-------------------------------
 
-app.get("/register", function(request, response){
+app.get("/register", function (request, response) {
     response.redirect("/nuevoUsuario.html")
 })
 
-app.post("/register", function(request, response){
+app.post("/register", function (request, response) {
     //console.log(request.body);
-    daoUsuarios.getUsuario(request.body.email, function(err, res){
-        
-        if(res == null){
+    daoUsuarios.getUsuario(request.body.email, function (err, res) {
+
+        if (res == null) {
             let sexo;
-            if(request.body.sexo == "hombre"){
+            if (request.body.sexo == "hombre") {
                 sexo = 0;
             }
-            else{
+            else {
                 sexo = 1;
             }
-            console.log("imagen|" +  request.body.Imagen_perfil + "|");
-            if(request.body.Imagen_perfil = ""){
+            console.log("imagen|" + request.body.Imagen_perfil + "|");
+            if (request.body.Imagen_perfil = "") {
                 console.log("pues si");
             }
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
                 null,
-                function(err){
-                    if(!err){
+                function (err) {
+                    if (!err) {
                         request.session.currentUser = request.body.email;
                         response.redirect("/profile");
                     }
-                    else{
+                    else {
                         console.log(err);
                     }
                 })
@@ -139,11 +139,11 @@ app.post("/register", function(request, response){
 })
 
 //-------------------------------MID PARA SI NO ESTÁ IDENTIFICADO----------------
-app.use(function(request, response, next){
-    if(request.session.currentUser){
+app.use(function (request, response, next) {
+    if (request.session.currentUser) {
         response.locals = request.session.currentUser;
     }
-    else{
+    else {
         response.redirect("/login");
     }
     next();
@@ -151,24 +151,24 @@ app.use(function(request, response, next){
 //-------------------------------------------------------------------------------
 
 //--------------------------------------PROFILE----------------------------------
-app.get("/profile",function(request,response){
+app.get("/profile", function (request, response) {
     //console.log("sdf fsdf fasdf");
-    daoUsuarios.getUsuario(request.session.currentUser, function(err,res){
+    daoUsuarios.getUsuario(request.session.currentUser, function (err, res) {
         //console.log(res);
-        if(res != null){
-            
+        if (res != null) {
+
             let nombre = res[0].nombre;
             let edad = res[0].fecha_nacimiento;
             let sexo = "";
-            if(res[0].sexo == 0){
+            if (res[0].sexo == 0) {
                 sexo = "Hombre";
             }
-            else{
+            else {
                 sexo = "Mujer";
             }
             let puntos = "0 puntos";
 
-            response.render("perfil",{nombre:nombre, edad:edad, sexo: sexo, puntos: puntos});
+            response.render("perfil", { nombre: nombre, edad: edad, sexo: sexo, puntos: puntos });
         }
     })
     //Creo que hacen falta coockies para esto
@@ -177,18 +177,18 @@ app.get("/profile",function(request,response){
 
 //------------------------IMAGEN DE USUARIO---------------------
 
-app.get("/imagenUsuario", function(request, response){
-    
-    daoUsuarios.getUserImageName(request.session.currentUser, function(err, res){
+app.get("/imagenUsuario", function (request, response) {
+
+    daoUsuarios.getUserImageName(request.session.currentUser, function (err, res) {
         console.log(res);
-        
-        if(res === null){
+
+        if (res === null) {
             //console.log("aqui");
             let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
             response.sendFile(pathImg)
-           // response.sendFile("C:\Users\carlo\Desktop\4\AW\Practicas\PRACTICAS OBLIGATORIAS\P5\public\img\NoPerfil.jpg");
+            // response.sendFile("C:\Users\carlo\Desktop\4\AW\Practicas\PRACTICAS OBLIGATORIAS\P5\public\img\NoPerfil.jpg");
         }
-        else{
+        else {
             //console.log("holi");
             let pathImg = path.join(__dirname, "profile_imgs", res);
             console.log(pathImg);
@@ -198,108 +198,122 @@ app.get("/imagenUsuario", function(request, response){
 })
 //--------------------------------------------------------------
 //------------------------LOGOUT--------------------------------
-app.get("/logout", function(request, response){
+app.get("/logout", function (request, response) {
     request.session.destroy();
     response.redirect("/login");
 })
 //--------------------------------------------------------------
 
-app.get("/modify",function(request, response){
+app.get("/modify", function (request, response) {
     response.redirect("/modificar.html");
 })
 
-app.get("/amigos", function(request,response){
-    daoUsuarios.consultarSolicitudes(request.session.currentUser, function(err, result){
-        if (err){
-                console.log("ERROR")
+app.get("/amigos", function (request, response) {
+    daoUsuarios.consultarSolicitudes(request.session.currentUser, function (err, result) {
+        if (err) {
+            console.log("ERROR")
         }
-        else{
-            if(result){
-               
-                let arrayID = result.map(element=> element.usuario_envia);
-               
-                daoUsuarios.selectAllbyID(arrayID, function(err, result2){
-                    if(err){
-                        console.log("Error al buscar amigos");
-                    }
-                    else{
-                        daoUsuarios.getAmigos(request.session.currentUser,function(err, result3){
-                            if(err){
-                                console.log("Error al encontrar tus amigos");
-                            }
-                            else{
-                                response.render("amigos", {posiblesamigos: result2, amigosya : result3});
-                            }
-
-                        })
-                        
-                    }
-                })
+        else {
+            if (result) {
                 
+                let arrayID = result.map(element => element.usuario_envia);
+                console.log(arrayID.length);
+                if (arrayID.length > 0) {
+                    daoUsuarios.selectAllbyID(arrayID, function (err, result2) {
+                        if (err) {
+                            console.log("Error al buscar amigos");
+                        }
+                        else {
+                            daoUsuarios.getAmigos(request.session.currentUser, function (err, result3) {
+                                if (err) {
+                                    console.log("Error al encontrar tus amigos");
+                                }
+                                else {
+                                    console.log("Estoy aqui1");
+                                    response.render("amigos", { posiblesamigos: result2, amigosya: result3 });
+                                }
+                            })
+
+                        }
+                    })
+                }
+                else {
+                    daoUsuarios.getAmigos(request.session.currentUser, function (err, result3) {
+                        if (err) {
+                            console.log("Error al encontrar tus amigos");
+                            
+                        }
+                        else {
+                            console.log(result3);
+                            let posiblesamigos = [];
+                            response.render("amigos", {  posiblesamigos : posiblesamigos, amigosya: result3});
+                        }
+
+                    })
+                }
             }
         }
     })
-    
 })
-app.post("/buscarAmigo",function(request,response){
-    
-    daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result){
-        if(err){
+app.post("/buscarAmigo", function (request, response) {
+
+    daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result) {
+        if (err) {
             response.redirect("/profile");
         }
-        else{
-            response.render("nuevosAmigos", {listaNombre: result});
+        else {
+            response.render("nuevosAmigos", { listaNombre: result });
         }
 
     })
 })
-app.get("/nuevoAmigo/:idAmigo", function(request,response){
-//Hay que comprobar que no hay ya amistad presente en estos dos ids.
-    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function(err){
-    if(err){
-        console.log("Error al enviar la peticion de amistad");
-    }
-    else{
-        response.redirect("/amigos");
-    }
+app.get("/nuevoAmigo/:idAmigo", function (request, response) {
+    //Hay que comprobar que no hay ya amistad presente en estos dos ids.
+    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
+        if (err) {
+            console.log("Error al enviar la peticion de amistad");
+        }
+        else {
+            response.redirect("/amigos");
+        }
     })
 })
 
-app.post("/modify",function(request, response){
+app.post("/modify", function (request, response) {
     //console.log(request.body);
-            let sexo;
-            if(request.body.sexo == "hombre"){
-                sexo = 0;
+    let sexo;
+    if (request.body.sexo == "hombre") {
+        sexo = 0;
+    }
+    else {
+        sexo = 1;
+    }
+
+    if (request.body.Imagen_perfil = "") {
+        console.log("pues si");
+    }
+    console.log(request.session.currentUser);
+    daoUsuarios.modifyUser(request.session.currentUser, request.body.contrasenya,
+        request.body.nombre, sexo, request.body.fecha_nacimiento,
+        null,
+        function (err) {
+            if (!err) {
+                response.redirect("/profile");
             }
-            else{
-                sexo = 1;
+            else {
+                response.redirect("/register");
+                console.log(err);
             }
-           
-            if(request.body.Imagen_perfil = ""){
-                console.log("pues si");
-            }
-            console.log(request.session.currentUser);
-            daoUsuarios.modifyUser(request.session.currentUser, request.body.contrasenya,
-                request.body.nombre, sexo, request.body.fecha_nacimiento,
-                null,
-                function(err){
-                    if(!err){
-                        response.redirect("/profile");
-                    }
-                    else{
-                        response.redirect("/register");
-                        console.log(err);
-                    }
-                })
-        
-    
+        })
+
+
 })
-app.get("/aceptarAmistad/:idAmigo", function(request,response){
-    daoUsuarios.aceptarAmistad(request.session.currentUser, request.params.idAmigo, function(err){
-        if(err){
+app.get("/aceptarAmistad/:idAmigo", function (request, response) {
+    daoUsuarios.aceptarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
+        if (err) {
             console.log(err.message);
         }
-        else{
+        else {
             response.redirect("/amigos");
         }
     })
@@ -309,32 +323,32 @@ app.get("/aceptarAmistad/:idAmigo", function(request,response){
 
 
 
-function cb_insertaUsuario(err,result){
-    if(err){
+function cb_insertaUsuario(err, result) {
+    if (err) {
         console.log(err);
     }
 }
 
-function cb_isUserCorrect(err,result){
-    if(err){
+function cb_isUserCorrect(err, result) {
+    if (err) {
         console.log(err);
     }
-    else if(result){
+    else if (result) {
         console.log("contraseña correcta");
     }
-    else{
+    else {
         console.log("contraseña incorrecta");
     }
 }
 
-function cb_deleteUsuario(err,result){
-    if(err){
+function cb_deleteUsuario(err, result) {
+    if (err) {
         console.log(err);
     }
-    else if(result){
+    else if (result) {
         console.log("Eliminado correctamente");
     }
-    else{
+    else {
         console.log("");
     }
 }

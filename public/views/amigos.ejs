@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title></title>
 	<meta charset="utf-8">
-	<link rel ="icon" href= "">
+	<link rel="icon" href="">
 	<title>Let´s Answer!</title>
-	<link rel="stylesheet" type ="text/css" href="css/amigos.css" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="css/amigos.css" media="screen" />
 </head>
+
 <body>
 	<div class="contenedor">
 		<div class="header">
@@ -39,81 +41,88 @@
 				</div>
 			</div>
 		</div>
-		<div class="Actual"> <!--Esto es para darle al usuario un feedback de en que parte de la pagina esta.-->
+		<div class="Actual">
+			<!--Esto es para darle al usuario un feedback de en que parte de la pagina esta.-->
 			Actualmente estas en: Amigos
 		</div>
 		<div class="Info_amigos">
 			<div class="solicitudes">
 				<div class="subtitulo">
-                    Solicitudes de amigo
-                </div>
-                <div class="peticiones">
-						<ul>
-							<% posiblesamigos.forEach(function(usuario) { %>
-							<li>
-								<div class="peticion">
-									<div class="fotos">
-										<%= usuario.Imagen_perfil %>
-									</div>
-									<div class="Nombre">
-										<%= usuario.nombre %>
-									</div>
-		
-									<div class="botones">
-										<div class="btn"> <a href="/aceptarAmistad/<%=usuario.id%>" class="btn">Aceptar</a></div>
-										<div class="btn"> <a href="/rechazarAmistad/<%=usuario.id%>" class="btn">Rechazar</a></div>
-									</div>
+					Solicitudes de amigo
+				</div>
+				<div class="peticiones">
+					<ul>
+						<% if(posiblesamigos.length > 0)  {%>
+						<% posiblesamigos.forEach(function(usuario) { %>
+						<li>
+							<div class="peticion">
+								<div class="fotos">
+									<%= usuario.Imagen_perfil %>
 								</div>
-							</li>
-							<% }); %>
-						</ul>
-                </div>
+								<div class="Nombre">
+									<%= usuario.nombre %>
+								</div>
+
+								<div class="botones">
+									<div class="btn"> <a href="/aceptarAmistad/<%=usuario.id%>" class="btn">Aceptar</a></div>
+									<div class="btn"> <a href="/rechazarAmistad/<%=usuario.id%>" class="btn">Rechazar</a></div>
+								</div>
+							</div>
+						</li>
+						<% }); %>
+						<% }; %>
+					</ul>
+				</div>
 			</div>
 			<div class="buscador">
-                <div class="subtitulo">
-                    Busqueda de amigos
-                </div>
-                <div class="buscador">
-                    <div class="buscarpor">
-                        Buscar por nombre
-                    </div>
-                    <div class="barrabusqueda">
-                        <form method = "POST" action= "/buscarAmigo">
-                            <input type="text" name="buscadorAmigo">
-                            <input type="submit" name ="Buscar">
-                        </form>
-                    </div>
-                    <div class="btnBuscar">
+				<div class="subtitulo">
+					Busqueda de amigos
+				</div>
+				<div class="buscador">
+					<div class="buscarpor">
+						Buscar por nombre
+					</div>
+					<div class="barrabusqueda">
+						<form method="POST" action="/buscarAmigo">
+							<input type="text" name="buscadorAmigo">
+							<input type="submit" name="Buscar">
+						</form>
+					</div>
+					<div class="btnBuscar">
 
-                    </div>
-                </div>
-			
+					</div>
+				</div>
+
 			</div>
+			
 			<div class="amigosya">
 				<div class="subtitulo">
-                    Mis amigos
-                </div>
-                <div class="Amigos">
+					Mis amigos
+				</div>
+				<div class="Amigos">
 					<ul>
+					<%	if(amigosya.length > 0) { %>
 						<% amigosya.forEach(function(usuario) { %>
-					<li>
-                    <div class="amigo">
-                        <div class="fotoAmigo">
-								<%= usuario.Imagen_perfil %>
-                        </div>
-                        <div class="NombreAmigo">
-								<%= usuario.nombre %>
-                        </div>
-					</div>
-					</li>
-					<% }); %>
-						</ul>
-                     
-                    
-                </div>
-            </div>
+						<li>
+							<div class="amigo">
+								<div class="fotoAmigo">
+									<%= usuario.Imagen_perfil %>
+								</div>
+								<div class="NombreAmigo">
+									<%= usuario.nombre %>
+								</div>
+							</div>
+						</li>
+						<% }); %>
+						<% } %>
+					</ul>
+
+
+				</div>
+			</div>
 		</div>
 
 	</div>
 </body>
+
 </html>

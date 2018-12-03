@@ -358,6 +358,7 @@ class DAOUsuarios {
         })
     }
     getAmigos(email, callback) {
+        let amigos=[];
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de acceso a la base de datos"));
@@ -375,17 +376,43 @@ class DAOUsuarios {
                                     callback(new Error("Error al encontrar tus amigos"));
                                 }
                                 else{
-                                    let amigos=[];
-                                    if(result >=0){
-                                        for(let i = 0; i < result.length; i++){
-                                            if(result[i].idAmigo1 == ida){
-                                                amigos.push(result[i].idAmigo2);
+                                    
+                                    if(result.length > 0){
+                                        for(let j = 0; j < result.length; j++){
+                                            if(result[j].idAmigo1 == ida){
+                                                amigos.push(result[j].IDAMIGO2);
+                                                console.log(amigos);
                                             }
                                             else{
-                                                amigos.push(result[i].idAmigo1);
+                                                amigos.push(result[j].IDAMIGO1);
+                                                console.log(amigos);
                                             }
                                         }
-                                        callback(null, amigos);
+                                        console.log(amigos);
+                                        let consulta = "SELECT * FROM usuario WHERE id IN (";
+                                        for (let i = 0; i < amigos.length; i++) {
+                                            if (i < amigos.length - 1) {
+                                                consulta += "?,"
+                                            }
+                                            else {
+                                                consulta += "?)";
+                                            }
+                                        }
+                                        connection.query(consulta, amigos,
+                                            function (err, filas) {
+                                                if (err) {
+                                                    callback(new Error("Error de acceso a la base de datos"));
+                                                }
+                                                else {
+                                                
+                                                    if (filas.length >= 0) {
+                                                        callback(null, filas);
+                                                    }
+                                                    else {
+                                                        callback(null, null);
+                                                    }
+                                                }
+                                            })
                                     }
                                 }
 
