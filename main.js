@@ -200,20 +200,21 @@ app.get("/preguntasAleatorias/:id", function(request, response){
                     }
                     else{
                         let existe = 0;
-                        //console.log("filas" + filas.length);
                         for(let i = 0; i < filas.length; i++){
-                            //console.log("pepito " +filas[i]);
                             if(filas[i].idPregunta == res[0].id){
                                 existe += 1;
                             }
                         }
-                        if(existe > 0){
-                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
-                        }
-                        else{
-                            //console.log("estoy por aquí " + res[0].pregunta);
-                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
-                        }
+                        daoUsuarios.getFriends(request.session.currentId, function(err,res){
+                            if(err){
+                                console.log(err);
+                            }
+                            else{
+                                let amigos = res;
+                                daoPreguntas.getRespeustaUnoMismo(request.params.id,)
+                            }
+                        })
+                        response.render("pregunta",{contestado: existe, pregunta: res[0]});
                     }
                 })
             
@@ -303,6 +304,13 @@ app.post("/contestarPregunta", function(request, response){
         //console.log("ha costestado propio");
     }
 })
+
+//------------------------CONTESTAR PREGUNTAS EN NOMBRE DE OTRO-------------------------------------
+
+
+
+//------------------------FIN CONTESTAR PREGUNTAS EN NOMBRE DE OTRO---------------------------------
+
 //------------------------IMAGEN DE USUARIO---------------------
 
 app.get("/imagenUsuario", function (request, response) {

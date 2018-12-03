@@ -283,5 +283,31 @@ class DAOUsuarios {
             }
         })
     }
+    getFriends(id, callback){
+        this.pool.getConnection(function(err, connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query("SELECT idAmigo1, idAmigo2 FROM amigos WHERE idAmigo1 = ? OR idAmigo2 = ?",
+                [id,id],
+                function(err, filas){
+                    
+                    if(err){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else{
+                        let amigos = [];
+                        for(let i = 0; i < filas.length; i++){
+                            if(filas[i].idAmigo1 != id) amigos.push(filas[i].idAmigo1);
+                            else amigos.push(filas[i].idAmigo2)
+                        }
+                        console.log(amigos);
+                        callback(null, amigos);
+                    }
+                })
+            }
+        })
+    }
 }
 module.exports = DAOUsuarios;

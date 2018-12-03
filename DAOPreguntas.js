@@ -138,5 +138,25 @@ class DAOPreguntas {
             }
         })
     }
+    getRespeustaUnoMismo(idPregunta, idUsuario, callback){
+        this.pool.getConnection(function(err,connection){
+            if(err){
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else{
+                connection.query("SELECT * FROM usuariorespondeparasimismo"
+                + "WHERE idPregunta = ? AND idUsuario = ?",
+                [idPregunta, idUsuario],
+                function(err, filas){
+                    if(err){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    }
+                    else{
+                        callback(null, filas);
+                    }
+                })
+            }
+        })
+    }
 }
 module.exports = DAOPreguntas;
