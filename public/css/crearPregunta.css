@@ -72,28 +72,22 @@ h1{
     color:#262a35;
     text-align: center;
 }
-.bloque_preguntas{
-    margin-top: 2%;
+.contenido{
+	display: flex;
+	flex-direction: column;
 }
-.pregunta{
-    margin-bottom: 2%;
-    padding:1%;
-    border-style: solid;
-    border-color: #04ab74;
-    background-color: #e8e9ef;
-    text-align: center;
+.preguntaIncorrecta{
+	margin-top: 8px;
 }
-.crear_pregunta{
-    width: 220px;
-    margin: auto;
-    background-color: #04ab74;
-    padding:1%;
-    margin-top: 1%;
-    
+label{
+	height: 2px;
 }
-.crear_pregunta a{
-    color: white;
+input{
+	margin-top: 8px;
+	width: 100%;
 }
-.crear_pregunta a:hover{
-    color: #4c545c;
+#textAreaRespuestas{
+	margin-top: 7px;
+	width: 675px;
+	height: 150px;
 }

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <link rel="icon" href="">
     <title>Let´s Talk!</title>
-    <link rel="stylesheet" type="text/css" href="css/preguntasAleatorias.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/contestarPregunta.css" media="screen" />
 </head>
 
 <body>
@@ -46,33 +46,26 @@
             Actualmente estas en: Preguntas
         </div>
         <div class="contenido">
-            <h1>Preguntas seleccionadas anteriormente</h1>
-            <div class="bloque_preguntas">
-                <div class="pregunta">
-                    ¿Cuál es la peor prelícula de la historia?
+            <form method="POST" action="/contestarPregunta">
+                <input type="hidden" name="id"value="<%= pregunta.id %>"> 
+                <input type="hidden" name="respuestas"value="<%= pregunta.respuestas %>">
+                <%= pregunta.pregunta %>
+                
+                <% for(let i = 0; i < pregunta.respuestas.length; i++){ %>
+                <div class="respuesta">
+                    <input type="radio" name="radio" value="R<%=i%>" id="form<%=i%>">
+                    <label for="form<%=i%>"> <%= pregunta.respuestas[i].replace(",","") %></label>
                 </div>
-                <div class="pregunta">
-                    ¿En qué escuela primaria estudiaste?
+                <% }; %>
+                <div class="propio">
+                    <input type="radio" name="propio" value="propio" >
+                    <input type="text" name="texto" id="formTexto">
                 </div>
-                <div class="pregunta">
-                    ¿Nintendo Switch, PS4 o Xbox One?
+                <div class="enviar">
+                    <input type="submit" value="Enviar">
                 </div>
-                <div class="pregunta">
-                    ¿Cuál es tu plato favorito?
-                </div>
-                <div class="pregunta">
-                    ¿Cuál es el personaje más irritante de juego de tronos?
-                </div>
-            </div>
+            </form>
         </div>
-        <h1>¡Añade tus preguntas!</h1>
-        <div class="crear_pregunta">
-            <a href="#">
-                 CREAR NUEVA PREGUNTA
-            </a>
-        </div>
-        
-
     </div>
 </body>
 

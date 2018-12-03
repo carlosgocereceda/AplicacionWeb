@@ -9,6 +9,7 @@
 //------------------IMPORTACIONES NECESARIAS-------------------------------
 const config = require("./config");
 const DAOUsuarios = require("./DAOUsuarios");
+const DAOPreguntas = require("./DAOPreguntas");
 const path = require("path");
 const mysql = require("mysql");
 const express = require("express");
@@ -54,6 +55,7 @@ app.use(express.static(ficherosEstaticos));
 const pool = mysql.createPool(config.mysqlConfig);
 //Creamos los daos
 const daoUsuarios = new DAOUsuarios(pool);
+const daoPreguntas = new DAOPreguntas(pool);
 
 //-----------------LOCALIZACIÓN DE LAS PLANTILLAS-----------------------------
 app.set("view engine", "ejs");
@@ -90,7 +92,14 @@ app.post("/loginUser", function (request, response) {
         }
         else if (solution) {
             request.session.currentUser = request.body.email;
-            response.redirect("/profile");
+            daoUsuarios.getUsuario(request.session.currentUser, function(err, filas){
+                console.log("id " + filas[0].id);
+                request.session.currentId = filas[0].id;
+                console.log("id guardado " + request.session.currentId);
+                response.redirect("/profile");
+                
+            })
+            
         }
         else {
             response.render("login", { errorMsg: true });
@@ -128,6 +137,9 @@ app.post("/register", function (request, response) {
                 function (err) {
                     if (!err) {
                         request.session.currentUser = request.body.email;
+                        daoUsuarios.getUsuario(request.session.currentUser, function(err, filas){
+                            request.session.currentId = filas[0].id;
+                        })
                         response.redirect("/profile");
                     }
                     else {
@@ -174,13 +186,129 @@ app.get("/profile", function (request, response) {
     //Creo que hacen falta coockies para esto
 })
 
+app.get("/preguntasAleatorias/:id", function(request, response){
+    daoPreguntas.getPreguntabyId(request.params.id, function(err,res){
+        if(err){
+            console.log(err);
+        }
+        else{
+            console.log(res);
+            daoPreguntas.getAllPreguntasRespondidasPorUsuario(request.session.currentId,
+                function(err,filas){
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        let existe = 0;
+                        //console.log("filas" + filas.length);
+                        for(let i = 0; i < filas.length; i++){
+                            //console.log("pepito " +filas[i]);
+                            if(filas[i].idPregunta == res[0].id){
+                                existe += 1;
+                            }
+                        }
+                        if(existe > 0){
+                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
+                        }
+                        else{
+                            //console.log("estoy por aquí " + res[0].pregunta);
+                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
+                        }
+                    }
+                })
+            
+        }
+    })
+    
+})
 
+app.get("/preguntasAleatorias", function(request, response){
+    daoPreguntas.getPreguntaAleatoria(5, function(err,res){
+        if(err){
+            response.redirect("/profile");
+        }
+        else{
+            if(res != null){
+                response.render("preguntasAleatorias", {preguntas : res});
+            }
+        }
+    })
+})
+
+app.get("/crearPregunta", function(request, response){
+    response.render("crearPregunta");
+})
+
+app.post("/crearPregunta", function(request, response){
+    //console.log("carlos, he sacado esto ");
+    //console.log(request.body);
+   // request.body.comment.replace("\r", "");
+    //let preguntas_split = request.body.comment.split('\n');
+    var respuestas = request.body.comment.replace(/\r\n/g,"\n").split("\n");
+    //console.log(respuestas);
+    if(respuestas.length < 2){
+        console.log("No se pueden crear preguntas con menos de dos respuestas");
+    }
+    else{
+        daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado,respuestas,  function(err){
+            if(err){
+                console.log(err);
+            }
+            else{
+                
+                response.redirect("/preguntasAleatorias");
+            }
+        });
+    }
+  
+})
+
+app.get("/contestarPregunta/:id", function(request, response){
+    daoPreguntas.getPreguntabyId(request.params.id, function(err,res){
+        if(err){
+            console.log(err);
+        }
+        else{
+            let pregunta = res[0];
+            //console.log(pregunta);
+            pregunta.respuestas = pregunta.respuestas.split(",");
+            //console.log(pregunta);
+            response.render("contestarPregunta", {pregunta:pregunta});
+            //console.log(pregunta);
+        }
+    })
+})
+
+app.post("/contestarPregunta", function(request, response){
+    //console.log(request.body);
+    if(request.body.radio){
+
+        let arrayRespuestas = request.body.respuestas.split(",");
+        let respuesta = arrayRespuestas[request.body.radio.replace("R","")];
+        let idRespuesta =request.body.radio.replace("R","");
+        //console.log(respuesta);
+
+        daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId,request.body.id, respuesta, idRespuesta,
+            function(err,res){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    response.redirect("/preguntasAleatorias");
+                }
+            })
+        //console.log("ha costestado radio");
+    }
+    else if(request.body.propio){
+        //console.log("ha costestado propio");
+    }
+})
 //------------------------IMAGEN DE USUARIO---------------------
 
 app.get("/imagenUsuario", function (request, response) {
 
     daoUsuarios.getUserImageName(request.session.currentUser, function (err, res) {
-        console.log(res);
+
 
         if (res === null) {
             //console.log("aqui");
@@ -191,7 +319,7 @@ app.get("/imagenUsuario", function (request, response) {
         else {
             //console.log("holi");
             let pathImg = path.join(__dirname, "profile_imgs", res);
-            console.log(pathImg);
+            //console.log(pathImg);
             response.sendFile(pathImg)
         }
     })
@@ -264,18 +392,18 @@ app.post("/buscarAmigo", function (request, response) {
         else {
             response.render("nuevosAmigos", { listaNombre: result });
         }
-
     })
 })
-app.get("/nuevoAmigo/:idAmigo", function (request, response) {
-    //Hay que comprobar que no hay ya amistad presente en estos dos ids.
-    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
-        if (err) {
-            console.log("Error al enviar la peticion de amistad");
-        }
-        else {
-            response.redirect("/amigos");
-        }
+app.get("/nuevoAmigo/:idAmigo", function(request,response){
+//Hay que comprobar que no hay ya amistad presente en estos dos ids.
+    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function(err){
+    if(err){
+        console.log("Error al enviar la peticion de amistad");
+    }
+    else{
+        response.redirect("/amigos");
+    }
+
     })
 })
 
@@ -307,6 +435,7 @@ app.post("/modify", function (request, response) {
         })
 
 
+
 })
 app.get("/aceptarAmistad/:idAmigo", function (request, response) {
     daoUsuarios.aceptarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
@@ -320,6 +449,7 @@ app.get("/aceptarAmistad/:idAmigo", function (request, response) {
 
 
 })
+
 
 
 

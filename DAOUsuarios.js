@@ -116,6 +116,7 @@ class DAOUsuarios {
                             else {
                                 callback(null, false);
                             }
+
                         }
                     }
                 )
