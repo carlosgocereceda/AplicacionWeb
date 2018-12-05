@@ -52,7 +52,6 @@
 				</div>
 				<div class="peticiones">
 					<ul>
-						<% if(posiblesamigos.length > 0)  {%>
 						<% posiblesamigos.forEach(function(usuario) { %>
 						<li>
 							<div class="peticion">
@@ -70,7 +69,7 @@
 							</div>
 						</li>
 						<% }); %>
-						<% }; %>
+					
 					</ul>
 				</div>
 			</div>
@@ -101,20 +100,24 @@
 				</div>
 				<div class="Amigos">
 					<ul>
-					<%	if(amigosya.length > 0) { %>
+				
 						<% amigosya.forEach(function(usuario) { %>
 						<li>
 							<div class="amigo">
-								<div class="fotoAmigo">
-									<%= usuario.Imagen_perfil %>
+								<div class="fotos">
+									<%if (usuario.Imagen_perfil){ %> 
+								<img src=<%=usuario.Imagen_perfil %>	
+								 <%} else {%>	
+										<img class = "fotos" src= "../img/NoPerfil.jpg" >
+										<%}%>
 								</div>
 								<div class="NombreAmigo">
-									<%= usuario.nombre %>
+									<%= usuario.nombre %> 
 								</div>
 							</div>
 						</li>
 						<% }); %>
-						<% } %>
+					
 					</ul>
 
 

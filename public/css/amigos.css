@@ -69,9 +69,7 @@ body{
 		font-family: 'Niramit', sans-serif;
 
 }
-.contenedor{
-	
-}
+
 .Info_amigos{
 	height: 100vh;
 	background-color: #fcf9fa;	
@@ -80,12 +78,11 @@ body{
 	margin-left: 20%;
 }
 .fotos, .fotoAmigo{
-	background-image:url("../img/gato.jpg");
 	background-size:100%;
 	width:70px;
+	
 	height:70px;
-	border:solid;
-	border-color:#e1e0dd;
+	
 }
 
 .subtitulo{

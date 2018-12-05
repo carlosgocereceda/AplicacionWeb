@@ -181,7 +181,7 @@ class DAOUsuarios {
                             callback(new Error("Error al realizar la consulta"));
                         }
                         else {
-
+                            console.log(filas);
                             if (filas.length == 0) {
                                 callback(null, null);
                             }
@@ -241,18 +241,19 @@ class DAOUsuarios {
                             let id = filas[0].id;
 
                             connection.query("SELECT usuario_envia FROM solicitudesamistad WHERE usuario_recibe = ?", [id],
-                                function (err, filas) {
+                                function (err, filas2) {
                                     connection.release();
                                     if (err) {
                                         callback(new Error("Error al obtener las solicitudes de amistad"));
                                     } else {
-                                        if (filas.length >= 0) {
-                                            callback(null, filas);
+                                        if (filas2.length > 0) {
+                                            callback(null, filas2);
                                         } else {
                                             callback(null, null);
                                         }
                                     }
                                 }
+                                
                             )
                         }
                     }
@@ -359,65 +360,80 @@ class DAOUsuarios {
         })
     }
     getAmigos(email, callback) {
-        let amigos=[];
+        let amigos = [];
+
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de acceso a la base de datos"));
             }
             else {
+
                 connection.query("SELECT id FROM USUARIO WHERE email = ?", [email],
                     function (err, filas) {
                         if (err) {
                             callback(new Error("Error al obtener el id del recibidor"));
                         } else {
+
                             let ida = filas[0].id;
-                            connection.query("SELECT * FROM AMIGOS WHERE idAmigo1 = ? OR idAmigo2 = ?", [ida,ida],
-                            function(err,result){
-                                if(err){
-                                    callback(new Error("Error al encontrar tus amigos"));
-                                }
-                                else{
-                                    
-                                    if(result.length > 0){
-                                        for(let j = 0; j < result.length; j++){
-                                            if(result[j].idAmigo1 == ida){
-                                                amigos.push(result[j].IDAMIGO2);
-                                                console.log(amigos);
-                                            }
-                                            else{
-                                                amigos.push(result[j].IDAMIGO1);
-                                                console.log(amigos);
-                                            }
-                                        }
-                                        console.log(amigos);
-                                        let consulta = "SELECT * FROM usuario WHERE id IN (";
-                                        for (let i = 0; i < amigos.length; i++) {
-                                            if (i < amigos.length - 1) {
-                                                consulta += "?,"
-                                            }
-                                            else {
-                                                consulta += "?)";
-                                            }
-                                        }
-                                        connection.query(consulta, amigos,
-                                            function (err, filas) {
-                                                if (err) {
-                                                    callback(new Error("Error de acceso a la base de datos"));
+                           
+                            connection.query("SELECT * FROM AMIGOS WHERE IDAMIGO1 = ? OR IDAMIGO2 = ?", [ida, ida],
+                                function (err, result) {
+
+                                    if (err) {
+                                        callback(new Error("Error al encontrar tus amigos"));
+                                    }
+                                    else {
+                                        console.log(result);
+                                        if (result.length > 0) {
+
+                                            for (let j = 0; j < result.length; j++) {
+
+                                                if (result[j].idAmigo1 == ida) {
+
+                                                    amigos.push(result[j].idAmigo2);
+
                                                 }
                                                 else {
-                                                
-                                                    if (filas.length >= 0) {
-                                                        callback(null, filas);
-                                                    }
-                                                    else {
-                                                        callback(null, null);
+                                                    if (result[j].idAmigo2) {
+
+                                                        amigos.push(result[j].idAmigo1);
+
                                                     }
                                                 }
-                                            })
-                                    }
-                                }
+                                            }
 
-                            })
+                                            let consulta = "SELECT * FROM usuario WHERE id IN (";
+                                            for (let i = 0; i < amigos.length; i++) {
+                                                if (i < amigos.length - 1) {
+                                                    consulta += "?,"
+                                                }
+                                              
+                                            }
+                                            consulta += "?)";
+                                        
+                                            connection.query(consulta,amigos,
+                                                function (err, filas2) {
+                                                    console.log(filas2);
+                                                    if (err) {
+                                                        callback(new Error("Error de acceso a la base de datos"));
+                                                    }
+                                                    else {
+
+                                                        if (filas2) {
+                                                            callback(null, filas2);
+                                                            console.log(filas2);
+                                                        }
+                                                        else {
+                                                            callback(null, null);
+                                                        }
+                                                    }
+                                                })
+                                        }
+                                        else{
+                                            callback(null, null);
+                                        }
+                                    }
+                                })
                         }
                     })
             }

@@ -92,14 +92,14 @@ app.post("/loginUser", function (request, response) {
         }
         else if (solution) {
             request.session.currentUser = request.body.email;
-            daoUsuarios.getUsuario(request.session.currentUser, function(err, filas){
+            daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
                 console.log("id " + filas[0].id);
                 request.session.currentId = filas[0].id;
                 console.log("id guardado " + request.session.currentId);
                 response.redirect("/profile");
-                
+
             })
-            
+
         }
         else {
             response.render("login", { errorMsg: true });
@@ -137,7 +137,7 @@ app.post("/register", function (request, response) {
                 function (err) {
                     if (!err) {
                         request.session.currentUser = request.body.email;
-                        daoUsuarios.getUsuario(request.session.currentUser, function(err, filas){
+                        daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
                             request.session.currentId = filas[0].id;
                         })
                         response.redirect("/profile");
@@ -186,120 +186,120 @@ app.get("/profile", function (request, response) {
     //Creo que hacen falta coockies para esto
 })
 
-app.get("/preguntasAleatorias/:id", function(request, response){
-    daoPreguntas.getPreguntabyId(request.params.id, function(err,res){
-        if(err){
+app.get("/preguntasAleatorias/:id", function (request, response) {
+    daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
+        if (err) {
             console.log(err);
         }
-        else{
+        else {
             console.log(res);
             daoPreguntas.getAllPreguntasRespondidasPorUsuario(request.session.currentId,
-                function(err,filas){
-                    if(err){
+                function (err, filas) {
+                    if (err) {
                         console.log(err);
                     }
-                    else{
+                    else {
                         let existe = 0;
                         //console.log("filas" + filas.length);
-                        for(let i = 0; i < filas.length; i++){
+                        for (let i = 0; i < filas.length; i++) {
                             //console.log("pepito " +filas[i]);
-                            if(filas[i].idPregunta == res[0].id){
+                            if (filas[i].idPregunta == res[0].id) {
                                 existe += 1;
                             }
                         }
-                        if(existe > 0){
-                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
+                        if (existe > 0) {
+                            response.render("pregunta", { contestado: existe, pregunta: res[0] });
                         }
-                        else{
+                        else {
                             //console.log("estoy por aquí " + res[0].pregunta);
-                            response.render("pregunta",{contestado: existe, pregunta: res[0]});
+                            response.render("pregunta", { contestado: existe, pregunta: res[0] });
                         }
                     }
                 })
-            
+
         }
     })
-    
+
 })
 
-app.get("/preguntasAleatorias", function(request, response){
-    daoPreguntas.getPreguntaAleatoria(5, function(err,res){
-        if(err){
+app.get("/preguntasAleatorias", function (request, response) {
+    daoPreguntas.getPreguntaAleatoria(5, function (err, res) {
+        if (err) {
             response.redirect("/profile");
         }
-        else{
-            if(res != null){
-                response.render("preguntasAleatorias", {preguntas : res});
+        else {
+            if (res != null) {
+                response.render("preguntasAleatorias", { preguntas: res });
             }
         }
     })
 })
 
-app.get("/crearPregunta", function(request, response){
+app.get("/crearPregunta", function (request, response) {
     response.render("crearPregunta");
 })
 
-app.post("/crearPregunta", function(request, response){
+app.post("/crearPregunta", function (request, response) {
     //console.log("carlos, he sacado esto ");
     //console.log(request.body);
-   // request.body.comment.replace("\r", "");
+    // request.body.comment.replace("\r", "");
     //let preguntas_split = request.body.comment.split('\n');
-    var respuestas = request.body.comment.replace(/\r\n/g,"\n").split("\n");
+    var respuestas = request.body.comment.replace(/\r\n/g, "\n").split("\n");
     //console.log(respuestas);
-    if(respuestas.length < 2){
+    if (respuestas.length < 2) {
         console.log("No se pueden crear preguntas con menos de dos respuestas");
     }
-    else{
-        daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado,respuestas,  function(err){
-            if(err){
+    else {
+        daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado, respuestas, function (err) {
+            if (err) {
                 console.log(err);
             }
-            else{
-                
+            else {
+
                 response.redirect("/preguntasAleatorias");
             }
         });
     }
-  
+
 })
 
-app.get("/contestarPregunta/:id", function(request, response){
-    daoPreguntas.getPreguntabyId(request.params.id, function(err,res){
-        if(err){
+app.get("/contestarPregunta/:id", function (request, response) {
+    daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
+        if (err) {
             console.log(err);
         }
-        else{
+        else {
             let pregunta = res[0];
             //console.log(pregunta);
             pregunta.respuestas = pregunta.respuestas.split(",");
             //console.log(pregunta);
-            response.render("contestarPregunta", {pregunta:pregunta});
+            response.render("contestarPregunta", { pregunta: pregunta });
             //console.log(pregunta);
         }
     })
 })
 
-app.post("/contestarPregunta", function(request, response){
+app.post("/contestarPregunta", function (request, response) {
     //console.log(request.body);
-    if(request.body.radio){
+    if (request.body.radio) {
 
         let arrayRespuestas = request.body.respuestas.split(",");
-        let respuesta = arrayRespuestas[request.body.radio.replace("R","")];
-        let idRespuesta =request.body.radio.replace("R","");
+        let respuesta = arrayRespuestas[request.body.radio.replace("R", "")];
+        let idRespuesta = request.body.radio.replace("R", "");
         //console.log(respuesta);
 
-        daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId,request.body.id, respuesta, idRespuesta,
-            function(err,res){
-                if(err){
+        daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId, request.body.id, respuesta, idRespuesta,
+            function (err, res) {
+                if (err) {
                     console.log(err);
                 }
-                else{
+                else {
                     response.redirect("/preguntasAleatorias");
                 }
             })
         //console.log("ha costestado radio");
     }
-    else if(request.body.propio){
+    else if (request.body.propio) {
         //console.log("ha costestado propio");
     }
 })
@@ -339,48 +339,63 @@ app.get("/modify", function (request, response) {
 app.get("/amigos", function (request, response) {
     daoUsuarios.consultarSolicitudes(request.session.currentUser, function (err, result) {
         if (err) {
-            console.log("ERROR")
+            console.log("ERROR");
         }
         else {
-            if (result) {
-                
+            if (result) { //Tiene que dar falso;
                 let arrayID = result.map(element => element.usuario_envia);
-                console.log(arrayID.length);
                 if (arrayID.length > 0) {
+                    console.log(arrayID);
                     daoUsuarios.selectAllbyID(arrayID, function (err, result2) {
                         if (err) {
-                            console.log("Error al buscar amigos");
+                            console.log("Error al buscar amigos2");
                         }
                         else {
+
                             daoUsuarios.getAmigos(request.session.currentUser, function (err, result3) {
                                 if (err) {
-                                    console.log("Error al encontrar tus amigos");
+                                    console.log("Error al encontrar tus amigos1");
                                 }
                                 else {
-                                    console.log("Estoy aqui1");
-                                    response.render("amigos", { posiblesamigos: result2, amigosya: result3 });
+
+                                    if (result3) {
+                                        response.render("amigos", { posiblesamigos: result2, amigosya: result3 });
+                                    }
+                                    else {
+
+                                        response.render("amigos", { posiblesamigos: result2, amigosya: [] });
+                                    }
+
                                 }
                             })
 
                         }
                     })
                 }
-                else {
-                    daoUsuarios.getAmigos(request.session.currentUser, function (err, result3) {
-                        if (err) {
-                            console.log("Error al encontrar tus amigos");
-                            
+            }
+            else {
+                daoUsuarios.getAmigos(request.session.currentUser, function (err, result3) {
+                    if (err) {
+                        console.log("Error al encontrar tus amigosS");
+
+                    }
+                    else {
+                        
+                        if (result3) {
+                            console.log("result3:");
+                            console.log(result3[0]);
+                           response.render("amigos", { posiblesamigos: [], amigosya: result3 });
                         }
                         else {
-                            console.log(result3);
-                            let posiblesamigos = [];
-                            response.render("amigos", {  posiblesamigos : posiblesamigos, amigosya: result3});
-                        }
 
-                    })
-                }
+                          response.render("amigos", { posiblesamigos: [], amigosya: [] });
+                        }
+                    }
+
+                })
             }
-        }
+        } 
+
     })
 })
 app.post("/buscarAmigo", function (request, response) {
@@ -390,19 +405,25 @@ app.post("/buscarAmigo", function (request, response) {
             response.redirect("/profile");
         }
         else {
-            response.render("nuevosAmigos", { listaNombre: result });
+
+            if (result) {
+                response.render("nuevosAmigos", { listaNombre: result });
+            }
+            else {
+                response.render("nuevosAmigos", { listaNombre: [] });
+            }
         }
     })
 })
-app.get("/nuevoAmigo/:idAmigo", function(request,response){
-//Hay que comprobar que no hay ya amistad presente en estos dos ids.
-    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function(err){
-    if(err){
-        console.log("Error al enviar la peticion de amistad");
-    }
-    else{
-        response.redirect("/amigos");
-    }
+app.get("/nuevoAmigo/:idAmigo", function (request, response) {
+    //Hay que comprobar que no hay ya amistad presente en estos dos ids.
+    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
+        if (err) {
+            console.log("Error al enviar la peticion de amistad");
+        }
+        else {
+            response.redirect("/amigos");
+        }
 
     })
 })
