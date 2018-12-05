@@ -380,26 +380,28 @@ app.get("/amigos", function (request, response) {
 
                     }
                     else {
-                        
+
                         if (result3) {
                             console.log("result3:");
                             console.log(result3[0]);
-                           response.render("amigos", { posiblesamigos: [], amigosya: result3 });
+                            response.render("amigos", { posiblesamigos: [], amigosya: result3 });
                         }
                         else {
 
-                          response.render("amigos", { posiblesamigos: [], amigosya: [] });
+                            response.render("amigos", { posiblesamigos: [], amigosya: [] });
                         }
                     }
 
                 })
             }
-        } 
+        }
 
     })
 })
 app.post("/buscarAmigo", function (request, response) {
-
+    let arrayID = [];
+    let count = 0;
+    let booleanID = [];
     daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result) {
         if (err) {
             response.redirect("/profile");
@@ -407,9 +409,23 @@ app.post("/buscarAmigo", function (request, response) {
         else {
 
             if (result) {
-                response.render("nuevosAmigos", { listaNombre: result });
+                //Creo el array de ID para comprobar de cual soy amigo y de cual no;
+                arrayID = result.map(element => element.id);
+                //Ahora llamo al dao para que me devuelva un array de boleanos y asi ver cuales son 
+                daoUsuarios.getAllAmigos(arrayID, function (err, result2) {
+                    if (err) {
+                        console.log("Error al comprobar tus amigos");
+                    }
+                    else {
+                      let c  = result2.filter(element => element.idAmigo1 == request.session.currentId || element.idAmigo2 == request.session.currentId);
+                      c = c.map(element => (element.idAmigo1 == request.session.currentId) ? element.idAmigo2 : element.idAmigo1);
+                      let a =  arrayID.map(element2 => (c.indexOf(element2 > -1) ? true: false));
+                        response.render("nuevosAmigos", { listaNombre: result, amigosya: a });
+                    }
+                })
+               
             }
-            else {
+            else{
                 response.render("nuevosAmigos", { listaNombre: [] });
             }
         }

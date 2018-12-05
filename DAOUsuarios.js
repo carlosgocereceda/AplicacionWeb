@@ -440,5 +440,32 @@ class DAOUsuarios {
         })
     }
 
+    getAllAmigos(idArray, callback){
+        this.pool.getConnection(function(err,connection){
+        let consulta = "SELECT * FROM amigos WHERE idAmigo1 OR idAmigo2 IN (";
+        for (let i = 0; i < idArray.length; i++) {
+            if (i < idArray.length - 1) {
+                consulta += "?,"
+            }
+          
+        }
+        consulta += "?)";
+        connection.query(consulta, idArray, function(err, result){
+            if(err){
+                callback(new Error("Error al buscar los amigos"));
+            }
+            else{
+                if(result.length > 0){
+                    callback(null, result);
+                }
+                else{
+                    callback(null,null);
+                }
+            }
+
+        })
+    })
+
+    }
 }
 module.exports = DAOUsuarios;

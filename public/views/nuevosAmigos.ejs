@@ -49,7 +49,7 @@
 
             <div class="peticiones">
                 <ul>
-                    <% listaNombre.forEach(function(usuario) { %>
+                    <% listaNombre.forEach(function(usuario, index) { %>
                     <li>
                         <div class="peticion">
                             <div class="fotos">
@@ -60,7 +60,11 @@
                             </div>
 
                             <div class="botones">
+                                <% if (!amigosya[index]) { %>
                                 <div class="btn"> <a href="/nuevoAmigo/<%= usuario.id %>" class="btn">Añadir Amigo</a></div>
+                                <% } else{ %>
+                                    <div class="Amigosya"> Ya sois amigos!</div>
+                                    <% } %>
                             </div>
 
                     </li>
