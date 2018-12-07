@@ -325,7 +325,8 @@ app.get("/preguntasAleatorias/:id", function (request, response) {
                                                         else {
                                                             response.render("pregunta", {
                                                                 contestado: existe, pregunta: pregunta,
-                                                                infoUsuarios: info_usuarios_han_respondido
+                                                                infoUsuarios: info_usuarios_han_respondido,
+                                                                idPregunta: request.params.id
                                                             });
                                                         }
                                                     })
@@ -346,241 +347,294 @@ app.get("/preguntasAleatorias/:id", function (request, response) {
 
 })
 
-app.get("/preguntasAleatorias", function (request, response) {
-    daoPreguntas.getPreguntaAleatoria(5, function (err, res) {
-        if (err) {
-            response.redirect("/profile");
-        }
-        else {
-            if (res != null) {
-                response.render("preguntasAleatorias", { preguntas: res });
-            }
-        }
-    })
-})
-
-app.get("/crearPregunta", function (request, response) {
-    response.render("crearPregunta");
-})
-
-app.post("/crearPregunta", function (request, response) {
-    //console.log("carlos, he sacado esto ");
-    //console.log(request.body);
-    // request.body.comment.replace("\r", "");
-    //let preguntas_split = request.body.comment.split('\n');
-    var respuestas = request.body.comment.replace(/\r\n/g, "\n").split("\n");
-    //console.log(respuestas);
-    if (respuestas.length < 2) {
-        console.log("No se pueden crear preguntas con menos de dos respuestas");
-    }
-    else {
-        daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado, respuestas, function (err) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-
-                response.redirect("/preguntasAleatorias");
-            }
-        });
-    }
-
-})
-
-app.get("/contestarPregunta/:id", function (request, response) {
-    daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
+app.post("/adivinar_nombre_otro", function (request, response) {
+    daoPreguntas.getPreguntabyId(request.body.idPregunta, function (err, res) {
         if (err) {
             console.log(err);
         }
         else {
+            console.log("pregunta:");
+            console.log(res);
             let pregunta = res[0];
             //console.log(pregunta);
             pregunta.respuestas = pregunta.respuestas.split(",");
             //console.log(pregunta);
-            response.render("contestarPregunta", { pregunta: pregunta });
+            response.render("contestarPreguntaNombreOtro", {
+                pregunta: pregunta,
+                idUsuario: request.body.idUsuario
+            });
             //console.log(pregunta);
         }
     })
 })
-
-app.post("/contestarPregunta", function (request, response) {
+app.post("/contestarPreguntaNombreDeOtro", function (request, response) {
+    console.log("body");
+    console.log(request.body);
     //console.log(request.body);
     if (request.body.radio) {
 
         let arrayRespuestas = request.body.respuestas.split(",");
         let respuesta = arrayRespuestas[request.body.radio.replace("R", "")];
         let idRespuesta = request.body.radio.replace("R", "");
-        //console.log(respuesta);
+        daoPreguntas.getRespeustaUnoMismo(request.body.idPregunta, request.body.idUsuario, function(err, respuesta_original){
+            if(err){
+                console.log(err);
+            }
+            else{
+                console.log(respuesta_original);
+                let correcto = 0; // 0 -> ha acertado 1 -> ha fallado
+                console.log(respuesta_original[0].respuesta);
+                if(respuesta != respuesta_original[0].respuesta){
+                    correcto = 1;
+                }
+                daoPreguntas.responderEnNombreDeOtro(request.session.currentId, request.body.idUsuario, request.body.idPregunta,
+                    respuesta, idRespuesta, correcto, function (err, res) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        else {
+                            response.redirect("/preguntasAleatorias");
+                        }
+                    })
+            }
+        })
+    }
+})
+    app.get("/preguntasAleatorias", function (request, response) {
+        daoPreguntas.getPreguntaAleatoria(5, function (err, res) {
+            if (err) {
+                response.redirect("/profile");
+            }
+            else {
+                if (res != null) {
+                    response.render("preguntasAleatorias", { preguntas: res });
+                }
+            }
+        })
+    })
 
-        daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId, request.body.id, respuesta, idRespuesta,
-            function (err, res) {
+    app.get("/crearPregunta", function (request, response) {
+        response.render("crearPregunta");
+    })
+
+    app.post("/crearPregunta", function (request, response) {
+        //console.log("carlos, he sacado esto ");
+        //console.log(request.body);
+        // request.body.comment.replace("\r", "");
+        //let preguntas_split = request.body.comment.split('\n');
+        var respuestas = request.body.comment.replace(/\r\n/g, "\n").split("\n");
+        //console.log(respuestas);
+        if (respuestas.length < 2) {
+            console.log("No se pueden crear preguntas con menos de dos respuestas");
+        }
+        else {
+            daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado, respuestas, function (err) {
                 if (err) {
                     console.log(err);
                 }
                 else {
+
                     response.redirect("/preguntasAleatorias");
                 }
-            })
-        //console.log("ha costestado radio");
-    }
-    else if (request.body.propio) {
-        //console.log("ha costestado propio");
-    }
-})
-
-//------------------------CONTESTAR PREGUNTAS EN NOMBRE DE OTRO-------------------------------------
-
-
-
-//------------------------FIN CONTESTAR PREGUNTAS EN NOMBRE DE OTRO---------------------------------
-
-//------------------------IMAGEN DE USUARIO---------------------
-
-app.get("/imagenUsuario", function (request, response) {
-
-    daoUsuarios.getUserImageName(request.session.currentUser, function (err, res) {
-        //console.log(res);
-
-        if (res === null) {
-            //console.log("aqui");
-            let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
-            response.sendFile(pathImg)
-            // response.sendFile("C:\Users\carlo\Desktop\4\AW\Practicas\PRACTICAS OBLIGATORIAS\P5\public\img\NoPerfil.jpg");
+            });
         }
-        else {
-            //console.log("holi");
-            let pathImg = path.join(__dirname, "profile_imgs", res);
-            //console.log(pathImg);
-            response.sendFile(pathImg)
-        }
-    })
-})
-//--------------------------------------------------------------
-//------------------------LOGOUT--------------------------------
-app.get("/logout", function (request, response) {
-    request.session.destroy();
-    response.redirect("/login");
-})
-//--------------------------------------------------------------
 
-app.get("/modify", function (request, response) {
-    response.redirect("/modificar.html");
-})
-
-app.get("/amigos", function (request, response) {
-    daoUsuarios.consultarSolicitudes(request.session.currentUser, function (err, result) {
-        if (err) {
-            console.log("ERROR")
-        }
-        else {
-            if (result) {
-                console.log(result);
-                var posiblesamigos = [];
-                for (var j = 0; j < result.length; j++) {
-                    daoUsuarios.getUsuarioid(result[j].usuario_envia, function (err, result2) {
-                        if (err) {
-                            console.log("ERROR");
-                        }
-                        else {
-
-                            posiblesamigos.push(result2);
-                        }
-                    })
-                }
-                console.log(posiblesamigos);
-                response.render("amigos", { posiblesamigos: posiblesamigos });
-            }
-        }
     })
 
-})
-app.post("/buscarAmigo", function (request, response) {
-
-    daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result) {
-        if (err) {
-            response.redirect("/profile");
-        }
-        else {
-            response.render("nuevosAmigos", { listaNombre: result });
-        }
-    })
-})
-
-app.get("/nuevoAmigo/:idAmigo", function (request, response) {
-    //Hay que comprobar que no hay ya amistad presente en estos dos ids.
-    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
-        if (err) {
-            console.log("Error al enviar la peticion de amistad");
-        }
-        else {
-            response.redirect("/amigos");
-        }
-    })
-})
-
-app.post("/modify", function (request, response) {
-    //console.log(request.body);
-    let sexo;
-    if (request.body.sexo == "hombre") {
-        sexo = 0;
-    }
-    else {
-        sexo = 1;
-    }
-
-    if (request.body.Imagen_perfil = "") {
-        console.log("pues si");
-    }
-    console.log(request.session.currentUser);
-    daoUsuarios.modifyUser(request.session.currentUser, request.body.contrasenya,
-        request.body.nombre, sexo, request.body.fecha_nacimiento,
-        null,
-        function (err) {
-            if (!err) {
-                response.redirect("/profile");
+    app.get("/contestarPregunta/:id", function (request, response) {
+        daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
+            if (err) {
+                console.log(err);
             }
             else {
-                response.redirect("/register");
-                console.log(err);
+                let pregunta = res[0];
+                //console.log(pregunta);
+                pregunta.respuestas = pregunta.respuestas.split(",");
+                //console.log(pregunta);
+                response.render("contestarPregunta", { pregunta: pregunta });
+                //console.log(pregunta);
+            }
+        })
+    })
+
+    app.post("/contestarPregunta", function (request, response) {
+        //console.log(request.body);
+        if (request.body.radio) {
+
+            let arrayRespuestas = request.body.respuestas.split(",");
+            let respuesta = arrayRespuestas[request.body.radio.replace("R", "")];
+            let idRespuesta = request.body.radio.replace("R", "");
+            //console.log(respuesta);
+
+            daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId, request.body.id, respuesta, idRespuesta,
+                function (err, res) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        response.redirect("/preguntasAleatorias");
+                    }
+                })
+            //console.log("ha costestado radio");
+        }
+        else if (request.body.propio) {
+            //console.log("ha costestado propio");
+        }
+    })
+
+    //------------------------CONTESTAR PREGUNTAS EN NOMBRE DE OTRO-------------------------------------
+
+
+
+    //------------------------FIN CONTESTAR PREGUNTAS EN NOMBRE DE OTRO---------------------------------
+
+    //------------------------IMAGEN DE USUARIO---------------------
+
+    app.get("/imagenUsuario", function (request, response) {
+
+        daoUsuarios.getUserImageName(request.session.currentUser, function (err, res) {
+            //console.log(res);
+
+            if (res === null) {
+                //console.log("aqui");
+                let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
+                response.sendFile(pathImg)
+                // response.sendFile("C:\Users\carlo\Desktop\4\AW\Practicas\PRACTICAS OBLIGATORIAS\P5\public\img\NoPerfil.jpg");
+            }
+            else {
+                //console.log("holi");
+                let pathImg = path.join(__dirname, "profile_imgs", res);
+                //console.log(pathImg);
+                response.sendFile(pathImg)
+            }
+        })
+    })
+    //--------------------------------------------------------------
+    //------------------------LOGOUT--------------------------------
+    app.get("/logout", function (request, response) {
+        request.session.destroy();
+        response.redirect("/login");
+    })
+    //--------------------------------------------------------------
+
+    app.get("/modify", function (request, response) {
+        response.redirect("/modificar.html");
+    })
+
+    app.get("/amigos", function (request, response) {
+        daoUsuarios.consultarSolicitudes(request.session.currentUser, function (err, result) {
+            if (err) {
+                console.log("ERROR")
+            }
+            else {
+                if (result) {
+                    console.log(result);
+                    var posiblesamigos = [];
+                    for (var j = 0; j < result.length; j++) {
+                        daoUsuarios.getUsuarioid(result[j].usuario_envia, function (err, result2) {
+                            if (err) {
+                                console.log("ERROR");
+                            }
+                            else {
+
+                                posiblesamigos.push(result2);
+                            }
+                        })
+                    }
+                    console.log(posiblesamigos);
+                    response.render("amigos", { posiblesamigos: posiblesamigos });
+                }
             }
         })
 
+    })
+    app.post("/buscarAmigo", function (request, response) {
 
-})
+        daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result) {
+            if (err) {
+                response.redirect("/profile");
+            }
+            else {
+                response.render("nuevosAmigos", { listaNombre: result });
+            }
+        })
+    })
 
-function cb_insertaUsuario(err, result) {
-    if (err) {
-        console.log(err);
-    }
-}
+    app.get("/nuevoAmigo/:idAmigo", function (request, response) {
+        //Hay que comprobar que no hay ya amistad presente en estos dos ids.
+        daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
+            if (err) {
+                console.log("Error al enviar la peticion de amistad");
+            }
+            else {
+                response.redirect("/amigos");
+            }
+        })
+    })
 
-function cb_isUserCorrect(err, result) {
-    if (err) {
-        console.log(err);
-    }
-    else if (result) {
-        console.log("contraseña correcta");
-    }
-    else {
-        console.log("contraseña incorrecta");
-    }
-}
+    app.post("/modify", function (request, response) {
+        //console.log(request.body);
+        let sexo;
+        if (request.body.sexo == "hombre") {
+            sexo = 0;
+        }
+        else {
+            sexo = 1;
+        }
 
-function cb_deleteUsuario(err, result) {
-    if (err) {
-        console.log(err);
+        if (request.body.Imagen_perfil = "") {
+            console.log("pues si");
+        }
+        console.log(request.session.currentUser);
+        daoUsuarios.modifyUser(request.session.currentUser, request.body.contrasenya,
+            request.body.nombre, sexo, request.body.fecha_nacimiento,
+            null,
+            function (err) {
+                if (!err) {
+                    response.redirect("/profile");
+                }
+                else {
+                    response.redirect("/register");
+                    console.log(err);
+                }
+            })
+
+
+    })
+
+    function cb_insertaUsuario(err, result) {
+        if (err) {
+            console.log(err);
+        }
     }
-    else if (result) {
-        console.log("Eliminado correctamente");
+
+    function cb_isUserCorrect(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        else if (result) {
+            console.log("contraseña correcta");
+        }
+        else {
+            console.log("contraseña incorrecta");
+        }
     }
-    else {
-        console.log("");
+
+    function cb_deleteUsuario(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        else if (result) {
+            console.log("Eliminado correctamente");
+        }
+        else {
+            console.log("");
+        }
     }
-}
-function normalizarResultado(array, campo) {
-    let sol = [];
-    for (let i = 0; i < array.length; i++) {
-        sol.push(array[i].campo);
+    function normalizarResultado(array, campo) {
+        let sol = [];
+        for (let i = 0; i < array.length; i++) {
+            sol.push(array[i].campo);
+        }
+        return sol;
     }
-    return sol;
-}

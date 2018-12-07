@@ -145,7 +145,7 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT * FROM usuariorespondeparasimismo"
-                    + "WHERE idPregunta = ? AND idUsuario = ?",
+                    + " WHERE idPregunta = ? AND idUsuario = ?",
                     [idPregunta, idUsuario],
                     function (err, filas) {
                         if (err) {
@@ -231,6 +231,26 @@ class DAOPreguntas {
                     })
 
 
+            }
+        })
+    }
+    responderEnNombreDeOtro(idUsuarioAdivina,idUsuarioRespondio, idPregunta, respuesta, idRespuesta, correcta, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                
+                connection.query("INSERT INTO usuariorespondeennombredeotro (idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta) VALUES (?,?,?,?,?,?)",
+                    [idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta],
+                    function (err, res) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null, res);
+                        }
+                    })
             }
         })
     }

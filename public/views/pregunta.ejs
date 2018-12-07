@@ -86,23 +86,27 @@
                     <% } %>
                 </div>
                 <% } else{ %>
-                    <div class="amigo">
-                        <div class="info_amigo">
-                            <div class="fotoAmigo">
-                            </div>
-                            <div class="NombreAmigo">
-                                <%= valor %>
-                            </div>
+                <div class="amigo">
+                    <div class="info_amigo">
+                        <div class="fotoAmigo">
                         </div>
-    
-                        <div class="accion_adivinar">
-                            Adivinar
+                        <div class="NombreAmigo">
+                            <%= valor %>
                         </div>
                     </div>
 
+                    <div class="accion_adivinar">
+                        <form action="/adivinar_nombre_otro" method="POST">
+                            <input type="hidden" name="idPregunta" value= <%= idPregunta %>>
+                            <input type="hidden" name="idUsuario" value=<%= clave%>>
+                            <input type="submit" value="Adivinar">
+                        </form>
+                    </div>
+                </div>
+
                 <% } %>
                 <% } %>
-                
+
 
             </div>
 
