@@ -214,7 +214,7 @@ class DAOUsuarios {
                                     if (err) {
                                         callback(new Error("Error al enviar la solicitud de amistad"));
                                     }
-                                    else{
+                                    else {
                                         callback(null);
                                     }
                                 }
@@ -238,7 +238,7 @@ class DAOUsuarios {
                             callback(new Error("Error al obtener el id del recibidor"));
                         } else {
                             var id = filas[0].id;
-                            
+
                             connection.query("SELECT usuario_envia FROM solicitudesamistad WHERE usuario_recibe = ?", [id],
                                 function (err, filas) {
                                     connection.release();
@@ -283,29 +283,61 @@ class DAOUsuarios {
             }
         })
     }
-    getFriends(id, callback){
-        this.pool.getConnection(function(err, connection){
-            if(err){
+    getFriends(id, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
-            else{
-                connection.query("SELECT idAmigo1, idAmigo2 FROM amigos WHERE idAmigo1 = ? OR idAmigo2 = ?",
-                [id,id],
-                function(err, filas){
-                    
-                    if(err){
-                        callback(new Error("Error de acceso a la base de datos"));
-                    }
-                    else{
-                        let amigos = [];
-                        for(let i = 0; i < filas.length; i++){
-                            if(filas[i].idAmigo1 != id) amigos.push(filas[i].idAmigo1);
-                            else amigos.push(filas[i].idAmigo2)
+            else {
+                connection.query("SELECT idAmigo1 AS idAmigo, usuario.nombre FROM amigos, usuario WHERE idAmigo2 = ? " +
+                    "AND amigos.idAmigo1 = usuario.id",
+                    [id],
+                    function (err, filas1) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
                         }
-                        console.log(amigos);
-                        callback(null, amigos);
-                    }
-                })
+                        else {
+                            connection.query("SELECT idAmigo2 AS idAmigo, usuario.nombre FROM amigos, usuario WHERE idAmigo1 = ? " +
+                                "AND amigos.idAmigo2 = usuario.id",
+                                [id],
+                                function (err, filas2) {
+                                    let filas_concat = filas1.concat(filas2);
+                                    let amigos = new Map();
+
+                                    for(let i = 0; i < filas_concat.length; i++){
+                                        console.log("id");
+                                        console.log(filas_concat[0].idAmigo);
+                                        amigos.set(filas_concat[i].idAmigo,filas_concat[i].nombre);
+                                    }
+                                    callback(null, amigos, JSON.stringify(filas_concat));
+                                }
+                            )
+                        }
+                    })
+            }
+        })
+    }
+    getNamesByIds(usuarios, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query('SELECT nombre, id FROM usuario WHERE id IN (' + usuarios.join() + ')',
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            if (filas.length > 0) {
+                                callback(null, filas);
+                            }
+                            else {
+                                callback(null, null);
+                            }
+
+                        }
+                    })
             }
         })
     }

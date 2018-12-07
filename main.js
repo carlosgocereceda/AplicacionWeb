@@ -186,7 +186,7 @@ app.get("/profile", function (request, response) {
     //Creo que hacen falta coockies para esto
 })
 
-app.get("/preguntasAleatorias/:id", function (request, response) {
+/*app.get("/preguntasAleatorias/:id", function (request, response) {
     daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
         if (err) {
             console.log(err);
@@ -205,6 +205,7 @@ app.get("/preguntasAleatorias/:id", function (request, response) {
                                 existe += 1;
                             }
                         }
+                        //con existe sabemos si el usuario ha contestado o no a la pregunta
                         daoUsuarios.getFriends(request.session.currentId, function (err, res) {
                             if (err) {
                                 console.log(err);
@@ -230,16 +231,39 @@ app.get("/preguntasAleatorias/:id", function (request, response) {
 
                                         daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId,
                                             amigosQueHanRespondido_normalizado, function (err, amigosYa) {
-                                                let usuariosSePuedeAdivinar = new Set(amigosQueHanRespondido_normalizado);
-                                                for(let i = 0; i < amigosYa.length; i++ ){
+                                                let usuariosSePuedeAdivinar_set = new Set(amigosQueHanRespondido_normalizado);
+                                                for (let i = 0; i < amigosYa.length; i++) {
                                                     console.log(amigosYa[i].idUsuarioRespondio);
-                                                    usuariosSePuedeAdivinar.delete(amigosYa[i].idUsuarioRespondio);
+                                                    usuariosSePuedeAdivinar_set.delete(amigosYa[i].idUsuarioRespondio);
                                                 }
+                                                let usuariosNoSepuedeAdivinar_set = new Set(amigosYa);
                                                 console.log("usuarios se puede adivinar: ");
-                                                console.log(usuariosSePuedeAdivinar);
+                                                console.log(usuariosSePuedeAdivinar_set);
                                                 let amigosYaAdivinados = amigosYa;
                                                 console.log("amigos ya adivinados: ");
                                                 console.log(amigosYaAdivinados);
+                                                daoUsuarios.getNamesByIds(amigosQueHanRespondido_normalizado, function (err, todosInfo) {
+                                                    if (err) {
+                                                        console.log(err);
+                                                    }
+                                                    else {
+                                                        console.log("todosInfo");
+                                                        console.log(todosInfo);
+                                                        let solYaAdivinados = [];
+                                                        let noAdivinados = [];
+                                                        let infoYaAdivinados = {
+                                                            nombre: "",
+                                                            coorecto: 0
+                                                        };
+                                                        for (let i = 0; i < todosInfo.length; i++) {
+                                                            if (usuariosNoSepuedeAdivinar_set.has(todosInfo[i].id)) {
+                                                                infoYaAdivinados.nombre = todosInfo[i].nombre;
+                                                            }
+                                                        }
+                                                        response.render("pregunta", { contestado: existe })
+
+                                                    }
+                                                })
                                                 response.render("pregunta", { contestado: existe, pregunta: res[0],
                                                 amigosPuedeAdivinar: Array.from(usuariosSePuedeAdivinar),
                                                 amigosNoPuedeAdivinar: amigosYaAdivinados});
@@ -249,7 +273,71 @@ app.get("/preguntasAleatorias/:id", function (request, response) {
                                 })
                             }
                         })
-                        
+
+                    }
+                })
+
+        }
+    })
+
+})*/
+app.get("/preguntasAleatorias/:id", function (request, response) {
+    daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            //console.log(res);
+            daoPreguntas.getAllPreguntasRespondidasPorUsuario(request.session.currentId,
+                function (err, filas) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        let existe = 0;
+                        for (let i = 0; i < filas.length; i++) {
+                            if (filas[i].idPregunta == res[0].id) {
+                                existe += 1;
+                            }
+                        }
+                        //con existe sabemos si el usuario ha contestado o no a la pregunta
+                        daoUsuarios.getFriends(request.session.currentId, function (err, amigos_map, amigos_array) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                let amigos = res;
+                                daoPreguntas.getAmigosHanRespondido(request.params.id, amigos_map, function (err, amigosHanRespondido_map) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                    else {
+                                        daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId, amigosHanRespondido_map,
+                                            function (err, info_usuarios_han_respondido) {
+                                                if (err) {
+                                                    console.log(err);
+                                                }
+                                                else {
+                                                    daoPreguntas.getPreguntabyId(request.params.id, function (err, pregunta) {
+                                                        if (err) {
+                                                            console.log(err);
+                                                        }
+                                                        else {
+                                                            response.render("pregunta", {
+                                                                contestado: existe, pregunta: pregunta,
+                                                                infoUsuarios: info_usuarios_han_respondido
+                                                            });
+                                                        }
+                                                    })
+
+                                                }
+                                            })
+                                    }
+                                })
+
+                            }
+                        })
+
                     }
                 })
 

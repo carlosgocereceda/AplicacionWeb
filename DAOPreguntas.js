@@ -158,75 +158,78 @@ class DAOPreguntas {
             }
         })
     }
-    getAmigosHanRespondido(idPregunta, amigos, callback) {
+    getAmigosHanRespondido(idPregunta, amigos_map, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                for (let i = 0; i < amigos.length; i++) {
-                    connection.query('SELECT idUsuario FROM usuariorespondeparasimismo WHERE idPregunta = ' + idPregunta + ' AND idUsuario IN (' + amigos.join() + ')',
-                        function (err, filas) {
-                            connection.release();
-                            if (err) {
-                                console.log("holi");
-                                callback(new Error("Error de acceso a la base de datos"));
+                let amigos = Array.from(amigos_map.keys());
+
+                connection.query('SELECT idUsuario FROM usuariorespondeparasimismo WHERE idPregunta = ' + idPregunta + ' AND idUsuario IN (' + amigos.join() + ')',
+                    function (err, filas) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            let amigos_han_respondido_map = new Map();
+                            if (filas.length != 0) {
+                                for (let i = 0; i < filas.length; i++) {
+                                    amigos_han_respondido_map.set(filas[i].idUsuario, amigos_map.get(filas[i].idUsuario));
+                                }
+                                callback(null, amigos_han_respondido_map);
                             }
                             else {
-                                if (filas.length != 0) {
-                                    callback(null, filas);
-                                }
-                                else {
-                                    callback(null, null);
-                                }
+                                callback(null, null);
                             }
-                        })
-                }
+                        }
+                    })
+
 
             }
         })
     }
-    getUsuariosYaAdivinados(idPregunta, usuarioQuiereAdivinar, amigos, callback) {
+    getUsuariosYaAdivinados(idPregunta, usuarioQuiereAdivinar, amigos_map, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                for (let i = 0; i < amigos.length; i++) {
-                    connection.query('SELECT * FROM usuariorespondeennombredeotro WHERE idPregunta = ' + idPregunta +
-                        ' AND idUsuarioAdivina = ' + usuarioQuiereAdivinar + ' AND idUsuarioRespondio IN (' + amigos.join() + ')',
-                        function (err, filas) {
-                            if (err) {
-                                callback(new Error("Error de acceso a la base de datos"));
+                let amigos = Array.from(amigos_map.keys());
+                console.log("aqui");
+                console.log(amigos);
+                console.log("idpregunta" + idPregunta);
+                console.log("usuarioQuiereAdivinar " + usuarioQuiereAdivinar);
+
+                connection.query('SELECT * FROM usuariorespondeennombredeotro WHERE idPregunta = ' + idPregunta +
+                    ' AND idUsuarioAdivina = ' + usuarioQuiereAdivinar + ' AND idUsuarioRespondio IN (' + amigos.join() + ')',
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                           
+                            if (filas.length != 0) {
+                                let sol = amigos_map;
+                                for(let i = 0; i < filas.length; i++){
+                                    let info = {
+                                        nombre: sol.get(filas[i].id),
+                                        respondido: true,
+                                        correcto: filas[i].correcta
+                                    }
+                                    sol.set(filas[i].id, info);
+                                }
+                                console.log("mapa cambiado: ");
+                                console.log(sol);
+                                callback(null, sol);
                             }
                             else {
-                                if (filas.length != 0) {
-                                    let sol = [];
-                                    let info = {
-                                        id: 0,
-                                        idPregunta: 0,
-                                        idUsuarioAdivina: 0,
-                                        idUsuarioRespondio: 0,
-                                        respuesta: '',
-                                        correcta: 0
-                                    }
-                                    for(let i = 0; i < filas.length; i++){
-                                        info.id = filas[i].id;
-                                        info.idPregunta = filas[i].idPregunta;
-                                        info.idUsuarioAdivina = filas[i].idUsuarioAdivina;
-                                        info.idUsuarioRespondio = filas[i].idUsuarioRespondio;
-                                        info.respuesta = filas[i].respuesta;
-                                        info.correcta = filas[i].correcta;
-                                        sol.push(info);
-                                    }
-                                    callback(null, sol);
-                                }
-                                else {
-                                    callback(null, null);
-                                }
+                                callback(null, null);
                             }
-                        })
-                }
+                        }
+                    })
+
 
             }
         })
