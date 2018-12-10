@@ -52,7 +52,7 @@
             </h1>
             <div class="pregunta_contestada">
                 <h3>No has cotestado a esta pregunta</h3>
-                <a href="/contestarPregunta/<%= pregunta.id %>">
+                <a href="/preguntas/contestarPregunta/<%= pregunta.id %>">
                     Contestar pregunta
                 </a>
             </div>
@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="accion_adivinar">
-                        <form action="/adivinar_nombre_otro" method="POST">
+                        <form action="/preguntas/adivinar_nombre_otro" method="POST">
                             <input type="hidden" name="idPregunta" value= <%= idPregunta %>>
                             <input type="hidden" name="idUsuario" value=<%= clave%>>
                             <input type="submit" value="Adivinar">

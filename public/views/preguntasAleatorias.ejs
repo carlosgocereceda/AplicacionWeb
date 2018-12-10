@@ -50,7 +50,7 @@
             <div class="bloque_preguntas">
                 <% preguntas.forEach(function(pregunta) { %>
                     <div class="pregunta">
-                       <a href="preguntasAleatorias/<%= pregunta.id %>"><%= pregunta.enunciado %></a> 
+                       <a href="/preguntas/preguntasAleatorias/<%= pregunta.id %>"><%= pregunta.enunciado %></a> 
 
                     </div>
                 <% }); %>
@@ -58,7 +58,7 @@
         </div>
         <h1>¡Añade tus preguntas!</h1>
         <div class="crear_pregunta">
-            <a href="/crearPregunta">
+            <a href="/preguntas/crearPregunta">
                  CREAR NUEVA PREGUNTA
             </a>
         </div>

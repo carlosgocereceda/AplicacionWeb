@@ -46,7 +46,7 @@
             Actualmente estas en: Preguntas
         </div>
         <div class="contenido">
-            <form method="POST" action="/contestarPreguntaNombreDeOtro">
+            <form method="POST" action="/preguntas/contestarPreguntaNombreDeOtro">
                 <input type="hidden" name="idPregunta"value="<%= pregunta.id %>"> 
                 <input type="hidden" name="idUsuario" value="<%= idUsuario %>">
                 <input type="hidden" name="respuestas"value="<%= pregunta.respuestas %>">

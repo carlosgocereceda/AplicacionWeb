@@ -196,7 +196,11 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                let amigos = Array.from(amigos_map.keys());
+                if(amigos_map == null){
+                    callback(null, null);
+                }
+                else{
+                    let amigos = Array.from(amigos_map.keys());
                 console.log("aqui");
                 console.log(amigos);
                 console.log("idpregunta" + idPregunta);
@@ -229,8 +233,7 @@ class DAOPreguntas {
                             }
                         }
                     })
-
-
+                }
             }
         })
     }

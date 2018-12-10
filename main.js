@@ -21,6 +21,10 @@ const mysqlSession = require("express-mysql-session");
 
 const MySQLStore = mysqlSession(session);
 
+//ROUTERS
+const routerPreguntas = require("./routerPreguntas");
+
+
 const sessionStore = new MySQLStore({
     host: "localhost",
     user: "root",
@@ -40,6 +44,7 @@ const middlewareSession = session({
 //Creacion del servidor
 const app = express();
 app.use(middlewareSession);
+app.use("/preguntas", routerPreguntas);
 //Midleware de body parser
 app.use(bodyParser.urlencoded({ extended: true })); //Preguntar a Marina donde hay que colocar esto
 
@@ -281,206 +286,8 @@ app.get("/profile", function (request, response) {
     })
 
 })*/
-app.get("/preguntasAleatorias/:id", function (request, response) {
-    daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            //console.log(res);
-            daoPreguntas.getAllPreguntasRespondidasPorUsuario(request.session.currentId,
-                function (err, filas) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
-                        let existe = 0;
-                        for (let i = 0; i < filas.length; i++) {
-                            if (filas[i].idPregunta == res[0].id) {
-                                existe += 1;
-                            }
-                        }
-                        //con existe sabemos si el usuario ha contestado o no a la pregunta
-                        daoUsuarios.getFriends(request.session.currentId, function (err, amigos_map, amigos_array) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            else {
-                                let amigos = res;
-                                daoPreguntas.getAmigosHanRespondido(request.params.id, amigos_map, function (err, amigosHanRespondido_map) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                    else {
-                                        daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId, amigosHanRespondido_map,
-                                            function (err, info_usuarios_han_respondido) {
-                                                if (err) {
-                                                    console.log(err);
-                                                }
-                                                else {
-                                                    daoPreguntas.getPreguntabyId(request.params.id, function (err, pregunta) {
-                                                        if (err) {
-                                                            console.log(err);
-                                                        }
-                                                        else {
-                                                            response.render("pregunta", {
-                                                                contestado: existe, pregunta: pregunta,
-                                                                infoUsuarios: info_usuarios_han_respondido,
-                                                                idPregunta: request.params.id
-                                                            });
-                                                        }
-                                                    })
 
-                                                }
-                                            })
-                                    }
-                                })
 
-                            }
-                        })
-
-                    }
-                })
-
-        }
-    })
-
-})
-
-app.post("/adivinar_nombre_otro", function (request, response) {
-    daoPreguntas.getPreguntabyId(request.body.idPregunta, function (err, res) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log("pregunta:");
-            console.log(res);
-            let pregunta = res[0];
-            //console.log(pregunta);
-            pregunta.respuestas = pregunta.respuestas.split(",");
-            //console.log(pregunta);
-            response.render("contestarPreguntaNombreOtro", {
-                pregunta: pregunta,
-                idUsuario: request.body.idUsuario
-            });
-            //console.log(pregunta);
-        }
-    })
-})
-app.post("/contestarPreguntaNombreDeOtro", function (request, response) {
-    console.log("body");
-    console.log(request.body);
-    //console.log(request.body);
-    if (request.body.radio) {
-
-        let arrayRespuestas = request.body.respuestas.split(",");
-        let respuesta = arrayRespuestas[request.body.radio.replace("R", "")];
-        let idRespuesta = request.body.radio.replace("R", "");
-        daoPreguntas.getRespeustaUnoMismo(request.body.idPregunta, request.body.idUsuario, function(err, respuesta_original){
-            if(err){
-                console.log(err);
-            }
-            else{
-                console.log(respuesta_original);
-                let correcto = 0; // 0 -> ha acertado 1 -> ha fallado
-                console.log(respuesta_original[0].respuesta);
-                if(respuesta != respuesta_original[0].respuesta){
-                    correcto = 1;
-                }
-                daoPreguntas.responderEnNombreDeOtro(request.session.currentId, request.body.idUsuario, request.body.idPregunta,
-                    respuesta, idRespuesta, correcto, function (err, res) {
-                        if (err) {
-                            console.log(err);
-                        }
-                        else {
-                            response.redirect("/preguntasAleatorias");
-                        }
-                    })
-            }
-        })
-    }
-})
-    app.get("/preguntasAleatorias", function (request, response) {
-        daoPreguntas.getPreguntaAleatoria(5, function (err, res) {
-            if (err) {
-                response.redirect("/profile");
-            }
-            else {
-                if (res != null) {
-                    response.render("preguntasAleatorias", { preguntas: res });
-                }
-            }
-        })
-    })
-
-    app.get("/crearPregunta", function (request, response) {
-        response.render("crearPregunta");
-    })
-
-    app.post("/crearPregunta", function (request, response) {
-        //console.log("carlos, he sacado esto ");
-        //console.log(request.body);
-        // request.body.comment.replace("\r", "");
-        //let preguntas_split = request.body.comment.split('\n');
-        var respuestas = request.body.comment.replace(/\r\n/g, "\n").split("\n");
-        //console.log(respuestas);
-        if (respuestas.length < 2) {
-            console.log("No se pueden crear preguntas con menos de dos respuestas");
-        }
-        else {
-            daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado, respuestas, function (err) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-
-                    response.redirect("/preguntasAleatorias");
-                }
-            });
-        }
-
-    })
-
-    app.get("/contestarPregunta/:id", function (request, response) {
-        daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                let pregunta = res[0];
-                //console.log(pregunta);
-                pregunta.respuestas = pregunta.respuestas.split(",");
-                //console.log(pregunta);
-                response.render("contestarPregunta", { pregunta: pregunta });
-                //console.log(pregunta);
-            }
-        })
-    })
-
-    app.post("/contestarPregunta", function (request, response) {
-        //console.log(request.body);
-        if (request.body.radio) {
-
-            let arrayRespuestas = request.body.respuestas.split(",");
-            let respuesta = arrayRespuestas[request.body.radio.replace("R", "")];
-            let idRespuesta = request.body.radio.replace("R", "");
-            //console.log(respuesta);
-
-            daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId, request.body.id, respuesta, idRespuesta,
-                function (err, res) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
-                        response.redirect("/preguntasAleatorias");
-                    }
-                })
-            //console.log("ha costestado radio");
-        }
-        else if (request.body.propio) {
-            //console.log("ha costestado propio");
-        }
-    })
 
     //------------------------CONTESTAR PREGUNTAS EN NOMBRE DE OTRO-------------------------------------
 
