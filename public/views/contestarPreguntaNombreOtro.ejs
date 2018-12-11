@@ -12,17 +12,9 @@
 <body>
     <div class="contenedor">
         <div class="header">
-            	<div class = "Userlogged"> 
-                        <div class=" foto">
-                            <img src  = "/imagenUsuario"class = "fotos">
-                        </div>
-                        <div class = "Usuario">
-                            <%=usuariologeado%>
-                        </div>
-                    </div>
             <div class="titulo">Let´s Talk!</div>
             <div class="botones">
-                <div class="Amigos">
+                <div class="Perfil">
                     <a href="\perfil.html">
                         PERFIL
                     </a>
@@ -32,7 +24,7 @@
                         AMIGOS
                     </a>
                 </div>
-                <div class="Seleccionado">
+                <div class="Preguntas">
                     <a href="#">
                         PREGUNTAS
                     </a>
@@ -54,8 +46,9 @@
             Actualmente estas en: Preguntas
         </div>
         <div class="contenido">
-            <form method="POST" action="/preguntas/contestarPregunta">
-                <input type="hidden" name="id"value="<%= pregunta.id %>"> 
+            <form method="POST" action="/preguntas/contestarPreguntaNombreDeOtro">
+                <input type="hidden" name="idPregunta"value="<%= pregunta.id %>"> 
+                <input type="hidden" name="idUsuario" value="<%= idUsuario %>">
                 <input type="hidden" name="respuestas"value="<%= pregunta.respuestas %>">
                 <%= pregunta.pregunta %>
                 
@@ -65,10 +58,6 @@
                     <label for="form<%=i%>"> <%= pregunta.respuestas[i].replace(",","") %></label>
                 </div>
                 <% }; %>
-                <div class="propio">
-                    <input type="radio" name="propio" value="propio" >
-                    <input type="text" name="texto" id="formTexto">
-                </div>
                 <div class="enviar">
                     <input type="submit" value="Enviar">
                 </div>

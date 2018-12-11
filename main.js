@@ -21,6 +21,10 @@ const mysqlSession = require("express-mysql-session");
 
 const MySQLStore = mysqlSession(session);
 
+//ROUTERS
+const routerPreguntas = require("./routerPreguntas");
+
+
 const sessionStore = new MySQLStore({
     host: "localhost",
     user: "root",
@@ -40,6 +44,7 @@ const middlewareSession = session({
 //Creacion del servidor
 const app = express();
 app.use(middlewareSession);
+app.use("/preguntas", routerPreguntas);
 //Midleware de body parser
 app.use(bodyParser.urlencoded({ extended: true })); //Preguntar a Marina donde hay que colocar esto
 
@@ -183,13 +188,17 @@ app.get("/profile", function (request, response) {
     //Creo que hacen falta coockies para esto
 })
 
-app.get("/preguntasAleatorias/:id", function (request, response) {
+
+/*app.get("/preguntasAleatorias/:id", function (request, response) {
+
     daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
         if (err) {
             console.log(err);
         }
         else {
-            console.log(res);
+
+            //console.log(res);
+
             daoPreguntas.getAllPreguntasRespondidasPorUsuario(request.session.currentId,
                 function (err, filas) {
                     if (err) {
@@ -197,9 +206,9 @@ app.get("/preguntasAleatorias/:id", function (request, response) {
                     }
                     else {
                         let existe = 0;
-                        //console.log("filas" + filas.length);
+
                         for (let i = 0; i < filas.length; i++) {
-                            //console.log("pepito " +filas[i]);
+
                             if (filas[i].idPregunta == res[0].id) {
                                 existe += 1;
                             }
@@ -228,9 +237,81 @@ app.get("/preguntasAleatorias", function (request, response) {
             if (res != null) {
                 response.render("preguntasAleatorias", { usuariologeado: request.session.currentName, preguntas: res });
             }
+                        //con existe sabemos si el usuario ha contestado o no a la pregunta
+                        daoUsuarios.getFriends(request.session.currentId, function (err, res) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                let amigos = res;
+                                console.log("amigos: ");
+                                console.log(amigos);
+                                console.log("idPregunta : " + request.params.id + " amigos: " + amigos[0]);
+                                daoPreguntas.getAmigosHanRespondido(request.params.id, amigos, function (err, amigosQueHanRespondido) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                    else {
+                                        console.log("resultado: ");
+                                        console.log(amigosQueHanRespondido);
+                                        let amigosQueHanRespondido_normalizado = [];
+                                        for (let i = 0; i < amigosQueHanRespondido.length; i++) {
+                                            amigosQueHanRespondido_normalizado.push(amigosQueHanRespondido[i].idUsuario);
+                                        }
+                                        console.log("resultado normalizado");
+                                        console.log(amigosQueHanRespondido_normalizado);
+
+                                        daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId,
+                                            amigosQueHanRespondido_normalizado, function (err, amigosYa) {
+                                                let usuariosSePuedeAdivinar_set = new Set(amigosQueHanRespondido_normalizado);
+                                                for (let i = 0; i < amigosYa.length; i++) {
+                                                    console.log(amigosYa[i].idUsuarioRespondio);
+                                                    usuariosSePuedeAdivinar_set.delete(amigosYa[i].idUsuarioRespondio);
+                                                }
+                                                let usuariosNoSepuedeAdivinar_set = new Set(amigosYa);
+                                                console.log("usuarios se puede adivinar: ");
+                                                console.log(usuariosSePuedeAdivinar_set);
+                                                let amigosYaAdivinados = amigosYa;
+                                                console.log("amigos ya adivinados: ");
+                                                console.log(amigosYaAdivinados);
+                                                daoUsuarios.getNamesByIds(amigosQueHanRespondido_normalizado, function (err, todosInfo) {
+                                                    if (err) {
+                                                        console.log(err);
+                                                    }
+                                                    else {
+                                                        console.log("todosInfo");
+                                                        console.log(todosInfo);
+                                                        let solYaAdivinados = [];
+                                                        let noAdivinados = [];
+                                                        let infoYaAdivinados = {
+                                                            nombre: "",
+                                                            coorecto: 0
+                                                        };
+                                                        for (let i = 0; i < todosInfo.length; i++) {
+                                                            if (usuariosNoSepuedeAdivinar_set.has(todosInfo[i].id)) {
+                                                                infoYaAdivinados.nombre = todosInfo[i].nombre;
+                                                            }
+                                                        }
+                                                        response.render("pregunta", { contestado: existe })
+
+                                                    }
+                                                })
+                                                response.render("pregunta", { contestado: existe, pregunta: res[0],
+                                                amigosPuedeAdivinar: Array.from(usuariosSePuedeAdivinar),
+                                                amigosNoPuedeAdivinar: amigosYaAdivinados});
+                                            })
+
+                                    }
+                                })
+                            }
+                        })
+
+                    }
+                })
+
         }
     })
-})
+
 
 app.get("/crearPregunta", function (request, response) {
     response.render("crearPregunta", { usuariologeado: request.session.currentName });
@@ -301,12 +382,25 @@ app.post("/contestarPregunta", function (request, response) {
     }
 })
 //------------------------IMAGEN DE USUARIO---------------------
+})*/
+
+
+
+//------------------------CONTESTAR PREGUNTAS EN NOMBRE DE OTRO-------------------------------------
+
+
+
+
+//------------------------FIN CONTESTAR PREGUNTAS EN NOMBRE DE OTRO---------------------------------
+
+
+//------------------------IMAGEN DE USUARIO---------------------
+
 
 app.get("/imagenUsuario", function (request, response) {
 
     daoUsuarios.getUserImageName(request.session.currentUser, function (err, res) {
-
-
+        //console.log(res); 
         if (res === null) {
             //console.log("aqui");
             let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
@@ -321,17 +415,7 @@ app.get("/imagenUsuario", function (request, response) {
         }
     })
 })
-//--------------------------------------------------------------
-//------------------------LOGOUT--------------------------------
-app.get("/logout", function (request, response) {
-    request.session.destroy();
-    response.redirect("/login");
-})
-//--------------------------------------------------------------
 
-app.get("/modify", function (request, response) {
-    response.redirect("/modificar.html");
-})
 
 app.get("/amigos", function (request, response) {
     daoUsuarios.consultarSolicitudes(request.session.currentUser, function (err, result) {
@@ -440,7 +524,84 @@ app.get("/nuevoAmigo/:idAmigo", function (request, response) {
             response.redirect("/amigos");
         }
 
+
     })
+})
+//--------------------------------------------------------------
+//------------------------LOGOUT--------------------------------
+app.get("/logout", function (request, response) {
+    request.session.destroy();
+    response.redirect("/login");
+})
+//--------------------------------------------------------------
+
+app.get("/modify", function (request, response) {
+    response.render("modificar", {usuariologeado: request.session.currentName});
+})
+
+app.get("/amigos", function (request, response) {
+    daoUsuarios.consultarSolicitudes(request.session.currentUser, function (err, result) {
+        if (err) {
+            console.log("ERROR")
+        }
+        else {
+            if (result) {
+                console.log(result);
+                var posiblesamigos = [];
+                for (var j = 0; j < result.length; j++) {
+                    daoUsuarios.getUsuarioid(result[j].usuario_envia, function (err, result2) {
+                        if (err) {
+                            console.log("ERROR");
+                        }
+                        else {
+
+                            posiblesamigos.push(result2);
+                        }
+                    })
+                }
+                console.log(posiblesamigos);
+                response.render("amigos", { posiblesamigos: posiblesamigos });
+            }
+        }
+    })
+
+})
+app.post("/buscarAmigo", function (request, response) {
+
+    daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result) {
+        if (err) {
+            response.redirect("/profile");
+        }
+        else {
+            response.render("nuevosAmigos", { listaNombre: result });
+        }
+    })
+})
+
+app.get("/nuevoAmigo/:idAmigo", function (request, response) {
+    //Hay que comprobar que no hay ya amistad presente en estos dos ids.
+    daoUsuarios.enviarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
+        if (err) {
+            console.log("Error al enviar la peticion de amistad");
+        }
+        else {
+            response.redirect("/amigos");
+        }
+    })
+})
+
+
+app.get("/aceptarAmistad/:idAmigo", function (request, response) {
+    daoUsuarios.aceptarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
+        if (err) {
+            console.log(err.message);
+        }
+        else {
+            response.redirect("/amigos");
+        }
+    })
+
+
 })
 
 app.post("/modify", function (request, response) {
@@ -471,50 +632,5 @@ app.post("/modify", function (request, response) {
         })
 
 
-
-})
-app.get("/aceptarAmistad/:idAmigo", function (request, response) {
-    daoUsuarios.aceptarAmistad(request.session.currentUser, request.params.idAmigo, function (err) {
-        if (err) {
-            console.log(err.message);
-        }
-        else {
-            response.redirect("/amigos");
-        }
-    })
-
-
 })
 
-
-
-
-function cb_insertaUsuario(err, result) {
-    if (err) {
-        console.log(err);
-    }
-}
-
-function cb_isUserCorrect(err, result) {
-    if (err) {
-        console.log(err);
-    }
-    else if (result) {
-        console.log("contraseña correcta");
-    }
-    else {
-        console.log("contraseña incorrecta");
-    }
-}
-
-function cb_deleteUsuario(err, result) {
-    if (err) {
-        console.log(err);
-    }
-    else if (result) {
-        console.log("Eliminado correctamente");
-    }
-    else {
-        console.log("");
-    }
-}
