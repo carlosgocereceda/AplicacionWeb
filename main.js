@@ -25,6 +25,7 @@ const MySQLStore = mysqlSession(session);
 const routerPreguntas = require("./routerPreguntas");
 
 
+
 const sessionStore = new MySQLStore({
     host: "localhost",
     user: "root",
@@ -38,6 +39,8 @@ const middlewareSession = session({
     resave: false,
     store: sessionStore
 });
+const multer = require("multer");
+const multerFactory = multer({ dest: path.join(__dirname, "uploads")});
 
 //------------------FIN DE IMPORTACIONES------------------------------------
 
@@ -118,7 +121,8 @@ app.get("/register", function (request, response) {
     response.redirect("/nuevoUsuario.html")
 })
 
-app.post("/register", function (request, response) {
+app.post("/register",multerFactory.single("Imagen_perfil"), function (request, response) {
+    
     daoUsuarios.getUsuario(request.body.email, function (err, res) {
 
         if (res == null) {
@@ -129,13 +133,10 @@ app.post("/register", function (request, response) {
             else {
                 sexo = 1;
             }
-            console.log("imagen|" + request.body.Imagen_perfil + "|");
-            if (request.body.Imagen_perfil = "") {
-                console.log("pues si");
-            }
+            
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
-                null,
+                request.body.Imagen_perfil,
                 function (err) {
                     if (!err) {
                         request.session.currentUser = request.body.email;
@@ -189,212 +190,7 @@ app.get("/profile", function (request, response) {
 })
 
 
-/*app.get("/preguntasAleatorias/:id", function (request, response) {
 
-    daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-
-            //console.log(res);
-
-            daoPreguntas.getAllPreguntasRespondidasPorUsuario(request.session.currentId,
-                function (err, filas) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    else {
-                        let existe = 0;
-
-                        for (let i = 0; i < filas.length; i++) {
-
-                            if (filas[i].idPregunta == res[0].id) {
-                                existe += 1;
-                            }
-                        }
-                        if (existe > 0) {
-                            response.render("pregunta", { usuariologeado: request.session.currentName, contestado: existe, pregunta: res[0] });
-                        }
-                        else {
-                            //console.log("estoy por aquí " + res[0].pregunta);
-                            response.render("pregunta", { usuariologeado: request.session.currentName, contestado: existe, pregunta: res[0] });
-                        }
-                    }
-                })
-
-        }
-    })
-
-})
-
-app.get("/preguntasAleatorias", function (request, response) {
-    daoPreguntas.getPreguntaAleatoria(5, function (err, res) {
-        if (err) {
-            response.redirect("/profile");
-        }
-        else {
-            if (res != null) {
-                response.render("preguntasAleatorias", { usuariologeado: request.session.currentName, preguntas: res });
-            }
-                        //con existe sabemos si el usuario ha contestado o no a la pregunta
-                        daoUsuarios.getFriends(request.session.currentId, function (err, res) {
-                            if (err) {
-                                console.log(err);
-                            }
-                            else {
-                                let amigos = res;
-                                console.log("amigos: ");
-                                console.log(amigos);
-                                console.log("idPregunta : " + request.params.id + " amigos: " + amigos[0]);
-                                daoPreguntas.getAmigosHanRespondido(request.params.id, amigos, function (err, amigosQueHanRespondido) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                    else {
-                                        console.log("resultado: ");
-                                        console.log(amigosQueHanRespondido);
-                                        let amigosQueHanRespondido_normalizado = [];
-                                        for (let i = 0; i < amigosQueHanRespondido.length; i++) {
-                                            amigosQueHanRespondido_normalizado.push(amigosQueHanRespondido[i].idUsuario);
-                                        }
-                                        console.log("resultado normalizado");
-                                        console.log(amigosQueHanRespondido_normalizado);
-
-                                        daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId,
-                                            amigosQueHanRespondido_normalizado, function (err, amigosYa) {
-                                                let usuariosSePuedeAdivinar_set = new Set(amigosQueHanRespondido_normalizado);
-                                                for (let i = 0; i < amigosYa.length; i++) {
-                                                    console.log(amigosYa[i].idUsuarioRespondio);
-                                                    usuariosSePuedeAdivinar_set.delete(amigosYa[i].idUsuarioRespondio);
-                                                }
-                                                let usuariosNoSepuedeAdivinar_set = new Set(amigosYa);
-                                                console.log("usuarios se puede adivinar: ");
-                                                console.log(usuariosSePuedeAdivinar_set);
-                                                let amigosYaAdivinados = amigosYa;
-                                                console.log("amigos ya adivinados: ");
-                                                console.log(amigosYaAdivinados);
-                                                daoUsuarios.getNamesByIds(amigosQueHanRespondido_normalizado, function (err, todosInfo) {
-                                                    if (err) {
-                                                        console.log(err);
-                                                    }
-                                                    else {
-                                                        console.log("todosInfo");
-                                                        console.log(todosInfo);
-                                                        let solYaAdivinados = [];
-                                                        let noAdivinados = [];
-                                                        let infoYaAdivinados = {
-                                                            nombre: "",
-                                                            coorecto: 0
-                                                        };
-                                                        for (let i = 0; i < todosInfo.length; i++) {
-                                                            if (usuariosNoSepuedeAdivinar_set.has(todosInfo[i].id)) {
-                                                                infoYaAdivinados.nombre = todosInfo[i].nombre;
-                                                            }
-                                                        }
-                                                        response.render("pregunta", { contestado: existe })
-
-                                                    }
-                                                })
-                                                response.render("pregunta", { contestado: existe, pregunta: res[0],
-                                                amigosPuedeAdivinar: Array.from(usuariosSePuedeAdivinar),
-                                                amigosNoPuedeAdivinar: amigosYaAdivinados});
-                                            })
-
-                                    }
-                                })
-                            }
-                        })
-
-                    }
-                })
-
-        }
-    })
-
-
-app.get("/crearPregunta", function (request, response) {
-    response.render("crearPregunta", { usuariologeado: request.session.currentName });
-})
-
-app.post("/crearPregunta", function (request, response) {
-    //console.log("carlos, he sacado esto ");
-    //console.log(request.body);
-    // request.body.comment.replace("\r", "");
-    //let preguntas_split = request.body.comment.split('\n');
-    var respuestas = request.body.comment.replace(/\r\n/g, "\n").split("\n");
-    //console.log(respuestas);
-    if (respuestas.length < 2) {
-        console.log("No se pueden crear preguntas con menos de dos respuestas");
-    }
-    else {
-        daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado, respuestas, function (err) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-
-                response.redirect("/preguntasAleatorias");
-            }
-        });
-    }
-
-})
-
-app.get("/contestarPregunta/:id", function (request, response) {
-    daoPreguntas.getPreguntabyId(request.params.id, function (err, res) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            let pregunta = res[0];
-            //console.log(pregunta);
-            pregunta.respuestas = pregunta.respuestas.split(",");
-            //console.log(pregunta);
-            response.render("contestarPregunta", { usuariologeado: request.session.currentName, pregunta: pregunta });
-            //console.log(pregunta);
-        }
-    })
-})
-
-app.post("/contestarPregunta", function (request, response) {
-    //console.log(request.body);
-    if (request.body.radio) {
-
-        let arrayRespuestas = request.body.respuestas.split(",");
-        let respuesta = arrayRespuestas[request.body.radio.replace("R", "")];
-        let idRespuesta = request.body.radio.replace("R", "");
-        //console.log(respuesta);
-
-        daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId, request.body.id, respuesta, idRespuesta,
-            function (err, res) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    response.redirect("/preguntasAleatorias");
-                }
-            })
-        //console.log("ha costestado radio");
-    }
-    else if (request.body.propio) {
-        //console.log("ha costestado propio");
-    }
-})
-//------------------------IMAGEN DE USUARIO---------------------
-})*/
-
-
-
-//------------------------CONTESTAR PREGUNTAS EN NOMBRE DE OTRO-------------------------------------
-
-
-
-
-//------------------------FIN CONTESTAR PREGUNTAS EN NOMBRE DE OTRO---------------------------------
-
-
-//------------------------IMAGEN DE USUARIO---------------------
 
 
 app.get("/imagenUsuario", function (request, response) {
@@ -409,7 +205,7 @@ app.get("/imagenUsuario", function (request, response) {
         }
         else {
             //console.log("holi");
-            let pathImg = path.join(__dirname, "profile_imgs", res);
+            let pathImg = path.join(__dirname, "uploads", res);
             //console.log(pathImg);
             response.sendFile(pathImg)
         }
