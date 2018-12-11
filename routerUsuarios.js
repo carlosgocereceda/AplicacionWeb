@@ -50,6 +50,11 @@ const multerFactory = multer({ dest: path.join(__dirname, "uploads")});
 routerUsuarios.get("/register", function (request, response) {
     response.redirect("/nuevoUsuario.html")
 })
+function _calculateAge(birthday) { // birthday is a date
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 
 routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function (request, response) {
     let n = null;
@@ -104,10 +109,10 @@ routerUsuarios.get("/profile", function (request, response) {
     //console.log("sdf fsdf fasdf");
     daoUsuarios.getUsuario(request.session.currentUser, function (err, res) {
         //console.log(res);
-        if (res != null) {
+        if (res) {
 
             let nombre = res[0].nombre;
-            let edad = res[0].fecha_nacimiento;
+            let edad1 = res[0].fecha_nacimiento;
             let sexo = "";
             if (res[0].sexo == 0) {
                 sexo = "Hombre";
@@ -115,8 +120,8 @@ routerUsuarios.get("/profile", function (request, response) {
             else {
                 sexo = "Mujer";
             }
-            let puntos = "0 puntos";
-
+            let puntos = res[0].puntos;
+            let edad =  _calculateAge(edad1);
             response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad, sexo: sexo, puntos: puntos });
         }
     })
@@ -261,7 +266,7 @@ routerUsuarios.get("/nuevoAmigo/:idAmigo", function (request, response) {
 //------------------------LOGOUT--------------------------------
 routerUsuarios.get("/logout", function (request, response) {
     request.session.destroy();
-    response.redirect("/usuarios/login");
+    response.redirect("/login");
 })
 //--------------------------------------------------------------
 
@@ -365,7 +370,7 @@ routerUsuarios.post("/modify", multerFactory.single("Imagen_perfil"),function (r
             }
         })
 
-
+       
 })
 
 module.exports = routerUsuarios;
