@@ -13,6 +13,22 @@
 	border-bottom-style: solid;
 	border-color: #4c545c;
 }
+.Usuario{
+	margin-top:20px;
+	color:#e1e0dd ;
+	font-size: 30px;
+}
+.fotos, .fotoAmigo{
+	background-size:100%;
+	width:70px;
+	
+	height:70px;
+	
+}.Userlogged{
+	display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .titulo{
 	font-size:40px;
 	color:#e8e9ef;
