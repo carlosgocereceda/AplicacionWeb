@@ -99,7 +99,8 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                                                 contestado: existe, pregunta: pregunta[0],
                                                                 infoUsuarios: info_usuarios_han_respondido,
                                                                 idPregunta: request.params.id,
-                                                                usuariologeado: request.session.currentName
+                                                                usuariologeado: request.session.currentName,
+                                                                puntos: request.session.currentPoints 
                                                             });
                                                         }
                                                     })
@@ -134,7 +135,8 @@ routerPreguntas.post("/adivinar_nombre_otro", function (request, response) {
             //console.log(pregunta);
             response.render("contestarPreguntaNombreOtro", {
                 pregunta: pregunta,
-                idUsuario: request.body.idUsuario
+                idUsuario: request.body.idUsuario,
+                puntos: request.session.currentPoints   
             });
             //console.log(pregunta);
         }
@@ -160,12 +162,21 @@ routerPreguntas.post("/contestarPreguntaNombreDeOtro", function (request, respon
                 if(respuesta != respuesta_original[0].respuesta){
                     correcto = 1;
                 }
+                if(correcto == 0){
+                    request.session.currentPoints += 50;
+                }
                 daoPreguntas.responderEnNombreDeOtro(request.session.currentId, request.body.idUsuario, request.body.idPregunta,
                     respuesta, idRespuesta, correcto, function (err, res) {
                         if (err) {
                             console.log(err);
                         }
                         else {
+                            daoUsuarios.actualizarPuntuacion(request.session.currentId, request.session.currentPoints, function(err, res){
+                                if(err){
+                                    console.log(err.message);
+                                }
+
+                            })
                             response.redirect("/preguntas/preguntasAleatorias");
                         }
                     })
@@ -176,18 +187,19 @@ routerPreguntas.post("/contestarPreguntaNombreDeOtro", function (request, respon
 routerPreguntas.get("/preguntasAleatorias", function (request, response) {
         daoPreguntas.getPreguntaAleatoria(5, function (err, res) {
             if (err) {
-                response.redirect("/profile");
+                response.redirect("/usuarios/profile");
             }
             else {
-                if (res != null) {
-                    response.render("preguntasAleatorias", { preguntas: res, usuariologeado: request.session.currentName });
+                if (res) {
+                    console.log(request.session.currentPoints );
+                    response.render("preguntasAleatorias", { preguntas: res, usuariologeado: request.session.currentName, puntos: request.session.currentPoints  });
                 }
             }
         })
     })
 
     routerPreguntas.get("/crearPregunta", function (request, response) {
-        response.render("crearPregunta", {usuariologeado: request.session.currentName});
+        response.render("crearPregunta", {usuariologeado: request.session.currentName, puntos: request.session.currentPoints });
     })
 
     routerPreguntas.post("/crearPregunta", function (request, response) {
@@ -224,7 +236,7 @@ routerPreguntas.get("/preguntasAleatorias", function (request, response) {
                 //console.log(pregunta);
                 pregunta.respuestas = pregunta.respuestas.split(",");
                 //console.log(pregunta);
-                response.render("contestarPregunta", { pregunta: pregunta, usuariologeado: request.session.currentName });
+                response.render("contestarPregunta", { pregunta: pregunta, usuariologeado: request.session.currentName, puntos: request.session.currentPoints });
                 //console.log(pregunta);
             }
         })

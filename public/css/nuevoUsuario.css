@@ -18,6 +18,13 @@
 	color:#e1e0dd ;
 	font-size: 30px;
 }
+.puntos{
+	flex-direction: row;
+	margin-top: 30px;
+	margin-left:20px;
+	color: #e1e0dd;
+	font-size: 20px;
+}
 .fotos, .fotoAmigo{
 	background-size:100%;
 	width:70px;

@@ -56,10 +56,10 @@ class DAOUsuarios {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
-                            if(resultado){
-                            callback(null, resultado[0].Imagen_perfil);
+                            if (resultado) {
+                                callback(null, resultado[0].Imagen_perfil);
                             }
-                            else{
+                            else {
                                 callback(null);
                             }
                         };
@@ -77,9 +77,9 @@ class DAOUsuarios {
             }
             else {
                 connection.query(`INSERT INTO 
-                USUARIO(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil) 
+                USUARIO(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos) 
                 VALUES (?,?,?,?,?,?)`,
-                    [email, password, nombre, sexo, fecha_nacimiento, imagen_perfil],
+                    [email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, 0],
                     function (err, filas) {
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
@@ -474,64 +474,84 @@ class DAOUsuarios {
     }
 
 
-        getFriends(id, callback) {
-            this.pool.getConnection(function (err, connection) {
-                if (err) {
-                    callback(new Error("Error de conexión a la base de datos"));
-                }
-                else {
-                    connection.query("SELECT idAmigo1 AS idAmigo, usuario.nombre FROM amigos, usuario WHERE idAmigo2 = ? " +
-                        "AND amigos.idAmigo1 = usuario.id",
-                        [id],
-                        function (err, filas1) {
-                            if (err) {
-                                callback(new Error("Error de acceso a la base de datos"));
-                            }
-                            else {
-                                connection.query("SELECT idAmigo2 AS idAmigo, usuario.nombre FROM amigos, usuario WHERE idAmigo1 = ? " +
-                                    "AND amigos.idAmigo2 = usuario.id",
-                                    [id],
-                                    function (err, filas2) {
-                                        let filas_concat = filas1.concat(filas2);
-                                        let amigos = new Map();
+    getFriends(id, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query("SELECT idAmigo1 AS idAmigo, usuario.nombre FROM amigos, usuario WHERE idAmigo2 = ? " +
+                    "AND amigos.idAmigo1 = usuario.id",
+                    [id],
+                    function (err, filas1) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            connection.query("SELECT idAmigo2 AS idAmigo, usuario.nombre FROM amigos, usuario WHERE idAmigo1 = ? " +
+                                "AND amigos.idAmigo2 = usuario.id",
+                                [id],
+                                function (err, filas2) {
+                                    let filas_concat = filas1.concat(filas2);
+                                    let amigos = new Map();
 
-                                        for (let i = 0; i < filas_concat.length; i++) {
-                                            console.log("id");
-                                            console.log(filas_concat[0].idAmigo);
-                                            amigos.set(filas_concat[i].idAmigo, filas_concat[i].nombre);
-                                        }
-                                        callback(null, amigos, JSON.stringify(filas_concat));
+                                    for (let i = 0; i < filas_concat.length; i++) {
+                                        console.log("id");
+                                        console.log(filas_concat[0].idAmigo);
+                                        amigos.set(filas_concat[i].idAmigo, filas_concat[i].nombre);
                                     }
-                                )
-                            }
-                        })
-                }
-            })
-        }
-        getNamesByIds(usuarios, callback) {
-            this.pool.getConnection(function (err, connection) {
-                if (err) {
-                    callback(new Error("Error de conexión a la base de datos"));
-                }
-                else {
-                    connection.query('SELECT nombre, id FROM usuario WHERE id IN (' + usuarios.join() + ')',
-                        function (err, filas) {
-                            if (err) {
-                                callback(new Error("Error de acceso a la base de datos"));
+                                    callback(null, amigos, JSON.stringify(filas_concat));
+                                }
+                            )
+                        }
+                    })
+            }
+        })
+    }
+    getNamesByIds(usuarios, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query('SELECT nombre, id FROM usuario WHERE id IN (' + usuarios.join() + ')',
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            if (filas.length > 0) {
+                                callback(null, filas);
                             }
                             else {
-                                if (filas.length > 0) {
-                                    callback(null, filas);
-                                }
-                                else {
-                                    callback(null, null);
-                                }
-
+                                callback(null, null);
                             }
-                        })
-                }
-            })
 
-        }
+                        }
+                    })
+            }
+        })
+
     }
+    actualizarPuntuacion(id, puntos) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                console.log(err.message);
+            }
+            else {
+                connection.query("UPDATE USUARIOS SET PUNTOS = ? WHERE ID = ?", [puntos, id],
+                    function (err) {
+                        if (err) {
+                            callback(new Error("Error al actualizar los puntos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+                    }
+                )
+            }
+
+        })
+    }
+}
 module.exports = DAOUsuarios;

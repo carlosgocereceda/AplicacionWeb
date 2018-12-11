@@ -113,9 +113,6 @@ app.post("/loginUser", function (request, response) {
 
     })
 });
-//-------------------------------FIN DEL POST PARA EL LOGIN----------------------
-
-//-------------------------------REGISTRAR USUARIO-------------------------------
 
 
 

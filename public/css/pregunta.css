@@ -114,7 +114,7 @@ h3{
     margin-bottom: 1%;
 }
 .fotoAmigo{
-	background-image:url("../img/gato.jpg");
+	
 	background-size:100%;
 	width:35px;
 	height:35px;
@@ -136,4 +136,11 @@ h3{
 	
 	height:70px;
 	
+}
+.puntos{
+	flex-direction: row;
+	margin-top: 30px;
+	margin-left:20px;
+	color: #e1e0dd;
+	font-size: 20px;
 }
