@@ -22,6 +22,7 @@ class DAOPreguntas {
                 VALUES (?,?,?)`,
                     [id, enunciado, respuestas.join(",")],
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -40,6 +41,7 @@ class DAOPreguntas {
             else {
                 connection.query("SELECT * FROM PREGUNTA WHERE ID = ?",
                     [id], function (err, res) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -57,6 +59,7 @@ class DAOPreguntas {
             }
             else {
                 connection.query("SELECT * FROM PREGUNTA", function (err, filas) {
+                    connection.release();
                     if (err) {
                         callback(new Error("Error de acceso a la base de datos"));
                     }
@@ -109,6 +112,7 @@ class DAOPreguntas {
             else {
                 connection.query("SELECT * FROM usuariorespondeparasimismo WHERE idUsuario = ?",
                     [id], function (err, res) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -128,6 +132,7 @@ class DAOPreguntas {
                 connection.query("INSERT INTO usuariorespondeparasimismo (idPregunta, idUsuario, respuesta, idRespuesta) VALUES (?,?,?,?)",
                     [idPregunta, idUsuario, respuesta, idRespuesta],
                     function (err, res) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -148,6 +153,7 @@ class DAOPreguntas {
                     + " WHERE idPregunta = ? AND idUsuario = ?",
                     [idPregunta, idUsuario],
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -209,6 +215,7 @@ class DAOPreguntas {
                 connection.query('SELECT * FROM usuariorespondeennombredeotro WHERE idPregunta = ' + idPregunta +
                     ' AND idUsuarioAdivina = ' + usuarioQuiereAdivinar + ' AND idUsuarioRespondio IN (' + amigos.join() + ')',
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -247,6 +254,7 @@ class DAOPreguntas {
                 connection.query("INSERT INTO usuariorespondeennombredeotro (idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta) VALUES (?,?,?,?,?,?)",
                     [idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta],
                     function (err, res) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
