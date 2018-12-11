@@ -93,8 +93,8 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                                                 info_usuarios_han_respondido = new Map();
                                                                 info_usuarios_han_respondido.set(0,"ningun amigo ha respondido");
                                                             }
-                                                            console.log("id pregunta ");
-                                                            console.log(pregunta);
+                                                            //console.log("id pregunta ");
+                                                            //console.log(pregunta);
                                                             response.render("pregunta", {
                                                                 contestado: existe, pregunta: pregunta[0],
                                                                 infoUsuarios: info_usuarios_han_respondido,
@@ -125,8 +125,8 @@ routerPreguntas.post("/adivinar_nombre_otro", function (request, response) {
             console.log(err);
         }
         else {
-            console.log("pregunta:");
-            console.log(res);
+            //console.log("pregunta:");
+            //console.log(res);
             let pregunta = res[0];
             //console.log(pregunta);
             pregunta.respuestas = pregunta.respuestas.split(",");
@@ -140,8 +140,8 @@ routerPreguntas.post("/adivinar_nombre_otro", function (request, response) {
     })
 })
 routerPreguntas.post("/contestarPreguntaNombreDeOtro", function (request, response) {
-    console.log("body");
-    console.log(request.body);
+    //console.log("body");
+    //console.log(request.body);
     //console.log(request.body);
     if (request.body.radio) {
 
@@ -153,9 +153,9 @@ routerPreguntas.post("/contestarPreguntaNombreDeOtro", function (request, respon
                 console.log(err);
             }
             else{
-                console.log(respuesta_original);
+                //console.log(respuesta_original);
                 let correcto = 0; // 0 -> ha acertado 1 -> ha fallado
-                console.log(respuesta_original[0].respuesta);
+                //console.log(respuesta_original[0].respuesta);
                 if(respuesta != respuesta_original[0].respuesta){
                     correcto = 1;
                 }

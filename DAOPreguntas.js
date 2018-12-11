@@ -207,10 +207,10 @@ class DAOPreguntas {
                 }
                 else{
                     let amigos = Array.from(amigos_map.keys());
-                console.log("aqui");
-                console.log(amigos);
-                console.log("idpregunta" + idPregunta);
-                console.log("usuarioQuiereAdivinar " + usuarioQuiereAdivinar);
+                //console.log("aqui");
+                //console.log(amigos);
+                //console.log("idpregunta" + idPregunta);
+                //console.log("usuarioQuiereAdivinar " + usuarioQuiereAdivinar);
 
                 connection.query('SELECT * FROM usuariorespondeennombredeotro WHERE idPregunta = ' + idPregunta +
                     ' AND idUsuarioAdivina = ' + usuarioQuiereAdivinar + ' AND idUsuarioRespondio IN (' + amigos.join() + ')',
@@ -231,8 +231,8 @@ class DAOPreguntas {
                                     }
                                     sol.set(filas[i].id, info);
                                 }
-                                console.log("mapa cambiado: ");
-                                console.log(sol);
+                                //console.log("mapa cambiado: ");
+                                //console.log(sol);
                                 callback(null, sol);
                             }
                             else {
