@@ -42,7 +42,7 @@ a:hover{
 	border-bottom: solid;
 	border-color: #f43d3d;
 }
-.Perfil a{
+.Seleccionado a{
 	color:#04ab74;
 	border-bottom: solid;
 	border-color: #04ab74;
@@ -90,6 +90,16 @@ body{
     color:#262a35;
     font-size:30px;
     padding-left: 20px;
+}
+.Usuario{
+	margin-top:20px;
+	color:#e1e0dd ;
+	font-size: 30px;
+}
+.Userlogged{
+	display:flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 .peticion{
     display:flex;

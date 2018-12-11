@@ -15,10 +15,27 @@
 	border-bottom-style: solid;
 	border-color: #4c545c;
 }
+.fotos, .fotoAmigo{
+	background-size:100%;
+	width:70px;
+	
+	height:70px;
+	
+}
 .titulo{
 	font-size:40px;
 	color:#e8e9ef;
 	padding: 10px;
+}
+.Usuario{
+	margin-top:20px;
+	color:#e1e0dd ;
+	font-size: 30px;
+}
+.Userlogged{
+	display:flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 a{
 	text-decoration-line: unset;

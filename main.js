@@ -177,7 +177,7 @@ app.get("/profile", function (request, response) {
             }
             let puntos = "0 puntos";
 
-            response.render("perfil", { usuariologeado: request.session.currentName,nombre: nombre, edad: edad, sexo: sexo, puntos: puntos });
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad, sexo: sexo, puntos: puntos });
         }
     })
     //Creo que hacen falta coockies para esto
@@ -205,11 +205,11 @@ app.get("/preguntasAleatorias/:id", function (request, response) {
                             }
                         }
                         if (existe > 0) {
-                            response.render("pregunta", {  usuariologeado: request.session.currentName, contestado: existe, pregunta: res[0] });
+                            response.render("pregunta", { usuariologeado: request.session.currentName, contestado: existe, pregunta: res[0] });
                         }
                         else {
                             //console.log("estoy por aquí " + res[0].pregunta);
-                            response.render("pregunta", {  usuariologeado: request.session.currentName, contestado: existe, pregunta: res[0] });
+                            response.render("pregunta", { usuariologeado: request.session.currentName, contestado: existe, pregunta: res[0] });
                         }
                     }
                 })
@@ -226,14 +226,14 @@ app.get("/preguntasAleatorias", function (request, response) {
         }
         else {
             if (res != null) {
-                response.render("preguntasAleatorias", {  usuariologeado: request.session.currentName, preguntas: res });
+                response.render("preguntasAleatorias", { usuariologeado: request.session.currentName, preguntas: res });
             }
         }
     })
 })
 
 app.get("/crearPregunta", function (request, response) {
-    response.render("crearPregunta");
+    response.render("crearPregunta", { usuariologeado: request.session.currentName });
 })
 
 app.post("/crearPregunta", function (request, response) {
@@ -270,7 +270,7 @@ app.get("/contestarPregunta/:id", function (request, response) {
             //console.log(pregunta);
             pregunta.respuestas = pregunta.respuestas.split(",");
             //console.log(pregunta);
-            response.render("contestarPregunta", { usuariologeado: request.session.currentName,  pregunta: pregunta });
+            response.render("contestarPregunta", { usuariologeado: request.session.currentName, pregunta: pregunta });
             //console.log(pregunta);
         }
     })
@@ -356,11 +356,11 @@ app.get("/amigos", function (request, response) {
                                 else {
 
                                     if (result3) {
-                                        response.render("amigos", {  usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: result3 });
+                                        response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: result3 });
                                     }
                                     else {
 
-                                        response.render("amigos", {  usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: [] });
+                                        response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: [] });
                                     }
 
                                 }
@@ -381,11 +381,11 @@ app.get("/amigos", function (request, response) {
                         if (result3) {
                             console.log("result3:");
                             console.log(result3[0]);
-                            response.render("amigos", { usuariologeado: request.session.currentName,  posiblesamigos: [], amigosya: result3 });
+                            response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: [], amigosya: result3 });
                         }
                         else {
 
-                            response.render("amigos", { usuariologeado: request.session.currentName,  posiblesamigos: [], amigosya: [] });
+                            response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: [], amigosya: [] });
                         }
                     }
 
@@ -397,8 +397,6 @@ app.get("/amigos", function (request, response) {
 })
 app.post("/buscarAmigo", function (request, response) {
     let arrayID = [];
-    let count = 0;
-    let booleanID = [];
     daoUsuarios.buscarUsuario2(request.body.buscadorAmigo, function (err, result) {
         if (err) {
             response.redirect("/profile");
@@ -415,19 +413,19 @@ app.post("/buscarAmigo", function (request, response) {
                     }
                     else {
                         //Aqui filtro donde estoy yo para quesarme solo con las filas en las que aparezca el id del usuario
-                      let c  = result2.filter(element => element.idAmigo1 == request.session.currentId || element.idAmigo2 == request.session.currentId);
-                      //Este map sirve para ver si me quedo con la fila 1 o 2 de amigos dependiendo de donde se encuentra el id del current user
-                      c = c.map(element => (element.idAmigo1 == request.session.currentId) ? element.idAmigo2 : element.idAmigo1);
-                      //Este map es para quedarme con true o false a la hora de pasarlo por el js, para ello miro a ver si el id de c que es el primer filtro es = -1 entondes meto false, mientras que si es mayor meto true;
-                      let a =  arrayID.map(element2 => (c.indexOf(element2 > -1) ? true: false));
-                      //envio el render con los dos arrays para las comprobaciones;
-                        response.render("nuevosAmigos", {  usuariologeado: request.session.currentName, listaNombre: result, amigosya: a });
+                        let c = result2.filter(element => element.idAmigo1 == request.session.currentId || element.idAmigo2 == request.session.currentId);
+                        //Este map sirve para ver si me quedo con la fila 1 o 2 de amigos dependiendo de donde se encuentra el id del current user
+                        c = c.map(element => (element.idAmigo1 == request.session.currentId) ? element.idAmigo2 : element.idAmigo1);
+                        //Este map es para quedarme con true o false a la hora de pasarlo por el js, para ello miro a ver si el id de c que es el primer filtro es = -1 entondes meto false, mientras que si es mayor meto true;
+                        let a = arrayID.map(element2 => (c.indexOf(element2 > -1) ? true : false));
+                        //envio el render con los dos arrays para las comprobaciones;
+                        response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a });
                     }
                 })
-               
+
             }
-            else{
-                response.render("nuevosAmigos", {  usuariologeado: request.session.currentName, listaNombre: [] });
+            else {
+                response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: [] });
             }
         }
     })
