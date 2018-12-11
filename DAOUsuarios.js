@@ -56,8 +56,12 @@ class DAOUsuarios {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
                         else {
+                            if(resultado){
                             callback(null, resultado[0].Imagen_perfil);
-
+                            }
+                            else{
+                                callback(null);
+                            }
                         };
                     }
 

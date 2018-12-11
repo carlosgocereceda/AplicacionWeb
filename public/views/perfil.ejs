@@ -4,7 +4,7 @@
 	<title></title>
 	<meta charset="utf-8">
 	<link rel ="icon" href= "">
-	<title>Let´s Talk!</title>
+	<title>Let´s Answer!</title>
 	<link rel="stylesheet" type ="text/css" href="css/perfil.css" media="screen"/>
 </head>
 <body>
@@ -12,13 +12,13 @@
 		<div class="header">
 			<div class = "Userlogged"> 
 				<div class=" foto">
-					<img src= "/imagenUsuario" class = "fotos">
+					<img src= "/usuarios/imagenUsuario" class = "fotos">
 				</div>
 				<div class = "Usuario">
 					<%=usuariologeado%>
 				</div>
 			</div>
-			<div class="titulo">Let´s Talk!</div>
+			<div class="titulo">Let´s Answer!</div>
 			<div class="botones">
 				<div class="Perfil">
 					<a href="#">
@@ -26,7 +26,7 @@
 					</a>
 				</div>
 				<div class="Amigos">
-					<a href="\amigos">
+					<a href="/usuarios/amigos">
 						AMIGOS
 					</a>
 				</div>
@@ -36,7 +36,7 @@
 					</a>
 				</div>
 				<div class="Desconectar">
-					<a href="/logout">
+					<a href="/usuarios/logout">
 						DESCONECTAR
 					</a>
 				</div>
@@ -51,7 +51,7 @@
 			Actualmente estas en: Tu perfil
 		</div>
 		<div class="Info_perfil">
-			<img src="/imagenUsuario" height="100" width="100">
+			<img src="/usuarios/imagenUsuario" height="100" width="100">
 			<div class="Informacion">
 				<div class="Nombre">
 					<%= nombre %>

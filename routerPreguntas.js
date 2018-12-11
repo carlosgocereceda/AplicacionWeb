@@ -25,7 +25,7 @@ const middlewareSession = session({
     resave: false,
     store: sessionStore
 });
-//const app = express();
+//const routerUsuarios = express();
 routerPreguntas.use(middlewareSession);
 //Midleware de body parser
 routerPreguntas.use(bodyParser.urlencoded({ extended: true })); //Preguntar a Marina donde hay que colocar esto

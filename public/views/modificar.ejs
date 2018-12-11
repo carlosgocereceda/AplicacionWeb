@@ -4,26 +4,27 @@
 	<title></title>
 	<meta charset="utf-8">
 	<link rel ="icon" href= "">
-	<title>Let´s Talk!</title>
+	<title>Let´s Answer!</title>
 	<link rel="stylesheet" type ="text/css" href="css/nuevoUsuario.css" media="screen"/>
 </head>
 <body>
 	<div class="contenedor">
-			<div class = "Userlogged"> 
-					<div class=" foto">
-						<img src  = "/imagenUsuario">
-					</div>
-					<div class = "Usuario">
-						<%=usuariologeado%>
-					</div>
-				</div>
+			
 		<div class="header">
+				<div class = "Userlogged"> 
+						<div class=" foto">
+							<img src  = "/usuarios/imagenUsuario">
+						</div>
+						<div class = "Usuario">
+							<%=usuariologeado%>
+						</div>
+					</div>
 			<div class="titulo">Let´s Answer!</div>
 		</div>
 
 		
 		<div class="formulario">
-			<form action="/modify" method="post">
+			<form action="/usuarios/modify" method="post" enctype="multipart/form-data">
 		    <div>
 		    	<label for="password">Password</label>
 		    	<input type="password" name="contrasenya">

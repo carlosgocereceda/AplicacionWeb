@@ -14,16 +14,16 @@
 		<div class="header">
 				<div class = "Userlogged"> 
 						<div class=" foto">
-							<img src= "/imagenUsuario" class = "fotos">
+							<img src= "/usuarios/imagenUsuario" class = "fotos">
 						</div>
 						<div class = "Usuario">
 							<%=usuariologeado%>
 						</div>
 					</div>
-			<div class="titulo">Let´s Talk!</div>
+			<div class="titulo">Let´s Answer!</div>
 			<div class="botones">
 				<div class="Preguntas">
-					<a href="\profile">
+					<a href="/usuarios\profile">
 						PERFIL
 					</a>
 				</div>
@@ -33,12 +33,12 @@
 					</a>
 				</div>
 				<div class="Preguntas">
-					<a href="preguntasAleatorias">
+					<a href="/preguntas/preguntasAleatorias">
 						PREGUNTAS
 					</a>
 				</div>
 				<div class="Desconectar">
-					<a href="/logout">
+					<a href="/usuarios/logout">
 						DESCONECTAR
 					</a>
 				</div>
@@ -71,8 +71,8 @@
 								</div>
 
 								<div class="botones">
-									<div class="btn"> <a href="/aceptarAmistad/<%=usuario.id%>" class="btn">Aceptar</a></div>
-									<div class="btn"> <a href="/rechazarAmistad/<%=usuario.id%>" class="btn">Rechazar</a></div>
+									<div class="btn"> <a href="/usuarios/aceptarAmistad/<%=usuario.id%>" class="btn">Aceptar</a></div>
+									<div class="btn"> <a href="/usuarios/rechazarAmistad/<%=usuario.id%>" class="btn">Rechazar</a></div>
 								</div>
 							</div>
 						</li>
