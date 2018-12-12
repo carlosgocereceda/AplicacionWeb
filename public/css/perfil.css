@@ -141,7 +141,7 @@ h2{
 	background-color:#4c545c;
 }
 .foto-usuario{
-padding: 68px;
+padding: 20px;
 width: 200px;
 height:200px;
 transition:2000ms;
@@ -151,6 +151,13 @@ transition:2000ms;
 	transform:scale(1.5);
 }
 .fotosUsuario{
-margin-left: 10px;
-flex-direction:row;
+	display: grid;
+	width: 600px;
+	padding: 10px;
+	grid-template-columns: 225px 225px 225px;
+	margin:auto;
+}
+.formularioImagenes, .button{
+	margin: auto;
+	width: 200px;
 }

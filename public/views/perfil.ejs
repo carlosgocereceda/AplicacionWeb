@@ -71,7 +71,7 @@
 		<% if(puntos >= 100 && propio) { %>
 
 		<div class="formulario">
-			<form action="/usuarios/upload" method="post" enctype="multipart/form-data">
+			<form action="/usuarios/upload" method="post" enctype="multipart/form-data" class="formularioImagenes">
 				<label for="msg">Imagen:</label>
 				<input type="file" name="imagen">
 		</div>
@@ -89,7 +89,7 @@
 		<div class="fotosUsuario">
 			<% for(let i = 0; i < fotos.length; i++){ %>
 				<div class="foto-usuario">
-			<img src="/usuarios/imagenUsuarioo/<%=fotos[i].FOTO%>" height="100" width="100">
+			<img src="/usuarios/imagenUsuarioo/<%=fotos[i].FOTO%>" height="200" width="200">
 		</div>
 			<% } %>
 		</div>
