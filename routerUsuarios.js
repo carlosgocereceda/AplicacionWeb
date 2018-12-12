@@ -135,6 +135,7 @@ routerUsuarios.get("/profile", function (request, response) {
             else {
                 sexo = "Mujer";
             }
+            let ruta ="/usuarios/imagenUsuario/";
             request.session.currentId = res[0].id;
             request.session.currentPoints = res[0].puntos;
             let edad =  _calculateAge(edad1);
@@ -148,7 +149,7 @@ routerUsuarios.get("/profile", function (request, response) {
                 }
             })
             
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints });
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo:ruta });
         }
     })
     //Creo que hacen falta coockies para esto
@@ -169,11 +170,11 @@ routerUsuarios.get("/profile/:idAmigo", function (request, response) {
             else {
                 sexo = "Mujer";
             }
-            
+            let ruta ="/usuarios/imagenUsuario/" + request.params.idAmigo;
             
             let edad =  _calculateAge(edad1);
             
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos });
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos ,amigo:ruta });
         }
     })
 })
