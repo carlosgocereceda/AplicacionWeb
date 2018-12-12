@@ -17,9 +17,10 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query(`INSERT INTO 
-                PREGUNTA(idUsuarioCrea, pregunta, respuestas) 
-                VALUES (?,?,?)`,
+                console.log(id, enunciado, respuestas.join(","));
+                connection.query("INSERT INTO "+
+                "PREGUNTA (idUsuarioCrea, pregunta, respuestas) "+
+                "VALUES (?,?,?)",
                     [id, enunciado, respuestas.join(",")],
                     function (err, filas) {
                         connection.release();
@@ -170,6 +171,10 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
+                console.log("amigos_map");
+                console.log(amigos_map.length);
+                if(amigos_map != null && amigos_map.length > 0){
+
                 let amigos = Array.from(amigos_map.keys());
 
                 connection.query('SELECT idUsuario FROM usuariorespondeparasimismo WHERE idPregunta = ' + idPregunta + ' AND idUsuario IN (' + amigos.join() + ')',
@@ -192,8 +197,12 @@ class DAOPreguntas {
                         }
                     })
 
-
+                }
+                else{
+                    callback(null, null);
+                }
             }
+            
         })
     }
     getUsuariosYaAdivinados(idPregunta, usuarioQuiereAdivinar, amigos_map, callback) {

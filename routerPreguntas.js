@@ -26,7 +26,7 @@ const middlewareSession = session({
     store: sessionStore
 });
 //const routerUsuarios = express();
-routerPreguntas.use(middlewareSession);
+//routerPreguntas.use(middlewareSession);
 //Midleware de body parser
 routerPreguntas.use(bodyParser.urlencoded({ extended: true })); //Preguntar a Marina donde hay que colocar esto
 
@@ -213,6 +213,7 @@ routerPreguntas.get("/preguntasAleatorias", function (request, response) {
             console.log("No se pueden crear preguntas con menos de dos respuestas");
         }
         else {
+            console.log("id " + request.session.currentId);
             daoPreguntas.insertarPregunta(request.session.currentId, request.body.enunciado, respuestas, function (err) {
                 if (err) {
                     console.log(err);

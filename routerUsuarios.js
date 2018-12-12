@@ -111,7 +111,7 @@ routerUsuarios.get("/profile", function (request, response) {
     daoUsuarios.getUsuario(request.session.currentUser, function (err, res) {
         //console.log(res);
         if (res) {
-
+            console.log(res);
             let nombre = res[0].nombre;
             let edad1 = res[0].fecha_nacimiento;
             let sexo = "";
