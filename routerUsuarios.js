@@ -246,7 +246,7 @@ routerUsuarios.post("/buscarAmigo", function (request, response) {
 
             }
             else {
-                response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: [] });
+                response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: [], puntos: request.session.currentPoints });
             }
         }
     })
