@@ -80,8 +80,8 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                         console.log(err);
                                     }
                                     else {
-                                        //console.log("amigos han respondido");
-                                        //console.log(amigosHanRespondido_map);
+                                        console.log("amigos han respondido");
+                                        console.log(amigosHanRespondido_map);
                                         daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId, amigosHanRespondido_map,
                                             function (err, info_usuarios_han_respondido) {
                                                 if (err) {
@@ -99,8 +99,8 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                                             }
                                                             //console.log("id pregunta ");
                                                             //console.log(pregunta);
-                                                            //console.log("infoUsuarios");
-                                                            //console.log(info_usuarios_han_respondido);
+                                                            console.log("infoUsuarios");
+                                                            console.log(info_usuarios_han_respondido);
                                                             response.render("pregunta", {
                                                                 contestado: existe, pregunta: pregunta[0],
                                                                 infoUsuarios: info_usuarios_han_respondido,
@@ -178,7 +178,7 @@ routerPreguntas.post("/contestarPreguntaNombreDeOtro", function (request, respon
                             console.log(err);
                         }
                         else {
-                            daoUsuarios.actualizarPuntuacion(request.session.currentId, request.session.currentPoints, function(err, res){
+                            daoUsuarios.actualizarPuntuacion(request.session.currentId, request.session.currentPoints, function(err){
                                 if(err){
                                     console.log(err.message);
                                 }

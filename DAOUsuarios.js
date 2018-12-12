@@ -542,7 +542,7 @@ class DAOUsuarios {
         })
 
     }
-    actualizarPuntuacion(id, puntos) {
+    actualizarPuntuacion(id, puntos, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 console.log(err.message);
