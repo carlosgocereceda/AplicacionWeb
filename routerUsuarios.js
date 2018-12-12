@@ -145,10 +145,9 @@ routerUsuarios.get("/profile", function (request, response) {
                     console.log(err);
                 }
                 else {
-                    response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo: ruta });
+                    response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo: ruta, propio: true });
                 }
             })
-
 
         }
     })
@@ -170,11 +169,20 @@ routerUsuarios.get("/profile/:idAmigo", function (request, response) {
             else {
                 sexo = "Mujer";
             }
-            let ruta = "/usuarios/imagenUsuario/" + request.params.idAmigo;
+            let ruta ="/usuarios/imagenUsuario/" + request.params.idAmigo;
+            
+            let edad =  _calculateAge(edad1);
+            daoUsuarios.getUserImages(request.params.idAmigo, function(err, res){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    
+                }
+            })
+            
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos ,amigo:ruta, propio: false });
 
-            let edad = _calculateAge(edad1);
-
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos, amigo: ruta });
         }
     })
 })
