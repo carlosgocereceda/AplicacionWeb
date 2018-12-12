@@ -69,7 +69,7 @@ class DAOUsuarios {
             }
         })
     }
-    insertaUsuario(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, callback) {
+    insertaUsuario(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos, callback) {
         //console.log("estoy aqui");
         this.pool.getConnection(function (err, connection) {
             if (err) {
@@ -77,9 +77,9 @@ class DAOUsuarios {
             }
             else {
                 connection.query(`INSERT INTO 
-                USUARIO(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil) 
+                USUARIO(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos) 
                 VALUES (?,?,?,?,?,?)`,
-                    [email, password, nombre, sexo, fecha_nacimiento, imagen_perfil],
+                    [email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos],
                     function (err, filas) {
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));

@@ -56,7 +56,7 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
     if(request.file){
         n = request.file.path;
     }
-    le
+    
     daoUsuarios.getUsuario(request.body.email, function (err, res) {
 
         if (res == null) {
@@ -70,7 +70,7 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
             
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
-                n,
+                n,0,
                 function (err) {
                     if (!err) {
                         request.session.currentUser = request.body.email;
@@ -115,7 +115,7 @@ routerUsuarios.get("/profile", function (request, response) {
             else {
                 sexo = "Mujer";
             }
-            let puntos = "0 puntos";
+            let puntos = res[0].puntos;
 
             response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad, sexo: sexo, puntos: puntos });
         }
