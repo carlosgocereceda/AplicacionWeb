@@ -134,7 +134,8 @@ routerPreguntas.post("/adivinar_nombre_otro", function (request, response) {
             response.render("contestarPreguntaNombreOtro", {
                 pregunta: pregunta,
                 idUsuario: request.body.idUsuario,
-                puntos: request.session.currentPoints   
+                puntos: request.session.currentPoints ,
+                usuariologeado: request.session.currentName  
             });
             //console.log(pregunta);
         }

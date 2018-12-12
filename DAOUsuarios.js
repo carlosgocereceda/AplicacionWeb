@@ -16,7 +16,33 @@ class DAOUsuarios {
 
     }
 
-    getUsuario(email, callback) {
+    getUsuario(id, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+                connection.query(`SELECT * FROM USUARIO WHERE id = ?`, [id],
+                    function (err, filas) {
+                        connection.release();
+                   
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            if (filas.length > 0) {
+                                callback(null, filas);
+                            }
+                            else {
+                                callback(null, null);
+                            }
+
+                        }
+                    })
+            }
+        })
+    }
+    getUsuariobyEmail(email, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
@@ -539,7 +565,7 @@ class DAOUsuarios {
         })
 
     }
-    actualizarPuntuacion(id, puntos) {
+    actualizarPuntuacion(id, puntos, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 console.log(err.message);

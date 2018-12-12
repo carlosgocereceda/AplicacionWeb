@@ -98,8 +98,8 @@ app.post("/loginUser", function (request, response) {
         }
         else if (solution) {
             request.session.currentUser = request.body.email;
-            daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
-                console.log("id " + filas[0].id);
+            daoUsuarios.getUsuariobyEmail(request.session.currentUser, function (err, filas) {
+            
                 request.session.currentName = filas[0].nombre;
                 request.session.currentId = filas[0].id;
                 response.redirect("/usuarios/profile");
