@@ -36,7 +36,7 @@
                     </a>
                 </div>
                 <div class="Preguntas">
-                    <a href="#">
+                    <a href="/preguntas/preguntasAleatorias">
                         PREGUNTAS
                     </a>
                 </div>
@@ -97,24 +97,35 @@
                     <% } %>
                 </div>
                 <% } else{ %>
-                <div class="amigo">
-                    <div class="info_amigo">
-                        <div class="fotoAmigo">
+                    <% if(valor == "ningun amigo ha respondido"){ %>
+                        <div class="amigo">
+                            <div class="info_amigo">
+                                <div class="fotoAmigo">
+                                </div>
+                                <div class="NombreAmigo">
+                                    <%= valor %>
+                                </div>
+                            </div>
                         </div>
-                        <div class="NombreAmigo">
-                            <%= valor %>
+                    <% }else{ %>
+                    <div class="amigo">
+                        <div class="info_amigo">
+                            <div class="fotoAmigo">
+                            </div>
+                            <div class="NombreAmigo">
+                                <%= valor %>
+                            </div>
+                        </div>
+
+                        <div class="accion_adivinar">
+                            <form action="/preguntas/adivinar_nombre_otro" method="POST">
+                                <input type="hidden" name="idPregunta" value= <%= idPregunta %>>
+                                <input type="hidden" name="idUsuario" value=<%= clave%>>
+                                <input type="submit" value="Adivinar">
+                            </form>
                         </div>
                     </div>
-
-                    <div class="accion_adivinar">
-                        <form action="/preguntas/adivinar_nombre_otro" method="POST">
-                            <input type="hidden" name="idPregunta" value= <%= idPregunta %>>
-                            <input type="hidden" name="idUsuario" value=<%= clave%>>
-                            <input type="submit" value="Adivinar">
-                        </form>
-                    </div>
-                </div>
-
+                    <% } %>
                 <% } %>
                 <% } %>
 

@@ -171,8 +171,6 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                console.log("amigos_map");
-                console.log(amigos_map.length);
                 if(amigos_map != null && amigos_map.length > 0){
 
                 let amigos = Array.from(amigos_map.keys());
