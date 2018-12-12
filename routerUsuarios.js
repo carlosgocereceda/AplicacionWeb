@@ -145,7 +145,8 @@ routerUsuarios.get("/profile", function (request, response) {
                     console.log(err);
                 }
                 else {
-                    response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo: ruta, propio: true });
+                    response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo: ruta, propio: true,
+                fotos:fotos });
                 }
             })
 
@@ -177,18 +178,19 @@ routerUsuarios.get("/profile/:idAmigo", function (request, response) {
                     console.log(err);
                 }
                 else{
-                    
+                    response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos ,amigo:ruta, propio: false,
+                 fotos: res});
                 }
             })
             
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos ,amigo:ruta, propio: false });
+           
 
         }
     })
 })
 
 
-routerUsuarios.get("/imagenUsuario/:nombreFoto", function (request, response) {
+routerUsuarios.get("/imagenUsuarioo/:nombreFoto", function (request, response) {
 
     let pathImg = path.join(__dirname, "uploads", request.params.nombreFoto);
     response.sendFile(pathImg);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-12-2018 a las 09:56:11
+-- Tiempo de generación: 12-12-2018 a las 18:38:14
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -38,7 +38,19 @@ CREATE TABLE `amigos` (
 
 INSERT INTO `amigos` (`id`, `idAmigo1`, `idAmigo2`) VALUES
 (1, 3, 2),
-(3, 1, 3);
+(3, 1, 3),
+(4, 37, 29);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `fotosusuario`
+--
+
+CREATE TABLE `fotosusuario` (
+  `idUsuario` int(11) NOT NULL,
+  `foto` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -61,9 +73,7 @@ INSERT INTO `pregunta` (`id`, `idUsuarioCrea`, `pregunta`, `respuestas`) VALUES
 (24, 3, 'afsdf adasf asd', 'Enter text here...,fasd fdasf saf ,asd fsadf asf asf'),
 (25, 3, '¿qué equipo te gusta más?', 'real madrid,barça,Atleti'),
 (26, 3, '¿Cual es tu color favorito?', 'azul,verde,amarillo'),
-(27, 28, '¿fasdf?', 'asdfsdaf,asdfasdf,asdfasdfa'),
-(28, 28, '¿que marca te gusta mas?', 'mac,asus,acer'),
-(29, 27, '¿A donde te gustaría ir?', 'Almeria,Filipinas,Tokio');
+(30, 29, '¿Que asignatura te gusta mas?', 'IS,MS,TAIS,EDA,GPS');
 
 -- --------------------------------------------------------
 
@@ -82,8 +92,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('W30ZUfaTCdImnvsnnxwSJxuxrE2Cp_RF', 1544691215, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"carlos@ucm.es\",\"currentName\":\"carlos\",\"currentId\":27,\"currentPoints\":0}'),
-('WPs4UQxqkFbBgU3aK_ZumfETsDBK7Qwl', 1544613909, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"carlos@ucm.es\",\"currentName\":\"carlos\",\"currentId\":27}');
+('eq77tX1b6fOtIKFbj-Vinnm3G-whlRNC', 1544722668, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"carlos@ucm.es\",\"currentName\":\"carlos\",\"currentId\":29,\"currentPoints\":10000}'),
+('u5ggdhCTLHhf__cP0KpxzoLnjoV47oq2', 1544710583, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentPoints\":0,\"currentUser\":\"carlos@ucm.es\",\"currentId\":29}');
 
 -- --------------------------------------------------------
 
@@ -132,10 +142,15 @@ INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`
 ('fasfasdf@fadsf.sdf', 'asdfasdf', 'asdfasdf', 0, '1212-12-12', '', 20, 0),
 ('fasdfasdf@asfasdf.cs', 'asdfa', 'asdfasf', 0, '1212-12-12', NULL, 21, 0),
 ('asdfasdf@fasdf.coom', 'dasf', 'asdfasdf', 0, '2233-03-12', NULL, 22, 0),
-('prueba3@faasdf.csd', 'fasdf', 'dasdfas', 0, '1234-03-12', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\ca5ae53f9cb72d3d62331854f2d95aeb', 25, 0),
-('fasdfas@sdfc.cs', 'sdfas', 'asfsdf', 0, '1986-03-12', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\1ac035c87ce685a6d6c3e61ff79004bf', 26, 0),
-('carlos@ucm.es', '1234', 'carlos', 0, '1997-03-21', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\76659da7e6e2dd3e67ba67fa6fe82d6a', 27, 0),
-('meme@ucm.es', '1234', 'meme', 1, '1997-01-26', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\a8bb08e832a30ecf84fd61648d4a5fde', 28, 100);
+('carlos@ucm.es', '1234', 'carlos', 0, '1997-03-21', 'd35010870b3fb74deefd7fa9c4c5086f', 29, 10000),
+('cafsdf@fsadf.fasd', 'asdf', 'dasdf', 0, '1980-01-01', '8ce674fde2b00f9cb2d96f9bf5a54a42', 30, 0),
+('carsf@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', 'd25fefb518eb067430f094fc2ccfcf50', 31, 0),
+('cardsff@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', '4a08e77b4810815b22a4a863fffb07f0', 32, 0),
+('cardfdssff@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', '6c96083cf26702ffeddefb1c8654621e', 33, 0),
+('cardfdssff@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', '438e34a6851762fc40ad947b431c9320', 34, 0),
+('asfsdfasdf@asddf.gr', 'asdf', 'casd', 0, '1980-01-01', '55b5fb98ca4347b3ce9d86853365ebf3', 35, 0),
+('asdgdfsg#@kslg.gsd', 'sdfa', 'sdf', 0, '1997-03-21', '78bd0015c5c82678b28358edc4e1f156', 36, 0),
+('asdfas@fsa.fsa', 'fsadf', 'fasdf', 0, '1980-01-01', '48614f8554ef7ba668bbc542f15460c9', 37, 0);
 
 -- --------------------------------------------------------
 
@@ -186,7 +201,7 @@ INSERT INTO `usuariorespondeparasimismo` (`id`, `idPregunta`, `idUsuario`, `resp
 (5, 26, 1, 'azul', 0),
 (6, 24, 3, 'Enter text here...', 0),
 (7, 24, 3, 'Enter text here...', 0),
-(8, 29, 27, 'Tokio', 2);
+(12, 30, 29, 'GPS', 4);
 
 --
 -- Índices para tablas volcadas
@@ -199,6 +214,12 @@ ALTER TABLE `amigos`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idAmigo1` (`idAmigo1`),
   ADD KEY `idAmigo2` (`idAmigo2`);
+
+--
+-- Indices de la tabla `fotosusuario`
+--
+ALTER TABLE `fotosusuario`
+  ADD KEY `idUsuario` (`idUsuario`);
 
 --
 -- Indices de la tabla `pregunta`
@@ -253,22 +274,22 @@ ALTER TABLE `usuariorespondeparasimismo`
 -- AUTO_INCREMENT de la tabla `amigos`
 --
 ALTER TABLE `amigos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT de la tabla `solicitudesamistad`
 --
 ALTER TABLE `solicitudesamistad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT de la tabla `usuariorespondeennombredeotro`
 --
@@ -278,7 +299,7 @@ ALTER TABLE `usuariorespondeennombredeotro`
 -- AUTO_INCREMENT de la tabla `usuariorespondeparasimismo`
 --
 ALTER TABLE `usuariorespondeparasimismo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- Restricciones para tablas volcadas
 --
@@ -289,6 +310,12 @@ ALTER TABLE `usuariorespondeparasimismo`
 ALTER TABLE `amigos`
   ADD CONSTRAINT `amigos_ibfk_1` FOREIGN KEY (`idAmigo1`) REFERENCES `usuario` (`id`),
   ADD CONSTRAINT `amigos_ibfk_2` FOREIGN KEY (`idAmigo2`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `fotosusuario`
+--
+ALTER TABLE `fotosusuario`
+  ADD CONSTRAINT `fotosusuario_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`id`);
 
 --
 -- Filtros para la tabla `pregunta`
