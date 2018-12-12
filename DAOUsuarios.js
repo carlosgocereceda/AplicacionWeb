@@ -592,7 +592,7 @@ class DAOUsuarios {
                 [id],
                     function (err, filas) {
                         if (err) {
-                            callback(new Error("Error al actualizar los puntos"));
+                            callback(new Error("Error al cargar las imagenes"));
                         }
                         else {
                             callback(null, filas);

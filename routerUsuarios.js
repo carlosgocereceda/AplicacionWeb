@@ -149,7 +149,7 @@ routerUsuarios.get("/profile", function (request, response) {
                 }
             })
             
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo:ruta });
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo:ruta, propio:true });
         }
     })
     //Creo que hacen falta coockies para esto
@@ -173,8 +173,16 @@ routerUsuarios.get("/profile/:idAmigo", function (request, response) {
             let ruta ="/usuarios/imagenUsuario/" + request.params.idAmigo;
             
             let edad =  _calculateAge(edad1);
+            daoUsuarios.getUserImages(request.params.idAmigo, function(err, res){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    
+                }
+            })
             
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos ,amigo:ruta });
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos ,amigo:ruta, propio: false });
         }
     })
 })
