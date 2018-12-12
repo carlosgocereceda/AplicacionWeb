@@ -77,9 +77,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query(`INSERT INTO 
-                USUARIO(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos) 
-                VALUES (?,?,?,?,?,?)`,
+                connection.query("INSERT INTO USUARIO(email, password, nombre, sexo, fecha_nacimiento, Imagen_perfil, puntos) VALUES (?,?,?,?,?,?)",
                     [email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos],
                     function (err, filas) {
                         connection.release();
