@@ -51,17 +51,26 @@ routerUsuarios.get("/register", function (request, response) {
     response.redirect("/nuevoUsuario.html")
 })
 function _calculateAge(birthday) { // birthday is a date
+   
+   
+        
     var ageDifMs = Date.now() - birthday.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
     return Math.abs(ageDate.getUTCFullYear() - 1970);
+   
+   
 }
 
 routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function (request, response) {
     let n = null;
+    let a = null;
+    let a2 = null;
     if(request.file){
         n = request.file.path;
+        a = n.split("\\");
+        a2= a[a.length -1];
+        
     }
-    console.log(request.file);
     daoUsuarios.getUsuario(request.body.email, function (err, res) {
 
         if (res == null) {
@@ -72,10 +81,10 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
             else {
                 sexo = 1;
             }
-            
+            console.log("Hola");
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
-                request.file.filename,0,
+                request.file.filename, 0,
                 function (err, filas) {
                     if (!err) {
                         request.session.currentPoints = 0;
@@ -129,10 +138,44 @@ routerUsuarios.get("/profile", function (request, response) {
             request.session.currentId = res[0].id;
             request.session.currentPoints = res[0].puntos;
             let edad =  _calculateAge(edad1);
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad, sexo: sexo, puntos: request.session.currentPoints });
+
+            daoUsuarios.getUserImages(request.session.currentId, function(err, res){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    
+                }
+            })
+            
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints });
         }
     })
     //Creo que hacen falta coockies para esto
+})
+
+routerUsuarios.get("/profile/:idAmigo", function (request, response) {
+    //console.log("sdf fsdf fasdf");
+    daoUsuarios.getUsuarioid(request.params.idAmigo, function (err, res) {
+        //console.log(res);
+        if (res) {
+            let nombre = res[0].nombre;
+            let edad1 = res[0].fecha_nacimiento;
+            let sexo = "";
+            let puntos = res[0].puntos;
+            if (res[0].sexo == 0) {
+                sexo = "Hombre";
+            }
+            else {
+                sexo = "Mujer";
+            }
+            
+            
+            let edad =  _calculateAge(edad1);
+            
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos });
+        }
+    })
 })
 
 
@@ -149,7 +192,8 @@ routerUsuarios.get("/imagenUsuario", function (request, response) {
         else{
         if (res) {
             let pathImg = path.join(__dirname, "uploads", res);
-            response.sendFile(pathImg);
+
+             response.sendFile(pathImg);
         }
         else {
             let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
@@ -185,7 +229,8 @@ routerUsuarios.get("/imagenUsuario/:id_usuario", function (request, response) {
         }
         else{
         if (res) {
-             response.sendFile(res);
+            let pathImg = path.join(__dirname, "uploads", res);
+            response.sendFile(pathImg);
         }
         else {
             let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");

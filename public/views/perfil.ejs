@@ -1,30 +1,32 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	
+
 	<meta charset="utf-8">
-	<link rel ="icon" href= "img/icon.jpg">
+	<link rel="icon" href="img/icon.jpg">
 	<title>Let´s Answer!</title>
-	<link rel="stylesheet" type ="text/css" href="css/perfil.css" media="screen"/>
+	<link rel="stylesheet" type="text/css" href="../css/perfil.css" media="screen" />
 </head>
+
 <body>
 	<div class="contenedor">
 		<div class="header">
-			<div class = "Userlogged"> 
+			<div class="Userlogged">
 				<div class=" foto">
-					<img src= "/usuarios/imagenUsuario" class = "fotos">
+					<img src="/usuarios/imagenUsuario" class="fotos">
 				</div>
-				<div class = "Usuario">
-					<%=usuariologeado%>       
+				<div class="Usuario">
+					<%=usuariologeado%>
 				</div>
-				<div class= "puntos">
+				<div class="puntos">
 					<%=puntos%> puntos
 				</div>
 			</div>
 			<div class="titulo">Let´s Answer!</div>
 			<div class="botones">
 				<div class="Perfil">
-					<a href="#">
+					<a href="/usuarios/profile">
 						PERFIL
 					</a>
 				</div>
@@ -45,7 +47,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="Actual"> <!--Esto es para darle al usuario un feedback de en que parte de la pagina esta.-->
+		<div class="Actual">
+			<!--Esto es para darle al usuario un feedback de en que parte de la pagina esta.-->
 			Actualmente estas en: Tu perfil
 		</div>
 		<div class="Info_perfil">
@@ -55,7 +58,7 @@
 					<%= nombre %>
 				</div>
 				<div class="info">
-					<%= edad %> Años
+					<%= edad %>
 				</div>
 				<div class="info">
 					<%= sexo %>
@@ -65,9 +68,17 @@
 				</div>
 			</div>
 		</div>
-			<div class="ModificarPerfil">
-				<a href="/usuarios/modify" >Modificar Perfil</a>
-			</div>
+		<div class="fotosUsuario">
+			<% for(let i = 0; i < fotos.length; i++){ %>
+
+				<img src= <%=fotos[i] %> height="100" width="100">
+
+			<% } %>
+		</div>
+		<div class="ModificarPerfil">
+			<a href="/usuarios/modify">Modificar Perfil</a>
+		</div>
 	</div>
 </body>
+
 </html>

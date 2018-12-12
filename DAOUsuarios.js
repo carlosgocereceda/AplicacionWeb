@@ -16,6 +16,7 @@ class DAOUsuarios {
 
     }
 
+  
     getUsuario(email, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
@@ -273,7 +274,7 @@ class DAOUsuarios {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                connection.query(`SELECT * FROM usuario WHERE id = ?`, [id],
+                connection.query(`SELECT * FROM USUARIO WHERE ID = ?`, [id],
                     function (err, filas) {
                         connection.release();
                         if (err) {
@@ -540,7 +541,7 @@ class DAOUsuarios {
         })
 
     }
-    actualizarPuntuacion(id, puntos) {
+    actualizarPuntuacion(id, puntos, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 console.log(err.message);
@@ -574,6 +575,27 @@ class DAOUsuarios {
                         }
                         else {
                             callback(null);
+                        }
+                    }
+                )
+            }
+
+        })
+    }
+    getUserImages(id, callback){
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                console.log(err.message);
+            }
+            else {
+                connection.query("SELECT FOTO FROM fotosusuario WHERE idUsuario = ?", 
+                [id],
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error al actualizar los puntos"));
+                        }
+                        else {
+                            callback(null, filas);
                         }
                     }
                 )

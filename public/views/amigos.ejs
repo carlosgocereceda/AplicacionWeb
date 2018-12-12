@@ -2,9 +2,9 @@
 <html>
 
 <head>
-	
+
 	<meta charset="utf-8">
-	<link rel ="icon" href= "img/icon.jpg">
+	<link rel="icon" href="img/icon.jpg">
 	<title>Let´s Answer!</title>
 	<link rel="stylesheet" type="text/css" href="css/amigos.css" media="screen" />
 </head>
@@ -12,17 +12,17 @@
 <body>
 	<div class="contenedor">
 		<div class="header">
-				<div class = "Userlogged"> 
-						<div class=" foto">
-							<img src= "/usuarios/imagenUsuario" class = "fotos">
-						</div>
-						<div class = "Usuario">
-							<%=usuariologeado%>
-						</div>
-						<div class= "puntos">
-								<%=puntos%> puntos
-							</div>
-					</div>
+			<div class="Userlogged">
+				<div class=" foto">
+					<img src="/usuarios/imagenUsuario" class="fotos">
+				</div>
+				<div class="Usuario">
+					<%=usuariologeado%>
+				</div>
+				<div class="puntos">
+					<%=puntos%> puntos
+				</div>
+			</div>
 			<div class="titulo">Let´s Answer!</div>
 			<div class="botones">
 				<div class="Preguntas">
@@ -62,7 +62,7 @@
 						<li>
 							<div class="peticion">
 								<div class="fotos">
-								<img src="/usuarios/imagenUsuario/<%=usuario.id%>" class = "fotos">
+									<img src="/usuarios/imagenUsuario/<%=usuario.id%>" class="fotos">
 								</div>
 								<div class="Nombre">
 									<%= usuario.nombre %>
@@ -75,7 +75,7 @@
 							</div>
 						</li>
 						<% }); %>
-					
+
 					</ul>
 				</div>
 			</div>
@@ -99,31 +99,35 @@
 				</div>
 
 			</div>
-			
+
 			<div class="amigosya">
 				<div class="subtitulo">
 					Mis amigos
 				</div>
 				<div class="Amigos">
 					<ul>
-				
+
 						<% amigosya.forEach(function(usuario) { %>
+
 						<li>
-							<div class="amigo">
-								<div class="fotos">
-									<%if (usuario.Imagen_perfil){ %> 
-										<img src="/usuarios/imagenUsuario/<%=usuario.id%>" class = "fotos">
-								 <%} else {%>	
-										<img src= "../img/NoPerfil.jpg" class = "fotos" >
+							<a href=<%="/usuarios/profile/" + usuario.id%>>
+								<div class="amigo">
+									<div class="fotos">
+										<%if (usuario.Imagen_perfil){ %>
+										<img src="/usuarios/imagenUsuario/<%=usuario.id%>" class="fotos">
+										<%} else {%>
+										<img src="../img/NoPerfil.jpg" class="fotos">
 										<%}%>
+									</div>
+									<div class="NombreAmigo">
+										<%= usuario.nombre %>
+									</div>
 								</div>
-								<div class="NombreAmigo">
-									<%= usuario.nombre %> 
-								</div>
-							</div>
+							</a>
 						</li>
+
 						<% }); %>
-					
+
 					</ul>
 
 
