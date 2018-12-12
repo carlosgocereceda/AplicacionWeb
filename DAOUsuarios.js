@@ -24,6 +24,7 @@ class DAOUsuarios {
             else {
                 connection.query(`SELECT * FROM USUARIO WHERE email = ?`, [email],
                     function (err, filas) {
+                        connection.release();
                         console.log(email);
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
@@ -81,6 +82,7 @@ class DAOUsuarios {
                 VALUES (?,?,?,?,?,?)`,
                     [email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos],
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -136,6 +138,7 @@ class DAOUsuarios {
                 connection.query(`DELETE FROM USUARIO WHERE EMAIL = ?`,
                     [email],
                     function (err, result) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -274,6 +277,7 @@ class DAOUsuarios {
             else {
                 connection.query(`SELECT * FROM usuario WHERE id = ?`, [id],
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -314,6 +318,7 @@ class DAOUsuarios {
                                         connection.query("INSERT INTO AMIGOS (idAmigo1, idAmigo2) VALUES (?,?)", [id, ida],
 
                                             function (err) {
+                                                connection.release();
                                                 if (err) {
                                                     callback(new Error("Error al insertar la amistad"));
                                                 }
@@ -349,6 +354,7 @@ class DAOUsuarios {
                 console.log(consulta);
                 connection.query(consulta, id,
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -418,6 +424,7 @@ class DAOUsuarios {
 
                                             connection.query(consulta, amigos,
                                                 function (err, filas2) {
+                                                    connection.release();
                                                     console.log(filas2);
                                                     if (err) {
                                                         callback(new Error("Error de acceso a la base de datos"));
@@ -457,6 +464,7 @@ class DAOUsuarios {
             }
             consulta += "?)";
             connection.query(consulta, idArray, function (err, result) {
+                connection.release();
                 if (err) {
                     callback(new Error("Error al buscar los amigos"));
                 }
@@ -492,6 +500,7 @@ class DAOUsuarios {
                                 "AND amigos.idAmigo2 = usuario.id",
                                 [id],
                                 function (err, filas2) {
+                                    connection.release();
                                     let filas_concat = filas1.concat(filas2);
                                     let amigos = new Map();
 
