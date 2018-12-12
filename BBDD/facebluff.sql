@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-12-2018 a las 18:38:14
+-- Tiempo de generación: 12-12-2018 a las 19:45:37
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -37,9 +37,10 @@ CREATE TABLE `amigos` (
 --
 
 INSERT INTO `amigos` (`id`, `idAmigo1`, `idAmigo2`) VALUES
-(1, 3, 2),
-(3, 1, 3),
-(4, 37, 29);
+(6, 41, 39),
+(7, 41, 40),
+(8, 41, 38),
+(9, 38, 39);
 
 -- --------------------------------------------------------
 
@@ -48,9 +49,25 @@ INSERT INTO `amigos` (`id`, `idAmigo1`, `idAmigo2`) VALUES
 --
 
 CREATE TABLE `fotosusuario` (
+  `id` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
   `foto` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `fotosusuario`
+--
+
+INSERT INTO `fotosusuario` (`id`, `idUsuario`, `foto`) VALUES
+(1, 38, '93bcb9f963dd6ecf194e86f44252f3d3'),
+(2, 38, 'bfbf278db24e535b68525d2fd9a5fe81'),
+(3, 38, '4688e9424c96ddc9bde5d385e7412d93'),
+(4, 38, '5396685a263eef1786b2bbaccb8b0572'),
+(5, 38, 'e91e4837b00a360aa7e61604e20459ce'),
+(6, 38, '90d70588c25366f12b6f9bd24ccb7154'),
+(7, 38, '486c618cb352cfd9776a6892eaef9a2d'),
+(8, 38, '9b2ee58367124ecb089dd6a6d7d9895a'),
+(9, 38, '48a89f30fc42d3b2dddac8f13031a3ab');
 
 -- --------------------------------------------------------
 
@@ -70,10 +87,7 @@ CREATE TABLE `pregunta` (
 --
 
 INSERT INTO `pregunta` (`id`, `idUsuarioCrea`, `pregunta`, `respuestas`) VALUES
-(24, 3, 'afsdf adasf asd', 'Enter text here...,fasd fdasf saf ,asd fsadf asf asf'),
-(25, 3, '¿qué equipo te gusta más?', 'real madrid,barça,Atleti'),
-(26, 3, '¿Cual es tu color favorito?', 'azul,verde,amarillo'),
-(30, 29, '¿Que asignatura te gusta mas?', 'IS,MS,TAIS,EDA,GPS');
+(31, 39, '¿Cual es tu color favorito?', 'amarillo,azul,verde,morado');
 
 -- --------------------------------------------------------
 
@@ -92,8 +106,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('eq77tX1b6fOtIKFbj-Vinnm3G-whlRNC', 1544722668, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"carlos@ucm.es\",\"currentName\":\"carlos\",\"currentId\":29,\"currentPoints\":10000}'),
-('u5ggdhCTLHhf__cP0KpxzoLnjoV47oq2', 1544710583, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentPoints\":0,\"currentUser\":\"carlos@ucm.es\",\"currentId\":29}');
+('RrQKzJYOTfGFxZ5Qdy5gaV9KhcLv7QHw', 1544726718, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"usuario1@ucm.es\",\"currentName\":\"usuario1\",\"currentId\":38,\"currentPoints\":1000}');
 
 -- --------------------------------------------------------
 
@@ -107,6 +120,13 @@ CREATE TABLE `solicitudesamistad` (
   `usuario_recibe` int(11) NOT NULL,
   `texto` varchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `solicitudesamistad`
+--
+
+INSERT INTO `solicitudesamistad` (`id`, `usuario_envia`, `usuario_recibe`, `texto`) VALUES
+(5, 38, 40, NULL);
 
 -- --------------------------------------------------------
 
@@ -130,27 +150,10 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`, `Imagen_perfil`, `id`, `puntos`) VALUES
-('usuario@ucm.es', '1234', 'usuario1', 0, '2018-11-10', NULL, 1, 0),
-('cargom11@ucm.es', '1234', 'carlos', 0, NULL, NULL, 2, 0),
-('pepe', '1234', 'carlos', 0, NULL, NULL, 3, 0),
-('averquetal@gmail.com', '1', 'a ver que tal', 0, '2222-02-22', '', 14, 0),
-('asdf@sdfadf.com', 'asdfasdf', 'asdfasdf', 0, '1212-12-12', '', 15, 0),
-('asddf@sdfadf.com', '', 'asdfasdf', 0, '1212-12-12', '', 16, 0),
-('asdddf@sdfadf.com', 'asdf', 'asdfasdf', 0, '1212-12-12', '', 17, 0),
-('asddsfddf@sdfadf.com', 'asfasdfasdf', 'asdfasdf', 0, '1212-12-12', '', 18, 0),
-('asdfasdf@fasd.csdc', 'sadfasdf', 'asdfasdf', 0, '1212-12-12', '', 19, 0),
-('fasfasdf@fadsf.sdf', 'asdfasdf', 'asdfasdf', 0, '1212-12-12', '', 20, 0),
-('fasdfasdf@asfasdf.cs', 'asdfa', 'asdfasf', 0, '1212-12-12', NULL, 21, 0),
-('asdfasdf@fasdf.coom', 'dasf', 'asdfasdf', 0, '2233-03-12', NULL, 22, 0),
-('carlos@ucm.es', '1234', 'carlos', 0, '1997-03-21', 'd35010870b3fb74deefd7fa9c4c5086f', 29, 10000),
-('cafsdf@fsadf.fasd', 'asdf', 'dasdf', 0, '1980-01-01', '8ce674fde2b00f9cb2d96f9bf5a54a42', 30, 0),
-('carsf@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', 'd25fefb518eb067430f094fc2ccfcf50', 31, 0),
-('cardsff@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', '4a08e77b4810815b22a4a863fffb07f0', 32, 0),
-('cardfdssff@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', '6c96083cf26702ffeddefb1c8654621e', 33, 0),
-('cardfdssff@fasdf.cs', '1234', 'casdf', 0, '1980-01-01', '438e34a6851762fc40ad947b431c9320', 34, 0),
-('asfsdfasdf@asddf.gr', 'asdf', 'casd', 0, '1980-01-01', '55b5fb98ca4347b3ce9d86853365ebf3', 35, 0),
-('asdgdfsg#@kslg.gsd', 'sdfa', 'sdf', 0, '1997-03-21', '78bd0015c5c82678b28358edc4e1f156', 36, 0),
-('asdfas@fsa.fsa', 'fsadf', 'fasdf', 0, '1980-01-01', '48614f8554ef7ba668bbc542f15460c9', 37, 0);
+('usuario1@ucm.es', '1234', 'usuario1', 0, '1980-01-01', '9a2f016facd7efa25fc8ad933efd82d7', 38, 1000),
+('usuario2@ucm.es', '1234', 'usuario2', 1, '1980-01-01', '2533194b0a0bf6d71b1fef988efa5abb', 39, 0),
+('usuario3@ucm.es', '1234', 'usuario3', 0, '1980-01-01', '0d199927e4a3ada78989faada12f96a2', 40, 0),
+('usuario4@ucm.es', '1234', 'usuario4', 0, '1980-01-01', '3ad291444dc5d1688cf54069aa8dd292', 41, 0);
 
 -- --------------------------------------------------------
 
@@ -173,8 +176,7 @@ CREATE TABLE `usuariorespondeennombredeotro` (
 --
 
 INSERT INTO `usuariorespondeennombredeotro` (`id`, `idPregunta`, `idUsuarioAdivina`, `idUsuarioRespondio`, `respuesta`, `idRespuesta`, `correcta`) VALUES
-(1, 26, 3, 1, 'azul', 0, 0),
-(2, 26, 3, 2, 'verde', 1, 1);
+(3, 31, 38, 39, 'morado', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -195,13 +197,7 @@ CREATE TABLE `usuariorespondeparasimismo` (
 --
 
 INSERT INTO `usuariorespondeparasimismo` (`id`, `idPregunta`, `idUsuario`, `respuesta`, `idRespuesta`) VALUES
-(2, 25, 3, 'barça', 1),
-(3, 26, 3, 'azul', 0),
-(4, 26, 2, 'azul', 0),
-(5, 26, 1, 'azul', 0),
-(6, 24, 3, 'Enter text here...', 0),
-(7, 24, 3, 'Enter text here...', 0),
-(12, 30, 29, 'GPS', 4);
+(13, 31, 39, 'azul', 1);
 
 --
 -- Índices para tablas volcadas
@@ -219,6 +215,7 @@ ALTER TABLE `amigos`
 -- Indices de la tabla `fotosusuario`
 --
 ALTER TABLE `fotosusuario`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `idUsuario` (`idUsuario`);
 
 --
@@ -274,32 +271,37 @@ ALTER TABLE `usuariorespondeparasimismo`
 -- AUTO_INCREMENT de la tabla `amigos`
 --
 ALTER TABLE `amigos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT de la tabla `fotosusuario`
+--
+ALTER TABLE `fotosusuario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT de la tabla `solicitudesamistad`
 --
 ALTER TABLE `solicitudesamistad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 --
 -- AUTO_INCREMENT de la tabla `usuariorespondeennombredeotro`
 --
 ALTER TABLE `usuariorespondeennombredeotro`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `usuariorespondeparasimismo`
 --
 ALTER TABLE `usuariorespondeparasimismo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- Restricciones para tablas volcadas
 --
