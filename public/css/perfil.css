@@ -113,6 +113,10 @@ h1{
 	margin-bottom:20px;
 	font-size:30px;
 }
+h2{
+	padding-left: 350px;
+	padding-bottom: 60px;
+}
 .info{
 	border-top: solid;
 	border-color: #04ab74;
@@ -135,4 +139,18 @@ h1{
 .ModificarPerfil:hover{
 	color:#04ab74;
 	background-color:#4c545c;
+}
+.foto-usuario{
+padding: 6px;
+width: 200px;
+height:200px;
+transition:2000ms;
+
+}
+.foto-usuario:hover{
+	transform:scale(1.5);
+}
+.fotosUsuario{
+margin-left: 10px;
+flex-direction:row;
 }

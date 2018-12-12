@@ -49,12 +49,15 @@ p{
 	margin-left: 60px;
 	margin-top: 20px;
 	padding:15px;
-	width:130px;
+	width:150px;
 	background-color:#04ac74;
 }
 .RegistroBtn a{
 	color:#e8e9ef;
 
+}
+.RegistroBtn:hover{
+background-color:#56595e;
 }
 
 a{

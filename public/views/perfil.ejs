@@ -68,7 +68,7 @@
 				</div>
 			</div>
 		</div>
-		<% if(puntos > 100) { %>
+		<% if(puntos > 100 && propio) { %>
 
 		<div class="formulario">
 			<form action="/usuarios/upload" method="post" enctype="multipart/form-data">
@@ -81,20 +81,20 @@
 		</div>
 
 		<% } else { %>
-
+				<% if (propio) { %>
 			<h2>No puedes subir fotos porque no tienes más de 100 puntos</h2>
-
+					<% } %>
 		<% } %>
 
 		<div class="fotosUsuario">
 			<% for(let i = 0; i < fotos.length; i++){ %>
-
+				<div class="foto-usuario">
 			<img src="/usuarios/imagenUsuarioo/<%=fotos[i].FOTO%>" height="100" width="100">
-
+		</div>
 			<% } %>
 		</div>
 		<% if (propio) { %>
-		<div class="ModificarPerfil">
+	 		<div class="ModificarPerfil">
 			<a href="/usuarios/modify">Modificar Perfil</a>
 		</div>
 		<% } %>

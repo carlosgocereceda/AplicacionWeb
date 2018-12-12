@@ -58,6 +58,7 @@
 				</div>
 				<div class="peticiones">
 					<ul>
+						<% if (posiblesamigos.length > 0) { %> 
 						<% posiblesamigos.forEach(function(usuario) { %>
 						<li>
 							<div class="peticion">
@@ -75,7 +76,13 @@
 							</div>
 						</li>
 						<% }); %>
-
+						<% } else{ %>
+						<div class="peticion">
+							<div class="Nombre">
+								No tienes amigos todavia! Agregales para ganar puntos!
+							</div>
+						</div>
+						<%}%>
 					</ul>
 				</div>
 			</div>

@@ -206,7 +206,16 @@ routerUsuarios.post("/upload", multerFactory.single("imagen"), function(request,
             console.log(err);
         }
         else{
-            response.redirect("/usuarios/profile");
+            var a = request.session.currentPoints - 100;
+            daoUsuarios.actualizarPuntuacion(request.session.currentId,a, function(err){
+                if (err){
+                    console.log("Problema al restar los puntos");
+                }
+                else{
+                    response.redirect("/usuarios/profile");
+                }
+            })
+
         }
         
     })
