@@ -76,16 +76,17 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
                 n,0,
-                function (err) {
+                function (err, filas) {
                     if (!err) {
-                        request.session.currentPoints = filas[0].puntos;
+                        request.session.currentPoints = 0;
                         request.session.currentUser = request.body.email;
-                        daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
-                            request.session.currentId = filas[0].id;
-                        })
+                      //  daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
+                        //    request.session.currentId = filas[0].id;
+                        //})
                         response.redirect("/usuarios/profile");
                     }
                     else {
+                        response.redirect("/login");
                         console.log(err);
                     }
                 })
@@ -121,7 +122,7 @@ routerUsuarios.get("/profile", function (request, response) {
             else {
                 sexo = "Mujer";
             }
-
+            request.session.currentId = res[0].id;
             request.session.currentPoints = res[0].puntos;
             let edad =  _calculateAge(edad1);
             response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad, sexo: sexo, puntos: request.session.currentPoints });
@@ -238,9 +239,11 @@ routerUsuarios.post("/buscarAmigo", function (request, response) {
                         //Este map sirve para ver si me quedo con la fila 1 o 2 de amigos dependiendo de donde se encuentra el id del current user
                         c = c.map(element => (element.idAmigo1 == request.session.currentId) ? element.idAmigo2 : element.idAmigo1);
                         //Este map es para quedarme con true o false a la hora de pasarlo por el js, para ello miro a ver si el id de c que es el primer filtro es = -1 entondes meto false, mientras que si es mayor meto true;
-                        let a = arrayID.map(element2 => (c.indexOf(element2 > -1) ? true : false));
+                        let a = arrayID.map(element2 => (c.indexOf(element2) > -1 ? true : false));
                         //envio el render con los dos arrays para las comprobaciones;
-                        response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a, puntos: request.session.currentPoints });
+                        console.log(a);
+                        console.log(result[0].id);
+                        response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a, puntos: request.session.currentPoints, idtuyo: request.session.currentId});
                     }
                 })
 

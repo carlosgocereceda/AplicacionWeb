@@ -14,7 +14,7 @@
         <div class="header">
             	<div class = "Userlogged"> 
                         <div class=" foto">
-                            <img src class  = "/usuarios/imagenUsuario">
+                            <img src = "/usuarios/imagenUsuario" class ="fotos">
                         </div>
                         <div class = "Usuario">
                             <%=usuariologeado%>
@@ -45,11 +45,7 @@
                         DESCONECTAR
                     </a>
                 </div>
-                <div class="Puntos">
-                    <a href="#">
-                        a
-                    </a>
-                </div>
+              
             </div>
         </div>
         <div class="Actual">
@@ -61,10 +57,11 @@
             <div class="peticiones">
                 <ul>
                     <% listaNombre.forEach(function(usuario, index) { %>
+                        <% if (usuario.id != idtuyo){ %>
                     <li>
                         <div class="peticion">
                             <div class="fotos">
-                                <%= usuario.Imagen_perfil %>
+                               <img src = "<%= usuario.Imagen_perfil %>" class ="fotos" >
                             </div>
                             <div class="Nombre">
                                 <%= usuario.nombre %>
@@ -79,6 +76,7 @@
                             </div>
 
                     </li>
+                    <% } %>
                     <% }); %>
                 </ul>
                     </div>
