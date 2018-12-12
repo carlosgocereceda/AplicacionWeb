@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-12-2018 a las 18:01:23
+-- Tiempo de generación: 12-12-2018 a las 09:56:11
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -32,6 +32,14 @@ CREATE TABLE `amigos` (
   `idAmigo2` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `amigos`
+--
+
+INSERT INTO `amigos` (`id`, `idAmigo1`, `idAmigo2`) VALUES
+(1, 3, 2),
+(3, 1, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -51,7 +59,11 @@ CREATE TABLE `pregunta` (
 
 INSERT INTO `pregunta` (`id`, `idUsuarioCrea`, `pregunta`, `respuestas`) VALUES
 (24, 3, 'afsdf adasf asd', 'Enter text here...,fasd fdasf saf ,asd fsadf asf asf'),
-(25, 3, '¿qué equipo te gusta más?', 'real madrid,barça,Atleti');
+(25, 3, '¿qué equipo te gusta más?', 'real madrid,barça,Atleti'),
+(26, 3, '¿Cual es tu color favorito?', 'azul,verde,amarillo'),
+(27, 28, '¿fasdf?', 'asdfsdaf,asdfasdf,asdfasdfa'),
+(28, 28, '¿que marca te gusta mas?', 'mac,asus,acer'),
+(29, 27, '¿A donde te gustaría ir?', 'Almeria,Filipinas,Tokio');
 
 -- --------------------------------------------------------
 
@@ -70,7 +82,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('hT438WXURN25KYD8-nC4hdmUFvQYlK2W', 1543769627, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"pepe\",\"currentId\":3}');
+('W30ZUfaTCdImnvsnnxwSJxuxrE2Cp_RF', 1544691215, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"carlos@ucm.es\",\"currentName\":\"carlos\",\"currentId\":27,\"currentPoints\":0}'),
+('WPs4UQxqkFbBgU3aK_ZumfETsDBK7Qwl', 1544613909, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"carlos@ucm.es\",\"currentName\":\"carlos\",\"currentId\":27}');
 
 -- --------------------------------------------------------
 
@@ -82,7 +95,7 @@ CREATE TABLE `solicitudesamistad` (
   `id` int(11) NOT NULL,
   `usuario_envia` int(11) NOT NULL,
   `usuario_recibe` int(11) NOT NULL,
-  `texto` letchar(1000) DEFAULT NULL
+  `texto` varchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -92,41 +105,61 @@ CREATE TABLE `solicitudesamistad` (
 --
 
 CREATE TABLE `usuario` (
-  `email` letchar(100) NOT NULL,
-  `password` letchar(100) NOT NULL,
-  `nombre` letchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
   `sexo` tinyint(1) NOT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
-  `Imagen_perfil` blob,
-  `id` int(11) NOT NULL
+  `Imagen_perfil` varchar(100) DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `puntos` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`, `Imagen_perfil`, `id`) VALUES
-('usuario@ucm.es', '1234', 'usuario1', 0, '2018-11-10', NULL, 1),
-('cargom11@ucm.es', '1234', 'carlos', 0, NULL, NULL, 2),
-('pepe', '1234', 'carlos', 0, NULL, NULL, 3),
-('asdfasfd@fasdf.cs', 'asdfasdf', 'asdfasdfasdfasdf', 0, '3222-02-12', 0x333232322d30322d3132, 4),
-('afsdfasdf@asdfasdfasdfasdfasdfasdfasdfasf.csd', 'fadfasdf', 'asdfasfdadsf', 0, '1231-03-12', 0x313233312d30332d3132, 5),
-('asdfasdf@asdfasdf.sdf', 'asfd', 'asdfasdf', 0, '1232-03-12', 0x313233322d30332d3132, 6),
-('prueba1@oeoe.com', 'asdfaf', 'asdfasdf', 0, '2231-12-23', 0x323233312d31322d3233, 7),
-('meme@meme.com', 'sadfasdf', 'fasdfasdf', 0, '3323-12-12', 0x333332332d31322d3132, 8),
-('meeeme@meme.com', 'asdfasfd', 'fasdfasdf', 0, '3323-12-12', 0x333332332d31322d3132, 9),
-('asdfasdfasdf@gsddgsd.com', 'sdfsdf', 'sdfasdf', 0, '2322-03-23', 0x323332322d30332d3233, 10),
-('holi@gmail.com', 'sdfsdf', 'sdfgsdfg', 0, '1212-12-12', 0x313231322d31322d3132, 11),
-('hola@gmail.com', '21a31fa', 'asdfasdf', 0, '1212-12-12', 0x313231322d31322d3132, 12),
-('pepito@gmail.com', '1234', 'pepito', 0, '1212-12-12', 0x313231322d31322d3132, 13),
-('averquetal@gmail.com', '1', 'a ver que tal', 0, '2222-02-22', '', 14),
-('asdf@sdfadf.com', 'asdfasdf', 'asdfasdf', 0, '1212-12-12', '', 15),
-('asddf@sdfadf.com', '', 'asdfasdf', 0, '1212-12-12', '', 16),
-('asdddf@sdfadf.com', 'asdf', 'asdfasdf', 0, '1212-12-12', '', 17),
-('asddsfddf@sdfadf.com', 'asfasdfasdf', 'asdfasdf', 0, '1212-12-12', '', 18),
-('asdfasdf@fasd.csdc', 'sadfasdf', 'asdfasdf', 0, '1212-12-12', '', 19),
-('fasfasdf@fadsf.sdf', 'asdfasdf', 'asdfasdf', 0, '1212-12-12', '', 20),
-('fasdfasdf@asfasdf.cs', 'asdfa', 'asdfasf', 0, '1212-12-12', NULL, 21);
+INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`, `Imagen_perfil`, `id`, `puntos`) VALUES
+('usuario@ucm.es', '1234', 'usuario1', 0, '2018-11-10', NULL, 1, 0),
+('cargom11@ucm.es', '1234', 'carlos', 0, NULL, NULL, 2, 0),
+('pepe', '1234', 'carlos', 0, NULL, NULL, 3, 0),
+('averquetal@gmail.com', '1', 'a ver que tal', 0, '2222-02-22', '', 14, 0),
+('asdf@sdfadf.com', 'asdfasdf', 'asdfasdf', 0, '1212-12-12', '', 15, 0),
+('asddf@sdfadf.com', '', 'asdfasdf', 0, '1212-12-12', '', 16, 0),
+('asdddf@sdfadf.com', 'asdf', 'asdfasdf', 0, '1212-12-12', '', 17, 0),
+('asddsfddf@sdfadf.com', 'asfasdfasdf', 'asdfasdf', 0, '1212-12-12', '', 18, 0),
+('asdfasdf@fasd.csdc', 'sadfasdf', 'asdfasdf', 0, '1212-12-12', '', 19, 0),
+('fasfasdf@fadsf.sdf', 'asdfasdf', 'asdfasdf', 0, '1212-12-12', '', 20, 0),
+('fasdfasdf@asfasdf.cs', 'asdfa', 'asdfasf', 0, '1212-12-12', NULL, 21, 0),
+('asdfasdf@fasdf.coom', 'dasf', 'asdfasdf', 0, '2233-03-12', NULL, 22, 0),
+('prueba3@faasdf.csd', 'fasdf', 'dasdfas', 0, '1234-03-12', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\ca5ae53f9cb72d3d62331854f2d95aeb', 25, 0),
+('fasdfas@sdfc.cs', 'sdfas', 'asfsdf', 0, '1986-03-12', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\1ac035c87ce685a6d6c3e61ff79004bf', 26, 0),
+('carlos@ucm.es', '1234', 'carlos', 0, '1997-03-21', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\76659da7e6e2dd3e67ba67fa6fe82d6a', 27, 0),
+('meme@ucm.es', '1234', 'meme', 1, '1997-01-26', 'C:\\Users\\carlo\\OneDrive\\Documentos\\GitHub\\AplicacionWeb\\uploads\\a8bb08e832a30ecf84fd61648d4a5fde', 28, 100);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuariorespondeennombredeotro`
+--
+
+CREATE TABLE `usuariorespondeennombredeotro` (
+  `id` int(100) NOT NULL,
+  `idPregunta` int(100) NOT NULL,
+  `idUsuarioAdivina` int(100) NOT NULL,
+  `idUsuarioRespondio` int(100) NOT NULL,
+  `respuesta` varchar(1000) NOT NULL,
+  `idRespuesta` int(11) NOT NULL,
+  `correcta` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `usuariorespondeennombredeotro`
+--
+
+INSERT INTO `usuariorespondeennombredeotro` (`id`, `idPregunta`, `idUsuarioAdivina`, `idUsuarioRespondio`, `respuesta`, `idRespuesta`, `correcta`) VALUES
+(1, 26, 3, 1, 'azul', 0, 0),
+(2, 26, 3, 2, 'verde', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -137,11 +170,9 @@ INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`
 CREATE TABLE `usuariorespondeparasimismo` (
   `id` int(11) NOT NULL,
   `idPregunta` int(11) NOT NULL,
-
   `idUsuario` int(11) NOT NULL,
   `respuesta` varchar(1000) NOT NULL,
   `idRespuesta` int(11) NOT NULL
-
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -149,7 +180,13 @@ CREATE TABLE `usuariorespondeparasimismo` (
 --
 
 INSERT INTO `usuariorespondeparasimismo` (`id`, `idPregunta`, `idUsuario`, `respuesta`, `idRespuesta`) VALUES
-(2, 25, 3, 'barça', 1);
+(2, 25, 3, 'barça', 1),
+(3, 26, 3, 'azul', 0),
+(4, 26, 2, 'azul', 0),
+(5, 26, 1, 'azul', 0),
+(6, 24, 3, 'Enter text here...', 0),
+(7, 24, 3, 'Enter text here...', 0),
+(8, 29, 27, 'Tokio', 2);
 
 --
 -- Índices para tablas volcadas
@@ -192,6 +229,15 @@ ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `usuariorespondeennombredeotro`
+--
+ALTER TABLE `usuariorespondeennombredeotro`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idPregunta` (`idPregunta`),
+  ADD KEY `idUsuarioAdivina` (`idUsuarioAdivina`),
+  ADD KEY `idUsuarioRespondio` (`idUsuarioRespondio`);
+
+--
 -- Indices de la tabla `usuariorespondeparasimismo`
 --
 ALTER TABLE `usuariorespondeparasimismo`
@@ -207,12 +253,12 @@ ALTER TABLE `usuariorespondeparasimismo`
 -- AUTO_INCREMENT de la tabla `amigos`
 --
 ALTER TABLE `amigos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
 --
 ALTER TABLE `pregunta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT de la tabla `solicitudesamistad`
 --
@@ -222,12 +268,17 @@ ALTER TABLE `solicitudesamistad`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+--
+-- AUTO_INCREMENT de la tabla `usuariorespondeennombredeotro`
+--
+ALTER TABLE `usuariorespondeennombredeotro`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `usuariorespondeparasimismo`
 --
 ALTER TABLE `usuariorespondeparasimismo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- Restricciones para tablas volcadas
 --
@@ -251,6 +302,14 @@ ALTER TABLE `pregunta`
 ALTER TABLE `solicitudesamistad`
   ADD CONSTRAINT `solicitudesamistad_ibfk_1` FOREIGN KEY (`usuario_envia`) REFERENCES `usuario` (`id`),
   ADD CONSTRAINT `solicitudesamistad_ibfk_2` FOREIGN KEY (`usuario_recibe`) REFERENCES `usuario` (`id`);
+
+--
+-- Filtros para la tabla `usuariorespondeennombredeotro`
+--
+ALTER TABLE `usuariorespondeennombredeotro`
+  ADD CONSTRAINT `usuariorespondeennombredeotro_ibfk_1` FOREIGN KEY (`idPregunta`) REFERENCES `pregunta` (`id`),
+  ADD CONSTRAINT `usuariorespondeennombredeotro_ibfk_2` FOREIGN KEY (`idUsuarioAdivina`) REFERENCES `usuario` (`id`),
+  ADD CONSTRAINT `usuariorespondeennombredeotro_ibfk_3` FOREIGN KEY (`idUsuarioRespondio`) REFERENCES `usuario` (`id`);
 
 --
 -- Filtros para la tabla `usuariorespondeparasimismo`
