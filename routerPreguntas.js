@@ -78,7 +78,6 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                         console.log(err);
                                     }
                                     else {
-
                                         daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId, amigosHanRespondido_map,
                                             function (err, info_usuarios_han_respondido) {
                                                 if (err) {
@@ -93,7 +92,7 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                                             if(info_usuarios_han_respondido == null){
                                                                 info_usuarios_han_respondido = new Map();
                                                                 info_usuarios_han_respondido.set(0,"ningun amigo ha respondido");
-
+                                                            }
                                                             response.render("pregunta", {
                                                                 contestado: existe, pregunta: pregunta[0],
                                                                 infoUsuarios: info_usuarios_han_respondido,

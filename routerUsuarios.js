@@ -137,7 +137,43 @@ routerUsuarios.get("/profile", function (request, response) {
 
 routerUsuarios.get("/imagenUsuario", function (request, response) {
 
-    daoUsuarios.getUserImageName(request.session.currentUser, function (err, res) {
+    daoUsuarios.getUserImageName(request.session.currentId, function (err, res) {
+        //console.log(res); 
+        if(err){
+            console.log("error al buscar la imagen");
+        }
+        else{
+        if (res) {
+             response.sendFile(res);
+        }
+        else {
+            let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
+            response.sendFile(pathImg)
+        }
+    }
+    })
+})
+routerUsuarios.get("/rechazarAmistad/:id",function(request,response){
+    daoUsuarios.rechazarAmistad(request.params.id, request.session.currentId, function(err){
+        if(err){
+            console.log(err.message);
+        }
+        else{
+            response.redirect("/usuarios/amigos");
+        }
+    })
+
+
+})
+
+
+
+
+
+
+routerUsuarios.get("/imagenUsuario/:id_usuario", function (request, response) {
+
+    daoUsuarios.getUserImageName(request.params.id_usuario, function (err, res) {
         //console.log(res); 
         if(err){
             console.log("error al buscar la imagen");

@@ -43,14 +43,14 @@ class DAOUsuarios {
         })
     }
 
-    getUserImageName(email, callback) {
+    getUserImageName(id, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
                 connection.query(
-                    "SELECT Imagen_perfil FROM USUARIO WHERE EMAIL = ?", [email],
+                    "SELECT Imagen_perfil FROM USUARIO WHERE ID = ?", [id],
                     function (err, resultado) {
                         connection.release();
                         if (err) {
@@ -539,13 +539,34 @@ class DAOUsuarios {
         })
 
     }
-    actualizarPuntuacion(id, puntos, callback) {
+    actualizarPuntuacion(id, puntos) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 console.log(err.message);
             }
             else {
                 connection.query("UPDATE USUARIO SET PUNTOS = ? WHERE ID = ?", [puntos, id],
+                    function (err) {
+                        if (err) {
+                            callback(new Error("Error al actualizar los puntos"));
+                        }
+                        else {
+                            callback(null);
+                        }
+                    }
+                )
+            }
+
+        })
+    }
+
+    rechazarAmistad(id1, id2, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                console.log(err.message);
+            }
+            else {
+                connection.query("DELETE FROM SOLICITUDESAMISTAD WHERE USUARIO_ENVIA = ? AND USUARIO_RECIBE = ? OR USUARIO_ENVIA = ? AND USUARIO_RECIBE = ?", [id1, id2, id2, id1],
                     function (err) {
                         if (err) {
                             callback(new Error("Error al actualizar los puntos"));

@@ -31,7 +31,7 @@
 					</a>
 				</div>
 				<div class="Seleccionado">
-					<a href="#">
+					<a href="/usuarios/amigos">
 						AMIGOS
 					</a>
 				</div>
@@ -62,7 +62,7 @@
 						<li>
 							<div class="peticion">
 								<div class="fotos">
-									<%= usuario.Imagen_perfil %>
+								<img src="/usuarios/imagenUsuario/<%=usuario.id%>" class = "fotos">
 								</div>
 								<div class="Nombre">
 									<%= usuario.nombre %>
@@ -112,9 +112,9 @@
 							<div class="amigo">
 								<div class="fotos">
 									<%if (usuario.Imagen_perfil){ %> 
-								<img src=<%=usuario.Imagen_perfil %>	
+										<img src="/usuarios/imagenUsuario/<%=usuario.id%>" class = "fotos">
 								 <%} else {%>	
-										<img class = "fotos" src= "../img/NoPerfil.jpg" >
+										<img src= "../img/NoPerfil.jpg" class = "fotos" >
 										<%}%>
 								</div>
 								<div class="NombreAmigo">
