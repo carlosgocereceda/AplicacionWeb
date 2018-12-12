@@ -351,7 +351,8 @@ routerUsuarios.post("/buscarAmigo", function (request, response) {
                         console.log("Error al comprobar tus amigos");
                     }
                     else {
-                        //Aqui filtro donde estoy yo para quesarme solo con las filas en las que aparezca el id del usuario
+                        if(result2){
+                            //Aqui filtro donde estoy yo para quesarme solo con las filas en las que aparezca el id del usuario
                         let c = result2.filter(element => element.idAmigo1 == request.session.currentId || element.idAmigo2 == request.session.currentId);
                         //Este map sirve para ver si me quedo con la fila 1 o 2 de amigos dependiendo de donde se encuentra el id del current user
                         c = c.map(element => (element.idAmigo1 == request.session.currentId) ? element.idAmigo2 : element.idAmigo1);
@@ -361,6 +362,12 @@ routerUsuarios.post("/buscarAmigo", function (request, response) {
                         console.log(a);
                         console.log(result[0].id);
                         response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a, puntos: request.session.currentPoints, idtuyo: request.session.currentId });
+
+                        }
+                        else{
+                            response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: [], puntos: request.session.currentPoints, idtuyo: request.session.currentId });
+                        }
+
                     }
                 })
 

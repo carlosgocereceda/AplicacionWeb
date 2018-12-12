@@ -524,6 +524,7 @@ class DAOUsuarios {
             else {
                 connection.query('SELECT nombre, id FROM usuario WHERE id IN (' + usuarios.join() + ')',
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error de acceso a la base de datos"));
                         }
@@ -549,6 +550,7 @@ class DAOUsuarios {
             else {
                 connection.query("UPDATE USUARIO SET PUNTOS = ? WHERE ID = ?", [puntos, id],
                     function (err) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error al actualizar los puntos"));
                         }
@@ -570,6 +572,7 @@ class DAOUsuarios {
             else {
                 connection.query("DELETE FROM SOLICITUDESAMISTAD WHERE USUARIO_ENVIA = ? AND USUARIO_RECIBE = ? OR USUARIO_ENVIA = ? AND USUARIO_RECIBE = ?", [id1, id2, id2, id1],
                     function (err) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error al actualizar los puntos"));
                         }
@@ -591,6 +594,7 @@ class DAOUsuarios {
                 connection.query("SELECT FOTO FROM fotosusuario WHERE idUsuario = ?", 
                 [id],
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error al cargar las imagenes"));
                         }
@@ -613,6 +617,7 @@ class DAOUsuarios {
                 connection.query("INSERT INTO fotosusuario(idUsuario, foto) VALUES (?,?)", 
                 [idUser, image],
                     function (err, filas) {
+                        connection.release();
                         if (err) {
                             callback(new Error("Error al cargar las imagenes"));
                         }
