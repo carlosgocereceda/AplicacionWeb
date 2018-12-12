@@ -78,6 +78,7 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                         console.log(err);
                                     }
                                     else {
+
                                         daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId, amigosHanRespondido_map,
                                             function (err, info_usuarios_han_respondido) {
                                                 if (err) {
@@ -92,9 +93,7 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                                             if(info_usuarios_han_respondido == null){
                                                                 info_usuarios_han_respondido = new Map();
                                                                 info_usuarios_han_respondido.set(0,"ningun amigo ha respondido");
-                                                            }
-                                                            //console.log("id pregunta ");
-                                                            //console.log(pregunta);
+
                                                             response.render("pregunta", {
                                                                 contestado: existe, pregunta: pregunta[0],
                                                                 infoUsuarios: info_usuarios_han_respondido,
@@ -171,7 +170,7 @@ routerPreguntas.post("/contestarPreguntaNombreDeOtro", function (request, respon
                             console.log(err);
                         }
                         else {
-                            daoUsuarios.actualizarPuntuacion(request.session.currentId, request.session.currentPoints, function(err, res){
+                            daoUsuarios.actualizarPuntuacion(request.session.currentId, request.session.currentPoints, function(err){
                                 if(err){
                                     console.log(err.message);
                                 }
@@ -266,7 +265,30 @@ routerPreguntas.get("/preguntasAleatorias", function (request, response) {
             //console.log("ha costestado radio");
         }
         else if (request.body.propio) {
-            //console.log("ha costestado propio");
+            console.log("ha costestado propio");
+            console.log(request.body);
+            let respuesta = request.body.texto;
+            let arrayRespuestas = request.body.respuestas.split(",");
+            arrayRespuestas.push(respuesta);
+            let idRespuesta = arrayRespuestas.length - 1;
+            
+            daoPreguntas.addRespuesta(request.body.id, arrayRespuestas, function(err, res){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId, request.body.id, respuesta, idRespuesta,
+                        function (err, res) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                response.redirect("/preguntas/preguntasAleatorias");
+                            }
+                        })
+                }
+            })
+
         }
     })
 

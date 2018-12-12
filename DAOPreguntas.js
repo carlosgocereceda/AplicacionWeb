@@ -232,16 +232,15 @@ class DAOPreguntas {
                                 callback(new Error("Error de acceso a la base de datos"));
                             }
                             else {
-
                                 if (filas.length != 0) {
                                     let sol = amigos_map;
                                     for (let i = 0; i < filas.length; i++) {
                                         let info = {
-                                            nombre: sol.get(filas[i].id),
+                                            nombre: sol.get(filas[i].idUsuarioRespondio),
                                             respondido: true,
                                             correcto: filas[i].correcta
                                         }
-                                        sol.set(filas[i].id, info);
+                                        sol.set(filas[i].idUsuarioRespondio, info);
                                     }
                                     //console.log("mapa cambiado: ");
                                     //console.log(sol);
@@ -265,6 +264,27 @@ class DAOPreguntas {
 
                 connection.query("INSERT INTO usuariorespondeennombredeotro (idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta) VALUES (?,?,?,?,?,?)",
                     [idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta],
+                    function (err, res) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null, res);
+                        }
+                    })
+            }
+        })
+    }
+    addRespuesta(idPregunta,respuestas,callback){
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+
+                connection.query("UPDATE PREGUNTA SET respuestas = ? WHERE id = ?",
+                    [respuestas.join(","),idPregunta],
                     function (err, res) {
                         connection.release();
                         if (err) {
