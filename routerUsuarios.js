@@ -35,7 +35,7 @@ routerUsuarios.use(bodyParser.urlencoded({ extended: true })); //Preguntar a Mar
 const ficherosEstaticos =
     path.join(__dirname, "public");
 
-    routerUsuarios.use(express.static(ficherosEstaticos));
+routerUsuarios.use(express.static(ficherosEstaticos));
 //------------------FIN DE FICHEROS ESTATICOS--------------------------------
 
 // Crear un pool de conexiones a la base de datos de MySQL
@@ -45,31 +45,31 @@ const daoUsuarios = new DAOUsuarios(pool);
 const daoPreguntas = new DAOPreguntas(pool);
 
 const multer = require("multer");
-const multerFactory = multer({ dest: path.join(__dirname, "uploads")});
+const multerFactory = multer({ dest: path.join(__dirname, "uploads") });
 
 routerUsuarios.get("/register", function (request, response) {
     response.redirect("/nuevoUsuario.html")
 })
 function _calculateAge(birthday) { // birthday is a date
-   
-   
-        
+
+
+
     var ageDifMs = Date.now() - birthday.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
     return Math.abs(ageDate.getUTCFullYear() - 1970);
-   
-   
+
+
 }
 
-routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function (request, response) {
+routerUsuarios.post("/register", multerFactory.single("Imagen_perfil"), function (request, response) {
     let n = null;
     let a = null;
     let a2 = null;
-    if(request.file){
+    if (request.file) {
         n = request.file.path;
         a = n.split("\\");
-        a2= a[a.length -1];
-        
+        a2 = a[a.length - 1];
+
     }
     daoUsuarios.getUsuario(request.body.email, function (err, res) {
 
@@ -89,7 +89,7 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
                     if (!err) {
                         request.session.currentPoints = 0;
                         request.session.currentUser = request.body.email;
-                      //  daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
+                        //  daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
                         //    request.session.currentId = filas[0].id;
                         //})
                         response.redirect("/usuarios/profile");
@@ -100,7 +100,7 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
                     }
                 })
         }
-        else{
+        else {
             console.log("usuario ya existente");
             response.redirect("/login");
         }
@@ -135,21 +135,20 @@ routerUsuarios.get("/profile", function (request, response) {
             else {
                 sexo = "Mujer";
             }
-            let ruta ="/usuarios/imagenUsuario/";
+            let ruta = "/usuarios/imagenUsuario/";
             request.session.currentId = res[0].id;
             request.session.currentPoints = res[0].puntos;
-            let edad =  _calculateAge(edad1);
+            let edad = _calculateAge(edad1);
 
-            daoUsuarios.getUserImages(request.session.currentId, function(err, res){
-                if(err){
+            daoUsuarios.getUserImages(request.session.currentId, function (err, fotos) {
+                if (err) {
                     console.log(err);
                 }
-                else{
-                    
+                else {
+                    response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo: ruta, propio: true });
                 }
             })
-            
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo:ruta, propio:true });
+
         }
     })
     //Creo que hacen falta coockies para esto
@@ -183,40 +182,46 @@ routerUsuarios.get("/profile/:idAmigo", function (request, response) {
             })
             
             response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: puntos ,amigo:ruta, propio: false });
+
         }
     })
 })
 
 
+routerUsuarios.get("/imagenUsuario/:nombreFoto", function (request, response) {
 
+    let pathImg = path.join(__dirname, "uploads", request.params.nombreFoto);
+    response.sendFile(pathImg);
+    
+})
 
 
 routerUsuarios.get("/imagenUsuario", function (request, response) {
 
     daoUsuarios.getUserImageName(request.session.currentId, function (err, res) {
         //console.log(res); 
-        if(err){
+        if (err) {
             console.log("error al buscar la imagen");
         }
-        else{
-        if (res) {
-            let pathImg = path.join(__dirname, "uploads", res);
-
-             response.sendFile(pathImg);
-        }
         else {
-            let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
-            response.sendFile(pathImg)
+            if (res) {
+                let pathImg = path.join(__dirname, "uploads", res);
+
+                response.sendFile(pathImg);
+            }
+            else {
+                let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
+                response.sendFile(pathImg)
+            }
         }
-    }
     })
 })
-routerUsuarios.get("/rechazarAmistad/:id",function(request,response){
-    daoUsuarios.rechazarAmistad(request.params.id, request.session.currentId, function(err){
-        if(err){
+routerUsuarios.get("/rechazarAmistad/:id", function (request, response) {
+    daoUsuarios.rechazarAmistad(request.params.id, request.session.currentId, function (err) {
+        if (err) {
             console.log(err.message);
         }
-        else{
+        else {
             response.redirect("/usuarios/amigos");
         }
     })
@@ -233,19 +238,19 @@ routerUsuarios.get("/imagenUsuario/:id_usuario", function (request, response) {
 
     daoUsuarios.getUserImageName(request.params.id_usuario, function (err, res) {
         //console.log(res); 
-        if(err){
+        if (err) {
             console.log("error al buscar la imagen");
         }
-        else{
-        if (res) {
-            let pathImg = path.join(__dirname, "uploads", res);
-            response.sendFile(pathImg);
-        }
         else {
-            let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
-            response.sendFile(pathImg)
+            if (res) {
+                let pathImg = path.join(__dirname, "uploads", res);
+                response.sendFile(pathImg);
+            }
+            else {
+                let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
+                response.sendFile(pathImg)
+            }
         }
-    }
     })
 })
 
@@ -338,7 +343,7 @@ routerUsuarios.post("/buscarAmigo", function (request, response) {
                         //envio el render con los dos arrays para las comprobaciones;
                         console.log(a);
                         console.log(result[0].id);
-                        response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a, puntos: request.session.currentPoints, idtuyo: request.session.currentId});
+                        response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a, puntos: request.session.currentPoints, idtuyo: request.session.currentId });
                     }
                 })
 
@@ -371,7 +376,7 @@ routerUsuarios.get("/logout", function (request, response) {
 //--------------------------------------------------------------
 
 routerUsuarios.get("/modify", function (request, response) {
-    response.render("modificar", {usuariologeado: request.session.currentName, puntos: request.session.currentPoints});
+    response.render("modificar", { usuariologeado: request.session.currentName, puntos: request.session.currentPoints });
 })
 
 routerUsuarios.get("/amigos", function (request, response) {
@@ -439,10 +444,10 @@ routerUsuarios.get("/aceptarAmistad/:idAmigo", function (request, response) {
 
 })
 
-routerUsuarios.post("/modify", multerFactory.single("Imagen_perfil"),function (request, response) {
+routerUsuarios.post("/modify", multerFactory.single("Imagen_perfil"), function (request, response) {
     //console.log(request.body);
     let n = null;
-    if(request.file){
+    if (request.file) {
         n = request.file.path;
     }
     let sexo;
@@ -466,11 +471,11 @@ routerUsuarios.post("/modify", multerFactory.single("Imagen_perfil"),function (r
             }
             else {
                 response.redirect("/usuarios/profile");
-               
+
             }
         })
 
-       
+
 })
 
 module.exports = routerUsuarios;
