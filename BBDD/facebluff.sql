@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-12-2018 a las 19:34:22
+-- Tiempo de generación: 12-12-2018 a las 19:45:37
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -49,6 +49,7 @@ INSERT INTO `amigos` (`id`, `idAmigo1`, `idAmigo2`) VALUES
 --
 
 CREATE TABLE `fotosusuario` (
+  `id` int(11) NOT NULL,
   `idUsuario` int(11) NOT NULL,
   `foto` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -57,16 +58,16 @@ CREATE TABLE `fotosusuario` (
 -- Volcado de datos para la tabla `fotosusuario`
 --
 
-INSERT INTO `fotosusuario` (`idUsuario`, `foto`) VALUES
-(38, '93bcb9f963dd6ecf194e86f44252f3d3'),
-(38, 'bfbf278db24e535b68525d2fd9a5fe81'),
-(38, '4688e9424c96ddc9bde5d385e7412d93'),
-(38, '5396685a263eef1786b2bbaccb8b0572'),
-(38, 'e91e4837b00a360aa7e61604e20459ce'),
-(38, '90d70588c25366f12b6f9bd24ccb7154'),
-(38, '486c618cb352cfd9776a6892eaef9a2d'),
-(38, '9b2ee58367124ecb089dd6a6d7d9895a'),
-(38, '48a89f30fc42d3b2dddac8f13031a3ab');
+INSERT INTO `fotosusuario` (`id`, `idUsuario`, `foto`) VALUES
+(1, 38, '93bcb9f963dd6ecf194e86f44252f3d3'),
+(2, 38, 'bfbf278db24e535b68525d2fd9a5fe81'),
+(3, 38, '4688e9424c96ddc9bde5d385e7412d93'),
+(4, 38, '5396685a263eef1786b2bbaccb8b0572'),
+(5, 38, 'e91e4837b00a360aa7e61604e20459ce'),
+(6, 38, '90d70588c25366f12b6f9bd24ccb7154'),
+(7, 38, '486c618cb352cfd9776a6892eaef9a2d'),
+(8, 38, '9b2ee58367124ecb089dd6a6d7d9895a'),
+(9, 38, '48a89f30fc42d3b2dddac8f13031a3ab');
 
 -- --------------------------------------------------------
 
@@ -105,7 +106,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('dgnAMafCdhNFJQqUyIb6FfuG57Z79lzq', 1544726033, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"usuario1@ucm.es\",\"currentName\":\"usuario1\",\"currentId\":38,\"currentPoints\":1000}');
+('RrQKzJYOTfGFxZ5Qdy5gaV9KhcLv7QHw', 1544726718, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"usuario1@ucm.es\",\"currentName\":\"usuario1\",\"currentId\":38,\"currentPoints\":1000}');
 
 -- --------------------------------------------------------
 
@@ -214,6 +215,7 @@ ALTER TABLE `amigos`
 -- Indices de la tabla `fotosusuario`
 --
 ALTER TABLE `fotosusuario`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `idUsuario` (`idUsuario`);
 
 --
@@ -269,6 +271,11 @@ ALTER TABLE `usuariorespondeparasimismo`
 -- AUTO_INCREMENT de la tabla `amigos`
 --
 ALTER TABLE `amigos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT de la tabla `fotosusuario`
+--
+ALTER TABLE `fotosusuario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT de la tabla `pregunta`
