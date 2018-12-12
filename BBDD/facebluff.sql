@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-12-2018 a las 19:28:34
+-- Tiempo de generación: 12-12-2018 a las 19:34:22
 -- Versión del servidor: 10.1.21-MariaDB
 -- Versión de PHP: 5.6.30
 
@@ -53,6 +53,21 @@ CREATE TABLE `fotosusuario` (
   `foto` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `fotosusuario`
+--
+
+INSERT INTO `fotosusuario` (`idUsuario`, `foto`) VALUES
+(38, '93bcb9f963dd6ecf194e86f44252f3d3'),
+(38, 'bfbf278db24e535b68525d2fd9a5fe81'),
+(38, '4688e9424c96ddc9bde5d385e7412d93'),
+(38, '5396685a263eef1786b2bbaccb8b0572'),
+(38, 'e91e4837b00a360aa7e61604e20459ce'),
+(38, '90d70588c25366f12b6f9bd24ccb7154'),
+(38, '486c618cb352cfd9776a6892eaef9a2d'),
+(38, '9b2ee58367124ecb089dd6a6d7d9895a'),
+(38, '48a89f30fc42d3b2dddac8f13031a3ab');
+
 -- --------------------------------------------------------
 
 --
@@ -84,6 +99,13 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `sessions`
+--
+
+INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
+('dgnAMafCdhNFJQqUyIb6FfuG57Z79lzq', 1544726033, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentUser\":\"usuario1@ucm.es\",\"currentName\":\"usuario1\",\"currentId\":38,\"currentPoints\":1000}');
 
 -- --------------------------------------------------------
 
@@ -127,7 +149,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`email`, `password`, `nombre`, `sexo`, `fecha_nacimiento`, `Imagen_perfil`, `id`, `puntos`) VALUES
-('usuario1@ucm.es', '1234', 'usuario1', 0, '1980-01-01', '9a2f016facd7efa25fc8ad933efd82d7', 38, 0),
+('usuario1@ucm.es', '1234', 'usuario1', 0, '1980-01-01', '9a2f016facd7efa25fc8ad933efd82d7', 38, 1000),
 ('usuario2@ucm.es', '1234', 'usuario2', 1, '1980-01-01', '2533194b0a0bf6d71b1fef988efa5abb', 39, 0),
 ('usuario3@ucm.es', '1234', 'usuario3', 0, '1980-01-01', '0d199927e4a3ada78989faada12f96a2', 40, 0),
 ('usuario4@ucm.es', '1234', 'usuario4', 0, '1980-01-01', '3ad291444dc5d1688cf54069aa8dd292', 41, 0);
