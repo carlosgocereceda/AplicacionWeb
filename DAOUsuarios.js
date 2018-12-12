@@ -71,7 +71,6 @@ class DAOUsuarios {
         })
     }
     insertaUsuario(email, password, nombre, sexo, fecha_nacimiento, imagen_perfil, puntos, callback) {
-        //console.log("estoy aqui");
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
