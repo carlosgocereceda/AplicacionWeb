@@ -51,15 +51,23 @@ routerUsuarios.get("/register", function (request, response) {
     response.redirect("/nuevoUsuario.html")
 })
 function _calculateAge(birthday) { // birthday is a date
+    if(birthday != null){
     var ageDifMs = Date.now() - birthday.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
     return Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+    else{
+        return null;
+    }
 }
 
 routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function (request, response) {
     let n = null;
+    let a = null;
     if(request.file){
         n = request.file.path;
+        a = n.split("\\");
+        
     }
     
     daoUsuarios.getUsuario(request.body.email, function (err, res) {
@@ -75,7 +83,7 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
             
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
-                n,0,
+                a[a.length -1],0,
                 function (err, filas) {
                     if (!err) {
                         request.session.currentPoints = 0;
@@ -144,7 +152,8 @@ routerUsuarios.get("/imagenUsuario", function (request, response) {
         }
         else{
         if (res) {
-             response.sendFile(res);
+            let pathImg = path.join(__dirname, "uploads", res);
+             response.sendFile(pathImg);
         }
         else {
             let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
@@ -180,7 +189,8 @@ routerUsuarios.get("/imagenUsuario/:id_usuario", function (request, response) {
         }
         else{
         if (res) {
-             response.sendFile(res);
+            let pathImg = path.join(__dirname, "uploads", res);
+            response.sendFile(pathImg);
         }
         else {
             let pathImg = path.join(__dirname, "public", "img", "NoPerfil.jpg");
