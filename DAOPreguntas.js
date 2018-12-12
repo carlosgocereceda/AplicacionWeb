@@ -18,9 +18,9 @@ class DAOPreguntas {
             }
             else {
                 console.log(id, enunciado, respuestas.join(","));
-                connection.query("INSERT INTO "+
-                "PREGUNTA (idUsuarioCrea, pregunta, respuestas) "+
-                "VALUES (?,?,?)",
+                connection.query("INSERT INTO " +
+                    "PREGUNTA (idUsuarioCrea, pregunta, respuestas) " +
+                    "VALUES (?,?,?)",
                     [id, enunciado, respuestas.join(",")],
                     function (err, filas) {
                         connection.release();
@@ -171,36 +171,41 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                if(amigos_map != null && amigos_map.length > 0){
+                //console.log("amigos_map");
+                //console.log(amigos_map);
+                //console.log("length");
+                //console.log(amigos_map.length);
+                if (amigos_map != null && amigos_map.size > 0) {
 
-                let amigos = Array.from(amigos_map.keys());
+                    //console.log("aqui");
+                    let amigos = Array.from(amigos_map.keys());
 
-                connection.query('SELECT idUsuario FROM usuariorespondeparasimismo WHERE idPregunta = ' + idPregunta + ' AND idUsuario IN (' + amigos.join() + ')',
-                    function (err, filas) {
-                        connection.release();
-                        if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
-                        }
-                        else {
-                            let amigos_han_respondido_map = new Map();
-                            if (filas.length != 0) {
-                                for (let i = 0; i < filas.length; i++) {
-                                    amigos_han_respondido_map.set(filas[i].idUsuario, amigos_map.get(filas[i].idUsuario));
-                                }
-                                callback(null, amigos_han_respondido_map);
+                    connection.query('SELECT idUsuario FROM usuariorespondeparasimismo WHERE idPregunta = ' + idPregunta + ' AND idUsuario IN (' + amigos.join() + ')',
+                        function (err, filas) {
+                            connection.release();
+                            if (err) {
+                                callback(new Error("Error de acceso a la base de datos"));
                             }
                             else {
-                                callback(null, null);
+                                let amigos_han_respondido_map = new Map();
+                                if (filas.length != 0) {
+                                    for (let i = 0; i < filas.length; i++) {
+                                        amigos_han_respondido_map.set(filas[i].idUsuario, amigos_map.get(filas[i].idUsuario));
+                                    }
+                                    callback(null, amigos_han_respondido_map);
+                                }
+                                else {
+                                    callback(null, null);
+                                }
                             }
-                        }
-                    })
+                        })
 
                 }
-                else{
+                else {
                     callback(null, null);
                 }
             }
-            
+
         })
     }
     getUsuariosYaAdivinados(idPregunta, usuarioQuiereAdivinar, amigos_map, callback) {
@@ -209,55 +214,55 @@ class DAOPreguntas {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                if(amigos_map == null){
+                if (amigos_map == null) {
                     callback(null, null);
                 }
-                else{
+                else {
                     let amigos = Array.from(amigos_map.keys());
-                //console.log("aqui");
-                //console.log(amigos);
-                //console.log("idpregunta" + idPregunta);
-                //console.log("usuarioQuiereAdivinar " + usuarioQuiereAdivinar);
+                    //console.log("aqui");
+                    //console.log(amigos);
+                    //console.log("idpregunta" + idPregunta);
+                    //console.log("usuarioQuiereAdivinar " + usuarioQuiereAdivinar);
 
-                connection.query('SELECT * FROM usuariorespondeennombredeotro WHERE idPregunta = ' + idPregunta +
-                    ' AND idUsuarioAdivina = ' + usuarioQuiereAdivinar + ' AND idUsuarioRespondio IN (' + amigos.join() + ')',
-                    function (err, filas) {
-                        connection.release();
-                        if (err) {
-                            callback(new Error("Error de acceso a la base de datos"));
-                        }
-                        else {
-                           
-                            if (filas.length != 0) {
-                                let sol = amigos_map;
-                                for(let i = 0; i < filas.length; i++){
-                                    let info = {
-                                        nombre: sol.get(filas[i].id),
-                                        respondido: true,
-                                        correcto: filas[i].correcta
-                                    }
-                                    sol.set(filas[i].id, info);
-                                }
-                                //console.log("mapa cambiado: ");
-                                //console.log(sol);
-                                callback(null, sol);
+                    connection.query('SELECT * FROM usuariorespondeennombredeotro WHERE idPregunta = ' + idPregunta +
+                        ' AND idUsuarioAdivina = ' + usuarioQuiereAdivinar + ' AND idUsuarioRespondio IN (' + amigos.join() + ')',
+                        function (err, filas) {
+                            connection.release();
+                            if (err) {
+                                callback(new Error("Error de acceso a la base de datos"));
                             }
                             else {
-                                callback(null, null);
+
+                                if (filas.length != 0) {
+                                    let sol = amigos_map;
+                                    for (let i = 0; i < filas.length; i++) {
+                                        let info = {
+                                            nombre: sol.get(filas[i].id),
+                                            respondido: true,
+                                            correcto: filas[i].correcta
+                                        }
+                                        sol.set(filas[i].id, info);
+                                    }
+                                    //console.log("mapa cambiado: ");
+                                    //console.log(sol);
+                                    callback(null, sol);
+                                }
+                                else {
+                                    callback(null, amigos_map);
+                                }
                             }
-                        }
-                    })
+                        })
                 }
             }
         })
     }
-    responderEnNombreDeOtro(idUsuarioAdivina,idUsuarioRespondio, idPregunta, respuesta, idRespuesta, correcta, callback) {
+    responderEnNombreDeOtro(idUsuarioAdivina, idUsuarioRespondio, idPregunta, respuesta, idRespuesta, correcta, callback) {
         this.pool.getConnection(function (err, connection) {
             if (err) {
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else {
-                
+
                 connection.query("INSERT INTO usuariorespondeennombredeotro (idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta) VALUES (?,?,?,?,?,?)",
                     [idPregunta, idUsuarioAdivina, idUsuarioRespondio, respuesta, idRespuesta, correcta],
                     function (err, res) {

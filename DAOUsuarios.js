@@ -545,7 +545,7 @@ class DAOUsuarios {
                 console.log(err.message);
             }
             else {
-                connection.query("UPDATE USUARIOS SET PUNTOS = ? WHERE ID = ?", [puntos, id],
+                connection.query("UPDATE USUARIO SET PUNTOS = ? WHERE ID = ?", [puntos, id],
                     function (err) {
                         if (err) {
                             callback(new Error("Error al actualizar los puntos"));

@@ -73,11 +73,15 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                             }
                             else {
                                 let amigos = res;
+                                //console.log("amigos");
+                                //console.log(amigos_map);
                                 daoPreguntas.getAmigosHanRespondido(request.params.id, amigos_map, function (err, amigosHanRespondido_map) {
                                     if (err) {
                                         console.log(err);
                                     }
                                     else {
+                                        //console.log("amigos han respondido");
+                                        //console.log(amigosHanRespondido_map);
                                         daoPreguntas.getUsuariosYaAdivinados(request.params.id, request.session.currentId, amigosHanRespondido_map,
                                             function (err, info_usuarios_han_respondido) {
                                                 if (err) {
@@ -95,6 +99,8 @@ routerPreguntas.get("/preguntasAleatorias/:id", function (request, response) {
                                                             }
                                                             //console.log("id pregunta ");
                                                             //console.log(pregunta);
+                                                            //console.log("infoUsuarios");
+                                                            //console.log(info_usuarios_han_respondido);
                                                             response.render("pregunta", {
                                                                 contestado: existe, pregunta: pregunta[0],
                                                                 infoUsuarios: info_usuarios_han_respondido,
@@ -136,7 +142,8 @@ routerPreguntas.post("/adivinar_nombre_otro", function (request, response) {
             response.render("contestarPreguntaNombreOtro", {
                 pregunta: pregunta,
                 idUsuario: request.body.idUsuario,
-                puntos: request.session.currentPoints   
+                puntos: request.session.currentPoints,
+                usuariologeado: request.session.currentName   
             });
             //console.log(pregunta);
         }
@@ -174,6 +181,9 @@ routerPreguntas.post("/contestarPreguntaNombreDeOtro", function (request, respon
                             daoUsuarios.actualizarPuntuacion(request.session.currentId, request.session.currentPoints, function(err, res){
                                 if(err){
                                     console.log(err.message);
+                                }
+                                else{
+                                    response.redirect("/preguntas/preguntasAleatorias");
                                 }
 
                             })
