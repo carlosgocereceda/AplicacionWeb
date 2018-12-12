@@ -274,7 +274,30 @@ routerPreguntas.get("/preguntasAleatorias", function (request, response) {
             //console.log("ha costestado radio");
         }
         else if (request.body.propio) {
-            //console.log("ha costestado propio");
+            console.log("ha costestado propio");
+            console.log(request.body);
+            let respuesta = request.body.texto;
+            let arrayRespuestas = request.body.respuestas.split(",");
+            arrayRespuestas.push(respuesta);
+            let idRespuesta = arrayRespuestas.length - 1;
+            
+            daoPreguntas.addRespuesta(request.body.id, arrayRespuestas, function(err, res){
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    daoPreguntas.insertaRespuestaUnoMismo(request.session.currentId, request.body.id, respuesta, idRespuesta,
+                        function (err, res) {
+                            if (err) {
+                                console.log(err);
+                            }
+                            else {
+                                response.redirect("/preguntas/preguntasAleatorias");
+                            }
+                        })
+                }
+            })
+
         }
     })
 

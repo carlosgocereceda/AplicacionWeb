@@ -277,5 +277,26 @@ class DAOPreguntas {
             }
         })
     }
+    addRespuesta(idPregunta,respuestas,callback){
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(new Error("Error de conexión a la base de datos"));
+            }
+            else {
+
+                connection.query("UPDATE PREGUNTA SET respuestas = ? WHERE id = ?",
+                    [respuestas.join(","),idPregunta],
+                    function (err, res) {
+                        connection.release();
+                        if (err) {
+                            callback(new Error("Error de acceso a la base de datos"));
+                        }
+                        else {
+                            callback(null, res);
+                        }
+                    })
+            }
+        })
+    }
 }
 module.exports = DAOPreguntas;
