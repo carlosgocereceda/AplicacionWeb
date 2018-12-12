@@ -71,7 +71,7 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
         a2= a[a.length -1];
         
     }
-    daoUsuarios.getUsuariobyEmail(request.body.email, function (err, res) {
+    daoUsuarios.getUsuario(request.body.email, function (err, res) {
 
         if (res == null) {
             let sexo;
@@ -81,10 +81,10 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
             else {
                 sexo = 1;
             }
-            
+            console.log("Hola");
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
-                a2,0,
+                request.file.filename,0,
                 function (err, filas) {
                     if (!err) {
                         request.session.currentPoints = 0;
@@ -118,7 +118,7 @@ routerUsuarios.use(function (request, response, next) {
 //--------------------------------------PROFILE----------------------------------
 routerUsuarios.get("/profile", function (request, response) {
     //console.log("sdf fsdf fasdf");
-    daoUsuarios.getUsuario(request.session.currentId, function (err, res) {
+    daoUsuarios.getUsuario(request.session.currentUser, function (err, res) {
         //console.log(res);
         if (res) {
             console.log(res);
@@ -143,7 +143,7 @@ routerUsuarios.get("/profile", function (request, response) {
 
 routerUsuarios.get("/profile/:idAmigo", function (request, response) {
     //console.log("sdf fsdf fasdf");
-    daoUsuarios.getUsuario(request.params.idAmigo, function (err, res) {
+    daoUsuarios.getUsuarioid(request.params.idAmigo, function (err, res) {
         //console.log(res);
         if (res) {
             let nombre = res[0].nombre;
