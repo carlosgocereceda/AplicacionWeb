@@ -50,6 +50,11 @@ const multerFactory = multer({ dest: path.join(__dirname, "uploads")});
 routerUsuarios.get("/register", function (request, response) {
     response.redirect("/nuevoUsuario.html")
 })
+function _calculateAge(birthday) { // birthday is a date
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 
 routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function (request, response) {
     let n = null;
@@ -73,6 +78,7 @@ routerUsuarios.post("/register",multerFactory.single("Imagen_perfil"), function 
                 n,0,
                 function (err) {
                     if (!err) {
+                        request.session.currentPoints = filas[0].puntos;
                         request.session.currentUser = request.body.email;
                         daoUsuarios.getUsuario(request.session.currentUser, function (err, filas) {
                             request.session.currentId = filas[0].id;
@@ -93,7 +99,7 @@ routerUsuarios.use(function (request, response, next) {
         response.locals = request.session.currentUser;
     }
     else {
-        response.redirect("/usuarios/login");
+        response.redirect("/login");
     }
     next();
 })
@@ -104,10 +110,10 @@ routerUsuarios.get("/profile", function (request, response) {
     //console.log("sdf fsdf fasdf");
     daoUsuarios.getUsuario(request.session.currentUser, function (err, res) {
         //console.log(res);
-        if (res != null) {
+        if (res) {
 
             let nombre = res[0].nombre;
-            let edad = res[0].fecha_nacimiento;
+            let edad1 = res[0].fecha_nacimiento;
             let sexo = "";
             if (res[0].sexo == 0) {
                 sexo = "Hombre";
@@ -115,9 +121,10 @@ routerUsuarios.get("/profile", function (request, response) {
             else {
                 sexo = "Mujer";
             }
-            let puntos = res[0].puntos;
 
-            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad, sexo: sexo, puntos: puntos });
+            request.session.currentPoints = res[0].puntos;
+            let edad =  _calculateAge(edad1);
+            response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad, sexo: sexo, puntos: request.session.currentPoints });
         }
     })
     //Creo que hacen falta coockies para esto
@@ -170,11 +177,11 @@ routerUsuarios.get("/amigos", function (request, response) {
                                 else {
 
                                     if (result3) {
-                                        response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: result3 });
+                                        response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: result3, puntos: request.session.currentPoints });
                                     }
                                     else {
 
-                                        response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: [] });
+                                        response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: result2, amigosya: [], puntos: request.session.currentPoints });
                                     }
 
                                 }
@@ -195,11 +202,11 @@ routerUsuarios.get("/amigos", function (request, response) {
                         if (result3) {
                             console.log("result3:");
                             console.log(result3[0]);
-                            response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: [], amigosya: result3 });
+                            response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: [], amigosya: result3, puntos: request.session.currentPoints });
                         }
                         else {
 
-                            response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: [], amigosya: [] });
+                            response.render("amigos", { usuariologeado: request.session.currentName, posiblesamigos: [], amigosya: [], puntos: request.session.currentPoints });
                         }
                     }
 
@@ -233,7 +240,7 @@ routerUsuarios.post("/buscarAmigo", function (request, response) {
                         //Este map es para quedarme con true o false a la hora de pasarlo por el js, para ello miro a ver si el id de c que es el primer filtro es = -1 entondes meto false, mientras que si es mayor meto true;
                         let a = arrayID.map(element2 => (c.indexOf(element2 > -1) ? true : false));
                         //envio el render con los dos arrays para las comprobaciones;
-                        response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a });
+                        response.render("nuevosAmigos", { usuariologeado: request.session.currentName, listaNombre: result, amigosya: a, puntos: request.session.currentPoints });
                     }
                 })
 
@@ -261,12 +268,12 @@ routerUsuarios.get("/nuevoAmigo/:idAmigo", function (request, response) {
 //------------------------LOGOUT--------------------------------
 routerUsuarios.get("/logout", function (request, response) {
     request.session.destroy();
-    response.redirect("/usuarios/login");
+    response.redirect("/login");
 })
 //--------------------------------------------------------------
 
 routerUsuarios.get("/modify", function (request, response) {
-    response.render("modificar", {usuariologeado: request.session.currentName});
+    response.render("modificar", {usuariologeado: request.session.currentName, puntos: request.session.currentPoints});
 })
 
 routerUsuarios.get("/amigos", function (request, response) {
@@ -290,7 +297,7 @@ routerUsuarios.get("/amigos", function (request, response) {
                     })
                 }
                 console.log(posiblesamigos);
-                response.render("amigos", { posiblesamigos: posiblesamigos });
+                response.render("amigos", { posiblesamigos: posiblesamigos, puntos: request.session.currentPoints, usuariologeado: request.session.currentName });
             }
         }
     })
@@ -303,7 +310,7 @@ routerUsuarios.post("/buscarAmigo", function (request, response) {
             response.redirect("/usuarios/profile");
         }
         else {
-            response.render("nuevosAmigos", { listaNombre: result });
+            response.render("nuevosAmigos", { listaNombre: result, puntos: request.session.currentPoints, usuariologeado: request.session.currentName });
         }
     })
 })
@@ -365,7 +372,7 @@ routerUsuarios.post("/modify", multerFactory.single("Imagen_perfil"),function (r
             }
         })
 
-
+       
 })
 
 module.exports = routerUsuarios;

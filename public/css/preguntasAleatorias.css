@@ -53,6 +53,13 @@ a:hover{
 	border-bottom: solid;
 	border-color:#04ab74;
 }
+.puntos{
+	flex-direction: row;
+	margin-top: 30px;
+	margin-left:20px;
+	color: #e1e0dd;
+	font-size: 20px;
+}
 .Desconectar a:hover{
 	color:#f43d3d;
 	border-bottom: solid;

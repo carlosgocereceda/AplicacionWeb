@@ -102,7 +102,7 @@ app.post("/loginUser", function (request, response) {
                 console.log("id " + filas[0].id);
                 request.session.currentName = filas[0].nombre;
                 request.session.currentId = filas[0].id;
-                response.redirect("/profile");
+                response.redirect("/usuarios/profile");
 
             })
 
@@ -113,9 +113,6 @@ app.post("/loginUser", function (request, response) {
 
     })
 });
-//-------------------------------FIN DEL POST PARA EL LOGIN----------------------
-
-//-------------------------------REGISTRAR USUARIO-------------------------------
 
 
 
