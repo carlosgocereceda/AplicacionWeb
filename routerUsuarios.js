@@ -145,6 +145,8 @@ routerUsuarios.get("/profile", function (request, response) {
                     console.log(err);
                 }
                 else {
+                    console.log("fotos");
+                    console.log(fotos);
                     response.render("perfil", { usuariologeado: request.session.currentName, nombre: nombre, edad: edad + " Años", sexo: sexo, puntos: request.session.currentPoints, amigo: ruta, propio: true,
                 fotos:fotos });
                 }
@@ -195,6 +197,19 @@ routerUsuarios.get("/imagenUsuarioo/:nombreFoto", function (request, response) {
     let pathImg = path.join(__dirname, "uploads", request.params.nombreFoto);
     response.sendFile(pathImg);
     
+})
+
+routerUsuarios.post("/upload", multerFactory.single("imagen"), function(request, response){
+
+    daoUsuarios.insertImage(request.session.currentId,request.file.filename,function(err, res){
+        if(err){
+            console.log(err);
+        }
+        else{
+            response.redirect("/usuarios/profile");
+        }
+        
+    })
 })
 
 

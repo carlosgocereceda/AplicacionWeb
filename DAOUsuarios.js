@@ -603,5 +603,27 @@ class DAOUsuarios {
 
         })
     }
+    insertImage(idUser, image, callback){
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                console.log(err.message);
+            }
+            else {
+                console.log("iduser " +idUser + " foto " + image);
+                connection.query("INSERT INTO fotosusuario(idUsuario, foto) VALUES (?,?)", 
+                [idUser, image],
+                    function (err, filas) {
+                        if (err) {
+                            callback(new Error("Error al cargar las imagenes"));
+                        }
+                        else {
+                            callback(null, filas);
+                        }
+                    }
+                )
+            }
+
+        })
+    }
 }
 module.exports = DAOUsuarios;
