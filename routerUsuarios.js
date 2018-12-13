@@ -84,7 +84,7 @@ routerUsuarios.post("/register", multerFactory.single("Imagen_perfil"), function
             console.log("Hola");
             daoUsuarios.insertaUsuario(request.body.email, request.body.contrasenya,
                 request.body.nombre, sexo, request.body.fecha_nacimiento,
-                request.file.filename, 0,
+                a2, 0,
                 function (err, filas) {
                     if (!err) {
                         request.session.currentPoints = 0;
