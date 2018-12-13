@@ -20,6 +20,20 @@
 	color:#e1e0dd ;
 	font-size: 30px;
 }
+.fotos, .fotoAmigo{
+	background-size:100%;
+	width:70px;
+	
+	height:70px;
+	
+}
+.Nombre, .NombreAmigo{
+    padding-top:20px;
+    margin-left:40px;
+	font-size:20px;
+	padding-bottom:20px;
+    
+}
 .Userlogged{
 	display:flex;
     flex-direction: row;
@@ -124,7 +138,20 @@ h3{
     flex-direction: row;
     justify-content: space-between;
 }
-
+.accion_acertaste{
+	padding-top:20px;
+    margin-left:40px;
+	font-size:20px;
+	padding-bottom:20px;
+	color:green;
+}
+.accion_fallaste{
+	padding-top:20px;
+ 
+	font-size:20px;
+	padding-bottom:20px;
+	color:red;
+}
 .NombreAmigo{
     width: 500px;
     padding-left: 20px;
